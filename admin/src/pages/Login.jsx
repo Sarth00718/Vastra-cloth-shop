@@ -4,6 +4,7 @@ import Vogo from "../assets/vogo.png";
 import { useNavigate } from "react-router-dom";
 import { IoEye, IoEyeOutline } from "react-icons/io5";
 import { authDataContext } from "../context/AuthContext";
+import { motion } from 'framer-motion';
 import { adminDataContext } from "../context/AdminContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
