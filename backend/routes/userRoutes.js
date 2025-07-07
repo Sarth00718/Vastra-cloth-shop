@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAdmin, getCurrentUser } from '../controllers/usercontroller.js';
+import { getAdmin, getCurrentUser } from '../controllers/userController.js';
 import  isAuth  from '../middlewares/isAuth.js'
 import adminAuth from '../middlewares/adminAuth.js';
 
