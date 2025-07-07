@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
 import Home from './pages/Home';
-import Registration from './pages/registration';
+import Registration from './pages/Registration';
 import Login from './pages/Login';
 import About from './pages/About';
 import Contects from './pages/Contects';
