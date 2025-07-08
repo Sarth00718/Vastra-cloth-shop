@@ -7,7 +7,6 @@ import { authDataContext } from "../context/AuthContext";
 import { motion } from 'framer-motion';
 import { adminDataContext } from "../context/AdminContext";
 import { toast } from "react-toastify";
-import { motion } from 'framer-motion';
 import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
