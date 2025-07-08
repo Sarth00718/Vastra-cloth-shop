@@ -7,7 +7,7 @@ import { authDataContext } from "../context/AuthContext";
 import { userDataContext } from "../context/UserContext";
 import axios from "axios";
 import { signInWithPopup } from "firebase/auth";
-import { auth, provider, signInWithGoogle } from "../utils/Firebase";
+import { auth, provider } from "../utils/Firebase";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
@@ -39,10 +39,10 @@ function Registration() {
 
   const googlesignup = async () => {
     try {
-      const idToken = await signInWithGoogle();
-      const user = auth.currentUser;
-      const name = user.displayName;
-      const email = user.email;
+      const res = await signInWithPopup();
+      let user = res.user;
+      // let name = user.name;
+      // let email = user.email;
 
       const reslt = await axios.post(
         serverurl + "/api/auth/googlelogin",
