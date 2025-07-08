@@ -39,10 +39,10 @@ function Registration() {
 
   const googlesignup = async () => {
     try {
-      const res = await signInWithPopup();
+      const res = await signInWithPopup(auth, provider);
       let user = res.user;
-      // let name = user.name;
-      // let email = user.email;
+      let name = user.displayName;
+      let email = user.email;
 
       const reslt = await axios.post(
         serverurl + "/api/auth/googlelogin",
