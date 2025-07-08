@@ -122,6 +122,7 @@ export const googleLogin = async (req, res) => {
 
         return res.status(200).cookie("token", token, {
             httpOnly: true,
+            secure: true,
             maxAge: 90 * 24 * 60 * 60 * 1000,// 1 day in milliseconds
             sameSite: 'none' // Prevent CSRF attacks
         }).json(user);

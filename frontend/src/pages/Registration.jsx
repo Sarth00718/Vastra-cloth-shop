@@ -39,10 +39,10 @@ function Registration() {
 
   const googlesignup = async () => {
     try {
-      const res = await signInWithPopup(auth, provider);
-      let user = res.user;
-      let name = user.displayName;
-      let email = user.email;
+      const idToken = await signInWithGoogle();
+      const user = auth.currentUser;
+      const name = user.displayName;
+      const email = user.email;
 
       const reslt = await axios.post(
         serverurl + "/api/auth/googlelogin",
@@ -53,7 +53,8 @@ function Registration() {
       getCurrentUser();
       navigate("/");
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Google sign-in failed!");
+      console.log(error);
+      toast.error("Google sign-in failed. Please try again.");
     }
   };
 

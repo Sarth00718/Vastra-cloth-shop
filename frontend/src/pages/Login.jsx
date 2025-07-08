@@ -41,17 +41,16 @@ function Login() {
 
   const googlelogin = async () => {
     try {
-      const res = await signInWithGoogle();
-      let user = res.user;
-      // let name = user.name;
-      // let email = user.email;
+      const idToken = await signInWithGoogle();
+      const user = auth.currentUser;
+      const name = user.displayName;
+      const email = user.email;
 
       const reslt = await axios.post(
         serverurl + "/api/auth/googlelogin",
-        { name, email, idToken: res },
+        { name, email },
         { withCredentials: true }
       );
-      console.log(reslt.data.name);
       console.log(reslt.data);
 
       toast.success("Google login successful!");
