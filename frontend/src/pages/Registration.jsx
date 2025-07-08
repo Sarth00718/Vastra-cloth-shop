@@ -7,7 +7,7 @@ import { authDataContext } from "../context/AuthContext";
 import { userDataContext } from "../context/UserContext";
 import axios from "axios";
 import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../utils/Firebase";
+import { auth, provider, signInWithGoogle } from "../utils/Firebase";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
