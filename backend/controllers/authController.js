@@ -33,8 +33,8 @@ export const register = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            sameSite: "Strict",
-            secure: false,
+            sameSite: "none",
+            secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         });
         res.json({ msg: 'User created successfully', user });
@@ -74,9 +74,9 @@ export const login = async (req, res) => {
 
         return res.status(200).cookie("token", token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             maxAge: 90 * 24 * 60 * 60 * 1000,// 1 day in milliseconds
-            sameSite: 'strict' // Prevent CSRF attacks
+            sameSite: 'none' // Prevent CSRF attacks
         }).json({
             user
         });
@@ -123,7 +123,7 @@ export const googleLogin = async (req, res) => {
         return res.status(200).cookie("token", token, {
             httpOnly: true,
             maxAge: 90 * 24 * 60 * 60 * 1000,// 1 day in milliseconds
-            sameSite: 'strict' // Prevent CSRF attacks
+            sameSite: 'none' // Prevent CSRF attacks
         }).json(user);
     }
     catch (error) {
@@ -143,9 +143,9 @@ export const adminLogin = async (req, res) => {
             let token = await genToken1(email);
             return res.status(200).cookie("token", token, {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 maxAge: 3 * 24 * 60 * 60 * 1000,//
-                sameSite: 'strict' // Prevent CSRF attacks
+                sameSite: 'none' // Prevent CSRF attacks
             }).json({ message: "Admin logged in successfully", token });
         }
     } catch (error) {
