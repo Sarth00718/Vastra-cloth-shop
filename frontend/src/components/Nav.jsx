@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Nav() {
-  const { user, getCurrentUser } = useContext(userDataContext);
+  const { user, getCurrentUser, setUser } = useContext(userDataContext);
   const { serverurl } = useContext(authDataContext);
   const { showSearch, setShowSearch, search, setSearch, getCardCount } = useContext(shopDataContext);
   const [showProfile, setShowProfile] = useState(false);
@@ -23,11 +23,12 @@ function Nav() {
   const handleLogout = async () => {
     try {
       await axios.get(`${serverurl}/api/auth/logout`, { withCredentials: true });
-      await getCurrentUser();
       setShowProfile(false);
-      navigate("/");
+      setUser(null); // Clear user state immediately
       toast.success("Logout successful!");
-    } catch {
+      navigate("/login"); // Navigate to login page instead of home
+    } catch (error) {
+      console.error("Logout failed:", error);
       toast.error("Logout failed. Please try again.");
     }
   };
