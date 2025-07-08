@@ -7,7 +7,7 @@ import { IoEye, IoEyeOutline } from "react-icons/io5";
 import { authDataContext } from "../context/AuthContext";
 import { userDataContext } from "../context/UserContext";
 import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../utils/Firebase";
+import { auth, provider, signInWithGoogle } from "../utils/Firebase";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 
@@ -41,17 +41,19 @@ function Login() {
 
   const googlelogin = async () => {
     try {
-      const res = await signInWithPopup(auth, provider);
+      const res = await signInWithGoogle();
       let user = res.user;
-      let name = user.displayName;
-      let email = user.email;
+      // let name = user.name;
+      // let email = user.email;
 
       const reslt = await axios.post(
         serverurl + "/api/auth/googlelogin",
-        { name, email },
+        { name, email, idToken: res },
         { withCredentials: true }
       );
+      console.log(reslt.data.name);
       console.log(reslt.data);
+
       toast.success("Google login successful!");
       getCurrentUser();
       navigate("/");

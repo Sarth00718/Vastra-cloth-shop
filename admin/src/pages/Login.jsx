@@ -6,6 +6,7 @@ import { IoEye, IoEyeOutline } from "react-icons/io5";
 import { authDataContext } from "../context/AuthContext";
 import { adminDataContext } from "../context/AdminContext";
 import { toast } from "react-toastify";
+import { motion } from 'framer-motion';
 import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
