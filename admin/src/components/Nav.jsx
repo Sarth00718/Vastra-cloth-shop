@@ -4,9 +4,8 @@ import { authDataContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { adminDataContext } from "../context/AdminContext";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import 'react-toastify/dist/ReactToastify.css';
 
 function Nav() {
   const { serverurl } = useContext(authDataContext);

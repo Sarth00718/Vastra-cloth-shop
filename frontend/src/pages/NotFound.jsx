@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 function NotFound() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ function NotFound() {
         <p className="text-[18px] md:text-[24px]">Oops! Page Not Found</p>
         <button
           onClick={() => {
-            toast.info('Redirecting to Login page...');
+            toast.success('Redirecting to Login page...');
             navigate('/login');
           }}
           className="bg-white text-black text-[16px] md:text-[18px] px-6 cursor-pointer py-3 rounded-lg hover:bg-gray-200 active:bg-gray-300 transition"

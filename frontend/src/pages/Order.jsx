@@ -3,7 +3,7 @@ import { shopDataContext } from '../context/ShopContext';
 import { authDataContext } from '../context/AuthContext';
 import Titles from '../components/Titles';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 
 function Order() {
@@ -12,7 +12,7 @@ function Order() {
     const { serverurl } = useContext(authDataContext);
 
     const loadOrder = async () => {
-        const loadingToastId = toast.loading("Loading your orders...");
+        const loadingPromise = toast.loading("Loading your orders...");
         try {
             const res = await axios.post(`${serverurl}/api/order/userorder`, {}, {
                 withCredentials: true,
@@ -30,10 +30,12 @@ function Order() {
                     });
                 });
                 setOrderData(allOrderItems.reverse());
-                toast.update(loadingToastId, { render: "Orders loaded!", type: "success", isLoading: false, autoClose: 2000 });
+                toast.dismiss(loadingPromise);
+                toast.success("Orders loaded!");
             }
         } catch (err) {
-            toast.update(loadingToastId, { render: "Failed to load orders.", type: "error", isLoading: false, autoClose: 3000 });
+            toast.dismiss(loadingPromise);
+            toast.error("Failed to load orders.");
             console.error('Failed to load orders:', err);
         }
     };

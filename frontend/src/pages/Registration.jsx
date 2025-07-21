@@ -8,8 +8,7 @@ import { userDataContext } from "../context/UserContext";
 import axios from "axios";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../utils/Firebase";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 
 function Registration() {
@@ -52,8 +51,8 @@ function Registration() {
       toast.success("Google sign-in successful!");
       getCurrentUser();
       navigate("/");
-    } catch (error) {
-      console.log(error);
+    }
+    catch (error) {
       toast.error("Google sign-in failed. Please try again.");
     }
   };

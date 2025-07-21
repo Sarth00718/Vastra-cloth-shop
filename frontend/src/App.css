@@ -1,0 +1,41 @@
+/* For small text */
+.animate-blink-sm {
+  animation: blink 1s ease-in-out infinite;
+}
+
+/* For medium to large text */
+.animate-blink-md {
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+/* For very large text */
+.animate-blink-lg {
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-in-out;
+}
+
+@keyframes glow-dark {
+  0%, 100% {
+    box-shadow: 0 0 10px #1e3a8a, 0 0 20px #1d4ed8;
+  }
+  50% {
+    box-shadow: 0 0 20px #3b82f6, 0 0 30px #60a5fa;
+  }
+}
+
+.animate-glow-dark {
+  animation: glow-dark 2s ease-in-out infinite;
+}

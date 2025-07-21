@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import 'react-toastify/dist/ReactToastify.css';
 
 function NewLettorBox() {
   const [email, setEmail] = useState('');

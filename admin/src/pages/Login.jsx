@@ -6,8 +6,7 @@ import { IoEye, IoEyeOutline } from "react-icons/io5";
 import { authDataContext } from "../context/AuthContext";
 import { motion } from 'framer-motion';
 import { adminDataContext } from "../context/AdminContext";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast from "react-hot-toast";
 
 function Login() {
   const navigate = useNavigate();

@@ -4,9 +4,8 @@ import Sidebar from '../components/Sidebar';
 import upload from '../assets/upload.png';
 import { authDataContext } from '../context/AuthContext';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import 'react-toastify/dist/ReactToastify.css';
 
 function Add() {
   const [image1, setImage1] = useState(null);
@@ -43,10 +42,9 @@ function Add() {
       setName(""); setDescription(""); setPrice(""); setCategory("Men");
       setSubCategory("Topwear"); setBestSeller(false); setSizes([]);
       setImage1(null); setImage2(null); setImage3(null); setImage4(null);
-
     } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || "Failed to add product");
+      console.error("Error adding product:", error);
+      toast.error("Failed to add product. Please try again.");
     }
   };
 

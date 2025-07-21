@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { shopDataContext } from '../context/ShopContext';
 import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
 import RelatedProducts from '../components/RelatedProducts';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 
 function ProductDetails() {
@@ -32,7 +32,7 @@ function ProductDetails() {
 
   const handleAddToCart = () => {
     if (!size) {
-      toast.warn('Please select a size before adding to cart.');
+      toast.error('Please select a size before adding to cart.');
       return;
     }
     addToCart(productData._id, size);

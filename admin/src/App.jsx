@@ -7,14 +7,35 @@ import Lists from './pages/Lists';
 import Login from './pages/Login';
 import Orders from './pages/Orders';
 import './App.css';
-import { ToastContainer } from 'react-toastify'
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   let { admin } = useContext(adminDataContext);
 
   return (
     <>
-    <ToastContainer />
+    <Toaster 
+      position="top-center"
+      reverseOrder={false}
+      gutter={8}
+      toastOptions={{
+        duration: 3000,
+        style: {
+          background: '#363636',
+          color: '#fff',
+        },
+        success: {
+          style: {
+            background: 'green',
+          },
+        },
+        error: {
+          style: {
+            background: 'red',
+          },
+        },
+      }}
+    />
       {!admin ? (
         <Login />
       ) : (

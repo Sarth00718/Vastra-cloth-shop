@@ -8,7 +8,7 @@ import { authDataContext } from "../context/AuthContext";
 import { userDataContext } from "../context/UserContext";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../utils/Firebase";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 
 function Login() {
