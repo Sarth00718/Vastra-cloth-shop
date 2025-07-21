@@ -12,7 +12,7 @@ function AuthContext({ children }) {
     return (
         <div>
             <authDataContext.Provider value={value}>
-                {children}.
+                {children}
             </authDataContext.Provider>
         </div>
     )
