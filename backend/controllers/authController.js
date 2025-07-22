@@ -33,7 +33,7 @@ export const register = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            sameSite: "none",
+            sameSite: "None",
             secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         });
@@ -75,7 +75,7 @@ export const login = async (req, res) => {
             httpOnly: true,
             secure: true,
             maxAge: 90 * 24 * 60 * 60 * 1000,// 1 day in milliseconds
-            sameSite: 'none' // Prevent CSRF attacks
+            sameSite: 'None' // Prevent CSRF attacks
         }).json({
             user,
             token
@@ -95,7 +95,7 @@ export const logout = async (req, res) => {
         res.clearCookie("token", {
             httpOnly: true,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'None'
         });
         return res.status(200).json({ message: "Logged out successfully", success: true });
     } catch (error) {
@@ -126,11 +126,11 @@ export const googleLogin = async (req, res) => {
 
         return res.status(200).cookie("token", token, {
             httpOnly: true,
-            secure: true,
             maxAge: 90 * 24 * 60 * 60 * 1000,// 1 day in milliseconds
-            sameSite: 'none' // Prevent CSRF attacks
+            secure: true,
+            sameSite: 'None'
         }).json({
-            user,token
+            user, token
         });
     }
     catch (error) {
