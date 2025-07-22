@@ -27,6 +27,7 @@ function Login() {
         { email, password },
         { withCredentials: true }
       );
+      localStorage.setItem("token", res.data.token);
       console.log(res.data);
       toast.success("Login successful!");
       getCurrentUser();
@@ -52,7 +53,7 @@ function Login() {
         { withCredentials: true }
       );
       console.log(reslt.data);
-
+      localStorage.setItem("token", reslt.data.token);
       toast.success("Google login successful!");
       getCurrentUser();
       navigate("/");

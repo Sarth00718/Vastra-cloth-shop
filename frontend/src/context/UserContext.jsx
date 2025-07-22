@@ -11,12 +11,15 @@ function UserContext({ children }) {
     const getCurrentUser = async () => {
         try {
             const result = await axios.post(`${serverurl}/api/user/getcurrentuser`, {}, {
-                withCredentials: true
+                withCredentials: true,
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
             });
             setUser(result.data);
             console.log(result.data);
         } catch (error) {
-            
+
             if (error.response?.status === 401) {
                 console.log("User not authenticated");
                 setUser(null);
