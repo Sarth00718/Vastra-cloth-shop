@@ -151,8 +151,8 @@ export const adminLogin = async (req, res) => {
             return res.status(200).cookie("token", token, {
                 httpOnly: true,
                 secure: true,
-                maxAge: 3 * 24 * 60 * 60 * 1000,//
-                sameSite: 'none' // Prevent CSRF attacks
+                maxAge: 30 * 24 * 60 * 60 * 1000,//
+                sameSite: 'None' // Prevent CSRF attacks
             }).json({ message: "Admin logged in successfully", token });
         }
     } catch (error) {

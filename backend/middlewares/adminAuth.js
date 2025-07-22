@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 const adminAuth = (req, res, next) => {
   try {
-    const { token } = req.cookies;
+    const  token  = req.cookies.token || req.headers.authorization?.split(' ')[1] ;
 
     if (!token) {
       return res.status(401).json({ msg: 'Unauthorized: No token provided' });
