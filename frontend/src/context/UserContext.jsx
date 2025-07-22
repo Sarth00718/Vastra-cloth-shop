@@ -12,12 +12,18 @@ function UserContext({ children }) {
         try {
             const result = await axios.post(`${serverurl}/api/user/getcurrentuser`, {}, {
                 withCredentials: true,
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
             });
             setUser(result.data);
             console.log(result.data);
         } catch (error) {
-            setUser(null);
-            console.log("Error fetching current user:", error.message);
+            if (error.response?.status === 401) {
+                console.log("User not authenticated");
+                setUser(null);
+            } else {
+                console.log("Error fetching current user:", error.message);
+                setUser(null);
+            }
         }
     };
 

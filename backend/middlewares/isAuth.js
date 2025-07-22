@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 const isAuth = (req, res, next) => {
   try {
-    const { token } = req.cookies;
+  const { token } = req.cookies || req.headers.authorization?.split(' ')[1] || {};
     //console.log("Token from cookies:", token);
 
     if (!token) {

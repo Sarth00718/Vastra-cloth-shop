@@ -160,7 +160,7 @@ function ProductDetails() {
         </div>
 
         {/* Related Products */}
-        <RelatedProducts-
+        <RelatedProducts
           subCategory={productData.subCategory}
           currentProductId={productData._id}
         />
