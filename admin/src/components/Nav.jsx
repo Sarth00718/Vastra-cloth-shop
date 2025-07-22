@@ -17,6 +17,7 @@ function Nav() {
       const result = await axios.get(`${serverurl}/api/auth/logout`, {
         withCredentials: true,
       });
+      localStorage.removeItem("token");
       console.log("Logout successful:", result.data);
       toast.success("Logout successful!");
       getAdmin();

@@ -26,6 +26,7 @@ function Login() {
         { withCredentials: true }
       );
       console.log(res.data);
+      localStorage.setItem("token", res.data.token);
 
       toast.success("Login successful!");
       getAdmin();

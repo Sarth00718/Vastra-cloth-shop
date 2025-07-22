@@ -12,6 +12,9 @@ function AdminContext({ children }) {
         try {
             const result = await axios.post(`${serverurl}/api/user/getadmin`, {}, {
                 withCredentials: true,
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
             });
             setAdmin(result.data);
             console.log(result.data);
