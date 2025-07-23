@@ -32,6 +32,7 @@ function BestSeller() {
           bestSellers.map((item, index) => (
             <Card
               key={index}
+              id={item._id} 
               image={item.image1}
               name={item.name}
               price={item.price}

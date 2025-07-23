@@ -4,8 +4,8 @@ import { createContext } from "react";
 export const authDataContext = createContext();
 
 function AuthContext({ children }) {
-   let serverurl = "http://localhost:3000"
-   //let serverurl = "https://vastra-cloth-shop-backend.onrender.com"
+  // let serverurl = "http://localhost:3000"
+    let serverurl = "https://vastra-cloth-shop-backend.onrender.com"
     let value = {
         serverurl
     }
