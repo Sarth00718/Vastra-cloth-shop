@@ -26,8 +26,10 @@ function Registration() {
       const res = await axios.post(
         `${serverurl}/api/auth/register`,
         { name, email, password },
-        { withCredentials: true }
+        { withCredentials: true 
+         }
       );
+      localStorage.setItem("token", res.data.token);
       toast.success("Registration successful!");
       getCurrentUser();
       navigate("/");
@@ -48,6 +50,7 @@ function Registration() {
         { name, email },
         { withCredentials: true }
       );
+      localStorage.setItem("token", reslt.data.token);
       toast.success("Google sign-in successful!");
       getCurrentUser();
       navigate("/");

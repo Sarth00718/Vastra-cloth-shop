@@ -37,7 +37,7 @@ export const register = async (req, res) => {
             secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         });
-        res.json({ msg: 'User created successfully', user });
+        res.json({ msg: 'User created successfully', user, token });
     }
     catch (error) {
         console.error(error);
