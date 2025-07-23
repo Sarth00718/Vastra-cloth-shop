@@ -14,10 +14,18 @@ function Home() {
 
   const fetchCounts = async () => {
     try {
-      const productsResponse = await axios.get(`${serverurl}/api/product/list`, { withCredentials: true });
+      const productsResponse = await axios.get(`${serverurl}/api/product/list`, { withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+       });
       setTotalProducts(productsResponse.data.products.length);
 
-      const ordersResponse = await axios.post(`${serverurl}/api/order/allorder`, {}, { withCredentials: true });
+      const ordersResponse = await axios.post(`${serverurl}/api/order/allorder`, {}, { withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+       });
       setTotalOrders(ordersResponse.data.length);
     } catch (err) {
       console.error('Failed to fetch counts', err);

@@ -19,7 +19,9 @@ const PORT = process.env.PORT || 8000;
 app.use(cors({
   origin: [
     "https://vastra-cloth-shop-frontend.onrender.com",
-    "https://vastra-cloth-shop-admin.onrender.com"
+    "https://vastra-cloth-shop-admin.onrender.com",
+    "http://localhost:5173",
+    "http://localhost:5174"
   ],
   credentials: true
 }))

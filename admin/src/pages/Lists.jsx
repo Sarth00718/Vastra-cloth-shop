@@ -13,7 +13,13 @@ function Lists() {
 
   const fetchList = async () => {
     try {
-      const response = await axios.get(`${serverurl}/api/product/list`);
+      const response = await axios.get(`${serverurl}/api/product/list`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      );
       setList(response.data.products);
     } catch (error) {
       console.error(error);
@@ -43,7 +49,7 @@ function Lists() {
       <Nav />
       <Sidebar />
 
-      <div className="w-full md:w-[82%] ml-auto px-6 md:pl-[65px] pr-[20px] pt-[110px] flex flex-col gap-8">
+      <div className="w-[82%] ml-auto px-6 md:pl-[65px] pr-[20px] pt-[110px] flex flex-col gap-8">
         <h2 className="text-3xl md:text-4xl font-bold text-cyan-300 mb-4">All Listed Products</h2>
 
         {list?.length > 0 ? (

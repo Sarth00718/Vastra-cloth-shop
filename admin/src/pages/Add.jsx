@@ -34,7 +34,11 @@ function Add() {
       formData.append("bestseller", bestseller);
       formData.append("sizes", JSON.stringify(sizes));
 
-      await axios.post(`${serverurl}/api/product/addProduct`, formData, { withCredentials: true });
+      await axios.post(`${serverurl}/api/product/addProduct`, formData, { withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+       });
 
       toast.success("Product added successfully!");
 

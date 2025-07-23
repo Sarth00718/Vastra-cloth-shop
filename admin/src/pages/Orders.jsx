@@ -14,7 +14,11 @@ function Orders() {
 
   const fetchAllOrders = async () => {
     try {
-      const result = await axios.post(`${serverurl}/api/order/allorder`, {}, { withCredentials: true });
+      const result = await axios.post(`${serverurl}/api/order/allorder`, {}, { withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+       });
       setOrders(result.data.reverse());
     } catch (error) {
       console.error(error.message);
