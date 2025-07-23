@@ -16,6 +16,7 @@ function PlaceOrder() {
   const navigate = useNavigate();
   const [method, setMethod] = useState('cod');
   const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '',
     street: '', city: '', state: '',
@@ -24,6 +25,35 @@ function PlaceOrder() {
 
   const onChangeHandler = (e) => {
     setFormData(data => ({ ...data, [e.target.name]: e.target.value }));
+  };
+
+  const validateForm = () => {
+    const { firstName, lastName, email, street, city, state, pinCode, country, phone } = formData;
+    if (!firstName || !lastName || !email || !street || !city || !state || !pinCode || !country || !phone) {
+      toast.error('Please fill in all required fields.');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]{10}$/;
+    const pinCodeRegex = /^[0-9]{6}$/;
+
+    if (!emailRegex.test(email)) {
+      toast.error('Invalid email address.');
+      return false;
+    }
+
+    if (!phoneRegex.test(phone)) {
+      toast.error('Phone number must be 10 digits.');
+      return false;
+    }
+
+    if (!pinCodeRegex.test(pinCode)) {
+      toast.error('Pincode must be 6 digits.');
+      return false;
+    }
+
+    return true;
   };
 
   const initPay = (order, token) => {
@@ -40,14 +70,11 @@ function PlaceOrder() {
           const { data } = await axios.post(
             serverurl + '/api/order/verifyrazorpay',
             response,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+            { headers: { Authorization: `Bearer ${token}` } }
           );
           if (data) {
             setCartItem({});
+            toast.success('Payment verified! Order placed.');
             navigate('/order');
           }
         } catch (err) {
@@ -62,6 +89,7 @@ function PlaceOrder() {
   };
 
   const onSubmitHandler = async () => {
+    if (!validateForm()) return;
     setLoading(true);
     const token = localStorage.getItem('token');
 
@@ -81,6 +109,12 @@ function PlaceOrder() {
         }
       }
 
+      if (orderItems.length === 0) {
+        toast.error('Your cart is empty!');
+        setLoading(false);
+        return;
+      }
+
       const orderData = {
         address: formData,
         orderItems,
@@ -91,11 +125,7 @@ function PlaceOrder() {
         const res = await axios.post(
           serverurl + '/api/order/placeorder',
           orderData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         if (res.data) {
           setCartItem({});
@@ -106,18 +136,14 @@ function PlaceOrder() {
         const resrp = await axios.post(
           serverurl + '/api/order/placeorderrazor',
           orderData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         if (resrp.data) {
           initPay(resrp.data, token);
         }
       }
     } catch (error) {
-      toast.error('Error placing order. Try again.');
+      toast.error('Error placing order. Please try again.');
       console.error(error);
     }
 
@@ -136,20 +162,20 @@ function PlaceOrder() {
         <div className="w-full flex flex-col gap-4">
           <Titles text1="DELIVERY" text2="INFORMATION" />
           <div className="flex flex-wrap gap-4">
-            <input type="text" name="firstName" value={formData.firstName} onChange={onChangeHandler} placeholder="First name" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" required />
-            <input type="text" name="lastName" value={formData.lastName} onChange={onChangeHandler} placeholder="Last name" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" required />
+            <input type="text" name="firstName" value={formData.firstName} onChange={onChangeHandler} placeholder="First name" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" />
+            <input type="text" name="lastName" value={formData.lastName} onChange={onChangeHandler} placeholder="Last name" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" />
           </div>
-          <input type="email" name="email" value={formData.email} onChange={onChangeHandler} placeholder="Email address" className="w-full h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" required />
-          <input type="text" name="street" value={formData.street} onChange={onChangeHandler} placeholder="Street" className="w-full h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" required />
+          <input type="email" name="email" value={formData.email} onChange={onChangeHandler} placeholder="Email address" className="w-full h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" />
+          <input type="text" name="street" value={formData.street} onChange={onChangeHandler} placeholder="Street" className="w-full h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" />
           <div className="flex flex-wrap gap-4">
-            <input type="text" name="city" value={formData.city} onChange={onChangeHandler} placeholder="City" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" required />
-            <input type="text" name="state" value={formData.state} onChange={onChangeHandler} placeholder="State" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" required />
+            <input type="text" name="city" value={formData.city} onChange={onChangeHandler} placeholder="City" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" />
+            <input type="text" name="state" value={formData.state} onChange={onChangeHandler} placeholder="State" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" />
           </div>
           <div className="flex flex-wrap gap-4">
-            <input type="text" name="pinCode" value={formData.pinCode} onChange={onChangeHandler} placeholder="Pincode" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" required />
-            <input type="text" name="country" value={formData.country} onChange={onChangeHandler} placeholder="Country" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" required />
+            <input type="text" name="pinCode" value={formData.pinCode} onChange={onChangeHandler} placeholder="Pincode" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" />
+            <input type="text" name="country" value={formData.country} onChange={onChangeHandler} placeholder="Country" className="flex-1 min-w-[48%] h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" />
           </div>
-          <input type="tel" name="phone" value={formData.phone} onChange={onChangeHandler} placeholder="Phone" className="w-full h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" required />
+          <input type="tel" name="phone" value={formData.phone} onChange={onChangeHandler} placeholder="Phone" className="w-full h-12 rounded-md bg-slate-700 text-white placeholder:text-white px-4" />
         </div>
       </motion.div>
 
