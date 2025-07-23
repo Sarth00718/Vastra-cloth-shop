@@ -13,10 +13,18 @@ function Order() {
 
     const loadOrder = async () => {
         const loadingPromise = toast.loading("Loading your orders...");
+        const token = localStorage.getItem("token"); // ✅ get token from localStorage
+
         try {
-            const res = await axios.post(`${serverurl}/api/order/userorder`, {}, {
-                withCredentials: true,
-            });
+            const res = await axios.post(
+                `${serverurl}/api/order/userorder`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // ✅ attach token
+                    },
+                }
+            );
 
             if (res.data) {
                 let allOrderItems = [];
