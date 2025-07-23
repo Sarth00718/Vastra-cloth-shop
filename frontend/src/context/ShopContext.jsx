@@ -9,8 +9,7 @@ function ShopContext({ children }) {
   const { serverurl } = useContext(authDataContext);
   const { user } = useContext(userDataContext);
 
-
-  const shopName = "Vastra";
+  const shopName = "VASTRA";
   const categories = ["Men", "Women", "Kids"];
   const currency = "₹";
   const delivery_fee = 40;
@@ -22,7 +21,12 @@ function ShopContext({ children }) {
 
   const getProducts = async () => {
     try {
-      const result = await axios.get(`${serverurl}/api/product/list`);
+      const result = await axios.get(`${serverurl}/api/product/list`,{
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
       setProducts(result.data.products);
       console.log(result.data)
     } catch (error) {
@@ -53,7 +57,11 @@ function ShopContext({ children }) {
 
     if (user) {
       try {
-        const result = await axios.post(`${serverurl}/api/cart/add`, { itemId, size }, { withCredentials: true });
+        const result = await axios.post(`${serverurl}/api/cart/add`, { itemId, size }, { withCredentials: true ,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+         });
         console.log(result.data)
       } catch (error) {
         console.error("Error adding to cart:", error);
@@ -72,7 +80,11 @@ function ShopContext({ children }) {
         const result = await axios.post(`${serverurl}/api/cart/update`, {
           itemId, size,
           quantity
-        }, { withCredentials: true });
+        }, { withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+         });
         console.log(result.data)
       } catch (error) {
         console.error("Error updating quantity:", error);
@@ -82,7 +94,12 @@ function ShopContext({ children }) {
 
   const getUserCart = async () => {
     try {
-      const result = await axios.post(`${serverurl}/api/cart/get`, {}, { withCredentials: true })
+      const result = await axios.post(`${serverurl}/api/cart/get`, {}, { withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+        
+       })
       setCartItem(result.data)
     } catch (error) {
       console.error("Error fetching cart:", error);
