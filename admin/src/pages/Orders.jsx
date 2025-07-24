@@ -4,9 +4,8 @@ import Sidebar from '../components/Sidebar';
 import axios from 'axios';
 import { authDataContext } from '../context/AuthContext';
 import { SiHackthebox } from 'react-icons/si';
-import { toast } from 'react-toastify';
+import  toast  from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import 'react-toastify/dist/ReactToastify.css';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -28,7 +27,11 @@ function Orders() {
 
   const statusHandler = async (orderId, status) => {
     try {
-      const result = await axios.post(`${serverurl}/api/order/updatestatus`, { orderId, status }, { withCredentials: true });
+      const result = await axios.post(`${serverurl}/api/order/updatestatus`, { orderId, status }, { withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+       });
       if (result.data) {
         toast.success('Order status updated!');
         await fetchAllOrders();

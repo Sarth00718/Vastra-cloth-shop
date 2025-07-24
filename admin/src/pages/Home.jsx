@@ -3,8 +3,7 @@ import Nav from '../components/Nav';
 import Sidebar from '../components/Sidebar';
 import axios from 'axios';
 import { authDataContext } from '../context/AuthContext';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import  toast  from 'react-hot-toast';
 
 
 function Home() {

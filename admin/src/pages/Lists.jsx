@@ -3,9 +3,8 @@ import Nav from '../components/Nav';
 import Sidebar from '../components/Sidebar';
 import axios from 'axios';
 import { authDataContext } from '../context/AuthContext';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import 'react-toastify/dist/ReactToastify.css';
 
 function Lists() {
   const [list, setList] = useState([]);
