@@ -266,7 +266,194 @@ vastra-cloth-shop/
 │   │
 │   └── package.json
 │
+└── # Vastra E-Commerce Platform
+
+A full-stack MERN e-commerce platform for clothing with separate admin panel.
+
+## 🚀 Live Demo
+
+- **Frontend**: [https://your-frontend.vercel.app](https://your-frontend.vercel.app)
+- **Admin Panel**: [https://your-admin.vercel.app](https://your-admin.vercel.app)
+- **Backend API**: [https://your-backend.render.com](https://your-backend.render.com)
+
+## 📁 Project Structure
+
+```
+vastra-ecommerce/
+├── frontend/          # Customer-facing React app
+├── admin/            # Admin panel React app
+├── backend/          # Node.js Express API
 └── README.md
+```
+
+## 🛠️ Tech Stack
+
+### Frontend & Admin
+- **Framework**: React 18 + Vite
+- **Styling**: CSS3, Tailwind CSS
+- **State Management**: Context API
+- **HTTP Client**: Axios
+- **Authentication**: JWT
+- **Payment**: Razorpay
+- **Deployment**: Vercel
+
+### Backend
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Database**: MongoDB Atlas
+- **Authentication**: JWT
+- **File Upload**: Cloudinary
+- **Payment**: Razorpay
+- **Deployment**: Render
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- MongoDB Atlas account
+- Cloudinary account
+- Razorpay account
+
+### 1. Clone Repository
+```bash
+git clone https://github.com/yourusername/vastra-ecommerce.git
+cd vastra-ecommerce
+```
+
+### 2. Backend Setup
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Edit .env with your credentials
+npm run dev
+```
+
+### 3. Frontend Setup
+```bash
+cd frontend
+npm install
+cp .env.example .env
+# Edit .env with backend URL
+npm run dev
+```
+
+### 4. Admin Setup
+```bash
+cd admin
+npm install
+cp .env.example .env
+# Edit .env with backend URL
+npm run dev
+```
+
+## 🌐 Deployment
+
+### Backend (Render)
+1. Push code to GitHub
+2. Connect Render to your repository
+3. Set environment variables in Render dashboard
+4. Deploy from `backend` folder
+
+### Frontend (Vercel)
+1. Connect Vercel to your repository
+2. Set root directory to `frontend`
+3. Set environment variables
+4. Deploy
+
+### Admin (Vercel)
+1. Create new Vercel project
+2. Set root directory to `admin`
+3. Set environment variables
+4. Deploy
+
+## 📋 Environment Variables
+
+### Backend (.env)
+```env
+PORT=5000
+MONGODB_URI=mongodb+srv://...
+JWT_SECRET_KEY=your_secret
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=password
+CLOUDINARY_NAME=your_name
+CLOUDINARY_API_KEY=your_key
+CLOUDINARY_API_SECRET=your_secret
+RAZORPAY_KEY_ID=your_key
+RAZORPAY_KEY_SECRET=your_secret
+NODE_ENV=production
+FRONTEND_URL=https://your-frontend.vercel.app
+```
+
+### Frontend (.env)
+```env
+VITE_API_URL=https://your-backend.render.com
+VITE_RAZORPAY_KEY_ID=your_razorpay_key
+```
+
+### Admin (.env)
+```env
+VITE_API_URL=https://your-backend.render.com
+```
+
+## 🎯 Features
+
+### Customer Features
+- Product browsing and search
+- Shopping cart and wishlist
+- User authentication
+- Order management
+- Payment integration
+- Responsive design
+
+### Admin Features
+- Product management
+- Order management
+- User management
+- Analytics dashboard
+- Image upload to Cloudinary
+
+## 🔧 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `POST /api/auth/admin-login` - Admin login
+
+### Products
+- `GET /api/product/list` - Get all products
+- `POST /api/product/addproduct` - Add product (Admin)
+- `DELETE /api/product/remove/:id` - Remove product (Admin)
+
+### Orders
+- `POST /api/order/place` - Place order
+- `GET /api/order/user` - Get user orders
+- `GET /api/order/all` - Get all orders (Admin)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 👨‍💻 Author
+
+**Your Name**
+- GitHub: [@yourusername](https://github.com/yourusername)
+- Email: your.email@example.com
+
+## 🙏 Acknowledgments
+
+- React team for the amazing framework
+- MongoDB for the database
+- Cloudinary for image management
+- Razorpay for payment processing
 ```
 
 ---
