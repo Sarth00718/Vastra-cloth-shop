@@ -122,7 +122,10 @@
 <td valign="top" width="33%">
 
 ### 🎨 Frontend
+<<<<<<< HEAD
 
+=======
+>>>>>>> cf42078d164cb25622678a1455332db38d54cd7a
 - ⚛️ **React 18** - UI library
 - 🎨 **Tailwind CSS** - Styling
 - 📦 **Context API** - State management
@@ -135,7 +138,10 @@
 <td valign="top" width="33%">
 
 ### ⚙️ Backend
+<<<<<<< HEAD
 
+=======
+>>>>>>> cf42078d164cb25622678a1455332db38d54cd7a
 - 🟢 **Node.js** - Runtime
 - 🚂 **Express.js** - Web framework
 - 🍃 **MongoDB** - Database
@@ -149,7 +155,10 @@
 <td valign="top" width="33%">
 
 ### ☁️ Cloud Services
+<<<<<<< HEAD
 
+=======
+>>>>>>> cf42078d164cb25622678a1455332db38d54cd7a
 - 🖼️ **Cloudinary** - Image storage
 - 🌐 **Render** - Deployment
 - 🍃 **MongoDB Atlas** - Database hosting
@@ -582,8 +591,6 @@ app.use(
     credentials: true,
   }),
 );
-```
-
 </details>
 
 ---
