@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin: [
     "https://vastra-cloth-shop-frontend.vercel.app",
-    "https://vastra-cloth-shop-admin.vercel.app",
+    "https://vastra-cloth-shop-oirs.vercel.app",
     "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:5000",
