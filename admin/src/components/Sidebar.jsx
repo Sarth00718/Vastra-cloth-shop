@@ -13,38 +13,49 @@ function Sidebar() {
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className='w-[18%] min-h-[100vh] py-[60px] border-r-[1px] fixed top-0 left-0 bg-[#0A1626]'
+      className='w-[18%] min-h-[100vh] py-[60px] border-r border-slate-800/50 fixed top-0 left-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 z-[5]'
     >
-      <div className='flex flex-col gap-4 pt-[40px] pl-[20%] text-[15px] font-poppins'>
+      {/* Premium Right Border */}
+      <div className="absolute top-0 right-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-blue-500/30 to-transparent" />
+      <div className='flex flex-col gap-5 pt-[40px] pl-[20%] text-[15px] relative z-10' style={{ fontFamily: 'Inter, sans-serif' }}>
 
-        {/* Add Items */}
+        {/* Premium Add Items */}
         <motion.div
           whileTap={{ scale: 0.95 }}
-          className='flex items-center justify-center md:justify-start gap-3 border border-gray-200 border-r-0 px-3 py-2 cursor-pointer hover:bg-[#526f7c] hover:text-white text-white'
+          whileHover={{ x: 8 }}
+          className='relative flex items-center justify-center md:justify-start gap-3 border border-slate-700/50 border-r-0 px-5 py-4 cursor-pointer text-slate-300 rounded-l-2xl transition-all duration-300 font-semibold group overflow-hidden'
           onClick={() => navigate('/add')}
         >
-          <IoIosAddCircleOutline className='w-[20px] h-[20px]' />
-          <p className='hidden md:block'>Add items</p>
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 to-blue-600/0 group-hover:from-blue-600/20 group-hover:to-purple-600/20 transition-all duration-300" />
+          <IoIosAddCircleOutline className='w-[24px] h-[24px] relative z-10 group-hover:text-blue-400 transition-colors' />
+          <p className='hidden md:block relative z-10 group-hover:text-white transition-colors'>Add items</p>
+          <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-blue-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity rounded-l-2xl" />
         </motion.div>
 
-        {/* List Items */}
+        {/* Premium List Items */}
         <motion.div
           whileTap={{ scale: 0.95 }}
-          className='flex items-center justify-center md:justify-start gap-3 border border-gray-200 border-r-0 px-3 py-2 cursor-pointer hover:bg-[#526f7c] hover:text-white text-white'
+          whileHover={{ x: 8 }}
+          className='relative flex items-center justify-center md:justify-start gap-3 border border-slate-700/50 border-r-0 px-5 py-4 cursor-pointer text-slate-300 rounded-l-2xl transition-all duration-300 font-semibold group overflow-hidden'
           onClick={() => navigate('/lists')}
         >
-          <FaListUl className='w-[20px] h-[20px]' />
-          <p className='hidden md:block'>List items</p>
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 to-blue-600/0 group-hover:from-blue-600/20 group-hover:to-purple-600/20 transition-all duration-300" />
+          <FaListUl className='w-[24px] h-[24px] relative z-10 group-hover:text-blue-400 transition-colors' />
+          <p className='hidden md:block relative z-10 group-hover:text-white transition-colors'>List items</p>
+          <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-blue-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity rounded-l-2xl" />
         </motion.div>
 
-        {/* View Orders */}
+        {/* Premium View Orders */}
         <motion.div
           whileTap={{ scale: 0.95 }}
-          className='flex items-center justify-center md:justify-start gap-3 border border-gray-200 border-r-0 px-3 py-2 cursor-pointer hover:bg-[#526f7c] hover:text-white text-white'
+          whileHover={{ x: 8 }}
+          className='relative flex items-center justify-center md:justify-start gap-3 border border-slate-700/50 border-r-0 px-5 py-4 cursor-pointer text-slate-300 rounded-l-2xl transition-all duration-300 font-semibold group overflow-hidden'
           onClick={() => navigate('/orders')}
         >
-          <MdOutlineReceiptLong className='w-[20px] h-[20px]' />
-          <p className='hidden md:block'>View Orders</p>
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 to-blue-600/0 group-hover:from-blue-600/20 group-hover:to-purple-600/20 transition-all duration-300" />
+          <MdOutlineReceiptLong className='w-[24px] h-[24px] relative z-10 group-hover:text-blue-400 transition-colors' />
+          <p className='hidden md:block relative z-10 group-hover:text-white transition-colors'>View Orders</p>
+          <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-blue-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity rounded-l-2xl" />
         </motion.div>
 
       </div>

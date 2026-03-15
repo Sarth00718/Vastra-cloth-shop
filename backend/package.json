@@ -9,7 +9,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "upload-assets": "node scripts/uploadAssetsToCloudinary.js",
+    "cleanup": "node cleanup.js",
+    "verify": "node verifyProducts.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

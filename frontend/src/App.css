@@ -27,15 +27,57 @@
   animation: fade-in 0.4s ease-in-out;
 }
 
-@keyframes glow-dark {
+/* Glow Animation - Enhanced Blue Theme */
+@keyframes glow-blue {
   0%, 100% {
-    box-shadow: 0 0 10px #1e3a8a, 0 0 20px #1d4ed8;
+    box-shadow: 0 0 15px rgba(33, 150, 243, 0.4), 0 0 30px rgba(33, 150, 243, 0.2);
   }
   50% {
-    box-shadow: 0 0 20px #3b82f6, 0 0 30px #60a5fa;
+    box-shadow: 0 0 25px rgba(33, 150, 243, 0.6), 0 0 50px rgba(33, 150, 243, 0.3);
   }
 }
 
+.animate-glow-blue {
+  animation: glow-blue 2s ease-in-out infinite;
+}
+
 .animate-glow-dark {
-  animation: glow-dark 2s ease-in-out infinite;
+  animation: glow-blue 2s ease-in-out infinite;
+}
+
+/* Pulse Animation */
+@keyframes pulse-blue {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-blue {
+  animation: pulse-blue 2s ease-in-out infinite;
+}
+
+/* Shimmer Effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(33, 150, 243, 0.1) 0%,
+    rgba(33, 150, 243, 0.3) 50%,
+    rgba(33, 150, 243, 0.1) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
 }

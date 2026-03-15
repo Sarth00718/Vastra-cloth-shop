@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { shopDataContext } from '../context/ShopContext';
-import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
+import { FaStar, FaStarHalfAlt, FaHeart, FaRegHeart } from 'react-icons/fa';
 import RelatedProducts from '../components/RelatedProducts';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 
+
 function ProductDetails() {
   const { productId } = useParams();
-  const { products, currency, addToCart } = useContext(shopDataContext);
+  const { products, currency, addToCart, wishlist, toggleWishlist } = useContext(shopDataContext);
 
   const [productData, setProductData] = useState(null);
   const [image, setImage] = useState('');
@@ -66,6 +67,7 @@ function ProductDetails() {
                     src={img}
                     alt={`Thumbnail ${idx + 1}`}
                     onClick={() => setImage(img)}
+                    referrerPolicy="no-referrer-when-downgrade"
                     className="w-full h-full object-cover cursor-pointer rounded-md"
                   />
                 </div>
@@ -76,6 +78,7 @@ function ProductDetails() {
             <img
               src={image}
               alt={productData.name}
+              referrerPolicy="no-referrer-when-downgrade"
               className="w-full h-[95%] object-cover rounded-lg"
             />
           </div>
@@ -124,14 +127,38 @@ function ProductDetails() {
             </div>
           </div>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="text-base cursor-pointer bg-[#495b61c9] py-2 px-6 rounded-2xl mt-3 border border-[#80808049] text-white shadow-md shadow-black w-fit hover:bg-slate-500"
-            onClick={handleAddToCart}
-          >
-            Add To Cart
-          </motion.button>
+          <div className="flex items-center gap-3 mt-3">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="text-base cursor-pointer bg-[#495b61c9] py-2 px-6 rounded-2xl border border-[#80808049] text-white shadow-md shadow-black hover:bg-slate-500"
+              onClick={handleAddToCart}
+            >
+              Add To Cart
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className={`w-12 h-11 rounded-2xl border flex items-center justify-center transition-all shadow-md ${
+                wishlist.includes(productData._id)
+                  ? 'bg-red-500/20 border-red-500/50 text-red-400'
+                  : 'bg-[#495b61c9] border-[#80808049] text-slate-300 hover:text-red-400 hover:border-red-500/40'
+              }`}
+              onClick={async () => {
+                try {
+                  const added = await toggleWishlist(productData._id);
+                  toast.success(added ? '❤️ Saved to wishlist!' : '💔 Removed from wishlist');
+                } catch {
+                  toast.error('Please log in first');
+                }
+              }}
+              title={wishlist.includes(productData._id) ? 'Remove from wishlist' : 'Add to wishlist'}
+            >
+              {wishlist.includes(productData._id)
+                ? <FaHeart className="text-xl" />
+                : <FaRegHeart className="text-xl" />}
+            </motion.button>
+          </div>
 
           <div className="text-sm md:text-base text-white space-y-1 mt-4">
             <p>✅ 100% Original Product.</p>

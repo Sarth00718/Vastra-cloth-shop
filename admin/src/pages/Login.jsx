@@ -44,18 +44,18 @@ function Login() {
         className="w-full h-[90px] flex items-center justify-start px-[30px] gap-[10px] cursor-pointer"
         onClick={() => navigate("/")}
       >
-        <img className="w-[40px]" src={Vogo} alt="Logo" />
-        <h1 className="text-[22px] text-cyan-300 font-sans">Vastra</h1>
+        <img className="w-[45px] drop-shadow-[0_0_10px_rgba(33,150,243,0.6)]" src={Vogo} alt="Logo" />
+        <h1 className="text-[26px] text-blue-300 font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>Vastra</h1>
       </div>
 
       {/* Title */}
       <div className="w-full h-[100px] flex items-center justify-center flex-col gap-[10px]">
-        <span className="text-[25px] font-semibold">Login</span>
-        <span className="text-[16px]">Welcome back to Vastra , For Admin Login</span>
+        <span className="text-[28px] font-bold text-blue-100" style={{ fontFamily: 'Poppins, sans-serif' }}>Admin Login</span>
+        <span className="text-[17px] text-blue-200/80">Welcome back to Vastra Admin Panel</span>
       </div>
 
       {/* Form Card */}
-      <div className="max-w-[600px] w-[90%] h-[300px] bg-[#00000025] border border-[#96969635] backdrop-blur-2xl rounded-lg shadow-lg flex items-center justify-center">
+      <div className="max-w-[600px] w-[90%] h-[300px] bg-gradient-to-br from-[#0d1f3c]/40 to-[#1a2f4d]/40 border border-blue-700/30 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-blue-900/30 flex items-center justify-center">
         <motion.form
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -94,10 +94,10 @@ function Login() {
               )}
             </div>
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(33, 150, 243, 0.5)" }}
               whileTap={{ scale: 0.95 }}
               type="submit"
-              className="w-full h-[50px] bg-[#333381] rounded-lg flex items-center justify-center mt-[20px] text-[17px] font-semibold"
+              className="w-full h-[50px] bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-lg flex items-center justify-center mt-[20px] text-[17px] font-bold shadow-lg shadow-blue-900/40"
             >
               Login
             </motion.button>

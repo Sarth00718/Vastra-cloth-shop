@@ -1,0 +1,97 @@
+/* -------------------- */
+/* Animations - Blue Theme */
+
+/* Blink Animation */
+.animate-blink-sm {
+  animation: blink 1s ease-in-out infinite;
+}
+
+.animate-blink-md {
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+.animate-blink-lg {
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Fade In Animation */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-in-out;
+}
+
+/* Glow Animation - Blue Theme */
+@keyframes glow-blue {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(33, 150, 243, 0.4), 0 0 30px rgba(33, 150, 243, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(33, 150, 243, 0.6), 0 0 50px rgba(33, 150, 243, 0.3);
+  }
+}
+
+.animate-glow-blue {
+  animation: glow-blue 2s ease-in-out infinite;
+}
+
+/* Pulse Animation */
+@keyframes pulse-blue {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-blue {
+  animation: pulse-blue 2s ease-in-out infinite;
+}
+
+/* Slide In Animation */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s ease-out;
+}
+
+/* Shimmer Effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(33, 150, 243, 0.1) 0%,
+    rgba(33, 150, 243, 0.3) 50%,
+    rgba(33, 150, 243, 0.1) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}

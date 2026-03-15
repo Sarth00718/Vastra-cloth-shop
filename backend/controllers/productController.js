@@ -17,7 +17,7 @@ export const addProduct = async (req, res) => {
             category: category,
             subCategory: subCategory,
             sizes: JSON.parse(sizes),
-            bestseller: bestseller === "true" ? "true" : "false",
+            bestseller: bestseller === "true" || bestseller === true,
             image1: image1,
             image2: image2,
             image3: image3,
@@ -55,3 +55,18 @@ export const removeProduct = async (req, res) => {
         res.status(500).json({ message: "Remove Product Error" });
     }
 }
+
+//remove all products
+export const removeAllProducts = async (req, res) => {
+    try {
+        const result = await Product.deleteMany({});
+        res.status(200).json({ 
+            message: "All Products Removed Successfully", 
+            deletedCount: result.deletedCount 
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Remove All Products Error" });
+    }
+}
+

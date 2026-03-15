@@ -8,6 +8,8 @@ import userRoutes from './routes/userRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import cartRoutes from './routes/cartRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
+import wishlistRoutes from './routes/wishlistRoutes.js'
+import assetRoutes from './routes/assetRoutes.js'
 dotenv.config();
 
 const app = express();
@@ -21,7 +23,8 @@ app.use(cors({
     "https://vastra-cloth-shop-frontend.onrender.com",
     "https://vastra-cloth-shop-admin.onrender.com",
     "http://localhost:5173",
-    "http://localhost:5174"
+    "http://localhost:5174",
+    "http://localhost:5000"
   ],
   credentials: true
 }))
@@ -34,6 +37,8 @@ app.use('/api/user', userRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/order', orderRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/assets', assetRoutes);
 
 //localhost
 app.listen(PORT, () => {

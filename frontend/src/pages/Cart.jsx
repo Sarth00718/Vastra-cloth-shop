@@ -62,6 +62,7 @@ function Cart() {
                                             className="w-[100px] h-[100px] rounded-md object-cover"
                                             src={productData.image1}
                                             alt={productData.name}
+                                            referrerPolicy="no-referrer-when-downgrade"
                                         />
                                         <div className="flex flex-col gap-3 flex-1">
                                             <p className="text-lg md:text-xl text-[#f3f9fc]">

@@ -81,6 +81,7 @@ function Order() {
                             <img
                                 src={item.image1}
                                 alt={item.name || 'Order item'}
+                                referrerPolicy="no-referrer-when-downgrade"
                                 className="w-full md:w-[130px] h-[200px] md:h-[130px] rounded-md object-cover"
                             />
 

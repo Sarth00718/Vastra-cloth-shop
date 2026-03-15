@@ -1,25 +1,17 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { authDataContext } from './AuthContext.jsx';
-import axios from 'axios';
+import { createContext, useEffect, useState } from 'react';
+import { authService } from '../services/authService';
 
 export const userDataContext = createContext();
 
 function UserContext({ children }) {
     const [user, setUser] = useState("");
-    const { serverurl } = useContext(authDataContext);
 
     const getCurrentUser = async () => {
         try {
-            const result = await axios.post(`${serverurl}/api/user/getcurrentuser`, {}, {
-                withCredentials: true,
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            setUser(result.data);
-            console.log(result.data);
+            const result = await authService.getCurrentUser();
+            setUser(result);
+            console.log(result);
         } catch (error) {
-
             if (error.response?.status === 401) {
                 console.log("User not authenticated");
                 setUser(null);

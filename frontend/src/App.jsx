@@ -15,6 +15,7 @@ import Cart from './pages/Cart';
 import PlaceOrder from './pages/PlaceOrder';
 import Order from './pages/Order';
 import NotFound from './pages/NotFound';
+import Wishlist from './pages/Wishlist';
 import { Toaster } from 'react-hot-toast';
 import VastraLoadingScreen from './components/VastraLoadingScreen'; 
 
@@ -145,6 +146,16 @@ function App() {
             element={
               user ? (
                 <Order />
+              ) : (
+                <Navigate to="/login" state={{ from: location.pathname }} />
+              )
+            }
+          />
+          <Route
+            path="/wishlist"
+            element={
+              user ? (
+                <Wishlist />
               ) : (
                 <Navigate to="/login" state={{ from: location.pathname }} />
               )

@@ -56,7 +56,18 @@ function Registration() {
       navigate("/");
     }
     catch (error) {
-      toast.error("Google sign-in failed. Please try again.");
+      console.error("Google signup error:", error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        toast.error("Sign-up cancelled. Please try again.");
+      } else if (error.code === 'auth/popup-blocked') {
+        toast.error("Popup blocked. Please allow popups for this site.");
+      } else if (error.response) {
+        toast.error(error.response.data.message || "Server error. Please try again.");
+      } else if (error.request) {
+        toast.error("Network error. Please check your connection.");
+      } else {
+        toast.error("Google sign-in failed. Please try again.");
+      }
     }
   };
 
@@ -72,36 +83,36 @@ function Registration() {
         className="w-full h-[60px] flex items-center justify-start px-[30px] gap-[10px] cursor-pointer"
         onClick={() => navigate("/")}
       >
-        <img className="w-[40px]" src={Vogo} alt="Logo" />
-        <h1 className="text-[22px] text-cyan-300 font-sans">Vastra</h1>
+        <img className="w-[45px] drop-shadow-[0_0_10px_rgba(33,150,243,0.6)]" src={Vogo} alt="Logo" />
+        <h1 className="text-[26px] text-blue-300 font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>Vastra</h1>
       </div>
 
       {/* Title Section */}
       <div className="w-full h-[100px] flex items-center justify-center flex-col gap-[10px]">
-        <span className="text-[25px] font-semibold">Registration </span>
-        <span className="text-[16px]">Welcome to Vastra, place your order</span>
+        <span className="text-[28px] font-bold text-blue-100" style={{ fontFamily: 'Poppins, sans-serif' }}>Registration</span>
+        <span className="text-[17px] text-blue-200/80">Welcome to Vastra, place your order</span>
       </div>
 
       {/* Form Card */}
-      <div className="max-w-[600px] w-[90%] h-[500px] bg-[#00000025] border border-[#96969635] backdrop-blur-2xl rounded-lg shadow-lg flex items-center justify-center">
+      <div className="max-w-[600px] w-[90%] h-[500px] bg-gradient-to-br from-[#0d1f3c]/40 to-[#1a2f4d]/40 border border-blue-700/30 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-blue-900/30 flex items-center justify-center">
         <form
           className="w-[90%] h-[90%] flex flex-col items-center justify-start gap-[20px]"
           onSubmit={handleSignup}
         >
           <motion.div
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(33, 150, 243, 0.4)" }}
             whileTap={{ scale: 0.95 }}
-            className="w-[90%] h-[50px] bg-[#2a3e78] rounded-lg flex items-center justify-center gap-[10px] py-[20px] cursor-pointer"
+            className="w-[90%] h-[50px] bg-gradient-to-r from-blue-700 to-blue-600 rounded-lg flex items-center justify-center gap-[10px] py-[20px] cursor-pointer shadow-lg shadow-blue-900/30 font-semibold"
             onClick={googlesignup}
           >
-            <img src={google} alt="Google icon" className="w-[20px]" />
+            <img src={google} alt="Google icon" className="w-[22px]" />
             Register with Google
           </motion.div>
 
-          <div className="w-[100%] h-[20px] flex justify-center items-center gap-[10px]">
-            <div className="w-[40%] h-[1px] bg-[rgb(52,88,85)]" />
+          <div className="w-[100%] h-[20px] flex justify-center items-center gap-[10px] text-blue-300/70">
+            <div className="w-[40%] h-[1px] bg-blue-700/40" />
             OR
-            <div className="w-[40%] h-[1px] bg-[rgb(52,88,85)]" />
+            <div className="w-[40%] h-[1px] bg-blue-700/40" />
           </div>
 
           <div className="w-[87%] flex flex-col items-center justify-center gap-[15px]">
@@ -153,17 +164,17 @@ function Registration() {
             </div>
             <motion.button
               type="submit"
-              className="w-full h-[50px] bg-[#333381] rounded-lg flex items-center justify-center mt-[20px] text-[17px] font-semibold"
-              whileHover={{ scale: 1.05 }}
+              className="w-full h-[50px] bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-lg flex items-center justify-center mt-[20px] text-[17px] font-bold shadow-lg shadow-blue-900/40"
+              whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(33, 150, 243, 0.5)" }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               Create Account
             </motion.button>
-            <p className="flex gap-[10px]">
+            <p className="flex gap-[10px] text-blue-200">
               Already have an account?
               <span
-                className="text-[#5555f6cf] text-[17px] font-semibold cursor-pointer"
+                className="text-blue-400 text-[17px] font-semibold cursor-pointer hover:text-blue-300 transition-colors"
                 onClick={() => navigate("/login")}
               >
                 Login
