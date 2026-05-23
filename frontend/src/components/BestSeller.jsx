@@ -1,46 +1,49 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
+import { motion } from 'framer-motion';
 import Titles from './Titles';
-import Card from './Card';
+import Card, { CardSkeleton } from './Card';
 import { shopDataContext } from '../context/ShopContext';
 
 function BestSeller() {
-  const { products } = useContext(shopDataContext);
-  const [bestSellers, setBestSellers] = useState([]);
-
-  useEffect(() => {
-    if (products && products.length > 0) {
-      const filtered = products.filter((item) => item.bestseller === true || item.bestseller === "true");
-      setBestSellers(filtered.slice(0, 5));
-    }
-  }, [products]);
+  const { products, productsLoading } = useContext(shopDataContext);
+  const bestSellers = products.filter(p => p.bestseller === true || p.bestseller === 'true').slice(0, 5);
 
   return (
-    <div>
-      {/* Section Title */}
-      <div className="h-[8%] w-full text-center mt-[50px]">
-        <Titles text1="BEST" text2="SELLER" />
-        <p className="w-full m-auto text-[13px] md:text-[20px] px-[10px] text-blue-100">
-          Tried, Tested, Loved — Discover Our All-Time Best Sellers.
+    <section className="w-full py-14 px-4">
+      <div className="text-center mb-3">
+        <Titles text1="BEST" text2="SELLERS" />
+        <p className="text-slate-400 text-sm md:text-base mt-2">
+          Tried, tested, loved — our all-time favourites
         </p>
       </div>
 
-      {/* Product Grid */}
-      <div className="w-full h-[50%] mt-[30px] flex items-center justify-center flex-wrap gap-[50px] px-4 ">
-        {bestSellers.length === 0 ? (
-          <p className="text-white">No best sellers available.</p>
+      <div className="flex flex-wrap justify-center gap-6 mt-8">
+        {productsLoading ? (
+          Array.from({ length: 5 }).map((_, i) => <CardSkeleton key={i} />)
+        ) : bestSellers.length === 0 ? (
+          <p className="text-slate-500 text-sm">No bestsellers available.</p>
         ) : (
-          bestSellers.map((item, index) => (
-            <Card
-              key={index}
-              id={item._id} 
-              image={item.image1}
-              name={item.name}
-              price={item.price}
-            />
+          bestSellers.map((item, i) => (
+            <motion.div
+              key={item._id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08 }}
+            >
+              <Card
+                id={item._id}
+                image={item.image1}
+                name={item.name}
+                price={item.price}
+                category={item.category}
+                sizes={item.sizes}
+              />
+            </motion.div>
           ))
         )}
       </div>
-    </div>
+    </section>
   );
 }
 

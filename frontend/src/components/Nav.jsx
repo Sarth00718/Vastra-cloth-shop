@@ -19,6 +19,7 @@ function Nav() {
   const { showSearch, setShowSearch, search, setSearch, getCardCount } = useContext(shopDataContext);
   const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
+  const iconButtonClass = "w-10 h-10 rounded-full flex items-center justify-center border border-slate-700/50 bg-slate-900/40 text-slate-300 hover:text-blue-300 hover:border-blue-500/50 transition-all";
 
   const handleLogout = async () => {
     try {
@@ -92,9 +93,13 @@ function Nav() {
           >
             <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
             {showSearch ? (
-              <IoSearchCircleSharp className="w-9 h-9 text-blue-400 cursor-pointer hover:text-blue-300 transition-colors relative" onClick={() => setShowSearch(false)} />
+              <button className={`${iconButtonClass} relative`} onClick={() => setShowSearch(false)}>
+                <IoSearchCircleSharp className="w-6 h-6 text-blue-400" />
+              </button>
             ) : (
-              <IoSearchCircleOutline className="w-9 h-9 text-slate-400 cursor-pointer hover:text-blue-400 transition-colors relative" onClick={() => { setShowSearch(true); navigate("/collections"); }} />
+              <button className={`${iconButtonClass} relative`} onClick={() => { setShowSearch(true); navigate("/collections"); }}>
+                <IoSearchCircleOutline className="w-6 h-6" />
+              </button>
             )}
           </motion.div>
 
@@ -103,7 +108,9 @@ function Nav() {
             {!user ? (
               <div className="relative">
                 <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                <FaCircleUser className="w-8 h-8 text-slate-400 cursor-pointer hover:text-blue-400 transition-colors relative" onClick={() => setShowProfile((prev) => !prev)} />
+                <button className={`${iconButtonClass} relative`} onClick={() => setShowProfile((prev) => !prev)}>
+                  <FaCircleUser className="w-6 h-6" />
+                </button>
               </div>
             ) : (
               <div className="relative">
@@ -148,7 +155,9 @@ function Nav() {
           {/* Premium Cart */}
           <motion.div whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.05 }} className="relative cursor-pointer group">
             <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-            <MdOutlineShoppingCart className="w-8 h-8 text-slate-400 hidden md:block hover:text-blue-400 transition-colors relative" onClick={() => navigate('/cart')} />
+            <button className={`${iconButtonClass} relative hidden md:flex`} onClick={() => navigate('/cart')}>
+              <MdOutlineShoppingCart className="w-6 h-6" />
+            </button>
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}

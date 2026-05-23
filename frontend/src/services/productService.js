@@ -1,15 +1,14 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import api from './api.js';
 
 export const productService = {
-    getProducts: async () => {
-        try {
-            const response = await axios.get(`${API_URL}/api/product/list`);
-            return response.data;
-        } catch (error) {
-            console.error("Error fetching products:", error);
-            throw error;
-        }
-    }
+  getProducts: async (params = {}) => {
+    const response = await api.get('/api/product/list', { params });
+    // Support both old shape {products:[]} and new paginated shape {data:[]}
+    return { products: response.data.data || response.data.products || [] };
+  },
+
+  getProduct: async (id) => {
+    const response = await api.get(`/api/product/${id}`);
+    return response.data.product;
+  },
 };

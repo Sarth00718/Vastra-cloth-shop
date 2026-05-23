@@ -1,169 +1,87 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useContext, lazy, Suspense } from 'react';
 import './App.css';
-import Home from './pages/Home';
-import Registration from './pages/Registration';
-import Login from './pages/Login';
-import About from './pages/About';
-import Contects from './pages/Contects';
-import Collections from './pages/Collections';
-import Product from './pages/Product';
-import Nav from './components/Nav';
-import { useContext, useState, useEffect } from 'react';
-import { userDataContext } from './context/UserContext';
-import ProductDetails from './pages/ProductDetails';
-import Cart from './pages/Cart';
-import PlaceOrder from './pages/PlaceOrder';
-import Order from './pages/Order';
-import NotFound from './pages/NotFound';
-import Wishlist from './pages/Wishlist';
 import { Toaster } from 'react-hot-toast';
-import VastraLoadingScreen from './components/VastraLoadingScreen'; 
+import { userDataContext } from './context/UserContext';
+import Nav from './components/Nav';
+import Footer from './components/Footer';
+import SkeletonPage from './components/SkeletonPage';
+
+// ─── LAZY ROUTES ─────────────────────────────────────────────────────────────
+const Home = lazy(() => import('./pages/Home'));
+const Registration = lazy(() => import('./pages/Registration'));
+const Login = lazy(() => import('./pages/Login'));
+const About = lazy(() => import('./pages/About'));
+const Contects = lazy(() => import('./pages/Contects'));
+const Collections = lazy(() => import('./pages/Collections'));
+const Product = lazy(() => import('./pages/Product'));
+const ProductDetails = lazy(() => import('./pages/ProductDetails'));
+const Cart = lazy(() => import('./pages/Cart'));
+const PlaceOrder = lazy(() => import('./pages/PlaceOrder'));
+const Order = lazy(() => import('./pages/Order'));
+const Wishlist = lazy(() => import('./pages/Wishlist'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+
+// ─── PROTECTED ROUTE ─────────────────────────────────────────────────────────
+function ProtectedRoute({ children }) {
+  const { user } = useContext(userDataContext);
+  const location = useLocation();
+  if (!user) return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  return children;
+}
+
+// ─── GUEST ROUTE (redirect authenticated users away from login/signup) ────────
+function GuestRoute({ children }) {
+  const { user } = useContext(userDataContext);
+  const location = useLocation();
+  if (user) return <Navigate to={location.state?.from || '/'} replace />;
+  return children;
+}
+
+// ─── PAGES WITHOUT FOOTER ────────────────────────────────────────────────────
+const NO_FOOTER_PATHS = ['/login', '/signup'];
 
 function App() {
   const { user } = useContext(userDataContext);
   const location = useLocation();
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 1500); // Adjust as needed
-    return () => clearTimeout(timer);
-  }, [location.pathname]);
+  const showFooter = !NO_FOOTER_PATHS.includes(location.pathname);
 
   return (
     <>
-      <Toaster />
-      <VastraLoadingScreen isVisible={isLoading} />
-      <div
-        className={`transition-opacity duration-300 ${
-          isLoading ? 'opacity-0' : 'opacity-100'
-        }`}
-      >
-        {user && <Nav />}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: '#1e293b',
+            color: '#f1f5f9',
+            border: '1px solid #334155',
+          },
+        }}
+      />
+      {user && <Nav />}
+      <Suspense fallback={<SkeletonPage />}>
         <Routes>
-          <Route
-            path="/"
-            element={
-              user ? (
-                <Home />
-              ) : (
-                <Navigate to="/login" state={{ from: location.pathname }} />
-              )
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              user ? (
-                <Navigate to={location.state?.from || '/'} />
-              ) : (
-                <Registration />
-              )
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              user ? (
-                <Navigate to={location.state?.from || '/'} />
-              ) : (
-                <Login />
-              )
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              user ? (
-                <About />
-              ) : (
-                <Navigate to="/login" state={{ from: location.pathname }} />
-              )
-            }
-          />
-          <Route
-            path="/contects"
-            element={
-              user ? (
-                <Contects />
-              ) : (
-                <Navigate to="/login" state={{ from: location.pathname }} />
-              )
-            }
-          />
-          <Route
-            path="/collections"
-            element={
-              user ? (
-                <Collections />
-              ) : (
-                <Navigate to="/login" state={{ from: location.pathname }} />
-              )
-            }
-          />
-          <Route
-            path="/product"
-            element={
-              user ? (
-                <Product />
-              ) : (
-                <Navigate to="/login" state={{ from: location.pathname }} />
-              )
-            }
-          />
-          <Route
-            path="/productdetails/:productId"
-            element={
-              user ? (
-                <ProductDetails />
-              ) : (
-                <Navigate to="/login" state={{ from: location.pathname }} />
-              )
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              user ? (
-                <Cart />
-              ) : (
-                <Navigate to="/login" state={{ from: location.pathname }} />
-              )
-            }
-          />
-          <Route
-            path="/placeorder"
-            element={
-              user ? (
-                <PlaceOrder />
-              ) : (
-                <Navigate to="/login" state={{ from: location.pathname }} />
-              )
-            }
-          />
-          <Route
-            path="/order"
-            element={
-              user ? (
-                <Order />
-              ) : (
-                <Navigate to="/login" state={{ from: location.pathname }} />
-              )
-            }
-          />
-          <Route
-            path="/wishlist"
-            element={
-              user ? (
-                <Wishlist />
-              ) : (
-                <Navigate to="/login" state={{ from: location.pathname }} />
-              )
-            }
-          />
+          {/* Guest routes */}
+          <Route path="/signup" element={<GuestRoute><Registration /></GuestRoute>} />
+          <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+
+          {/* Protected routes */}
+          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+          <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
+          <Route path="/contects" element={<ProtectedRoute><Contects /></ProtectedRoute>} />
+          <Route path="/collections" element={<ProtectedRoute><Collections /></ProtectedRoute>} />
+          <Route path="/product" element={<ProtectedRoute><Product /></ProtectedRoute>} />
+          <Route path="/productdetails/:productId" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>} />
+          <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+          <Route path="/placeorder" element={<ProtectedRoute><PlaceOrder /></ProtectedRoute>} />
+          <Route path="/order" element={<ProtectedRoute><Order /></ProtectedRoute>} />
+          <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
+
+          {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </div>
+      </Suspense>
+      {user && showFooter && <Footer />}
     </>
   );
 }

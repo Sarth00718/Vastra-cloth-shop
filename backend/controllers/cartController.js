@@ -1,82 +1,50 @@
-import { User } from "../models/userModel.js";
+import { User } from '../models/userModel.js';
+import { asyncHandler } from '../middlewares/errorHandler.js';
+import { sendSuccess, sendError } from '../utils/apiResponse.js';
 
-//add to cart
-export const addToCart = async (req, res) => {
-    try {
-        const { itemId, size } = req.body;
-        const user = await User.findOne({ _id: req.userId });
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        let cartData = await user.cartData || {};
-        if (cartData[itemId]) {
-            if (cartData[itemId][size]) {
-                cartData[itemId][size] += 1;
-            }
-            else {
-                cartData[itemId][size] = 1;
-            }
-        } else {
-            cartData[itemId] = {};
-            cartData[itemId][size] = 1;
-        }
-        await User.findByIdAndUpdate(req.userId, { cartData });
-        res.json({ message: "Item added to cart" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-}
+// ─── ADD TO CART ──────────────────────────────────────────────────────────────
+export const addToCart = asyncHandler(async (req, res) => {
+  const { itemId, size } = req.body;
+  if (!itemId || !size) return sendError(res, 'itemId and size are required', 400);
 
-//update cart
-export const updateCart = async (req, res) => {
-    try {
-        const { itemId, size, quantity } = req.body;
-        const user = await User.findOne({ _id: req.userId });
+  const user = await User.findById(req.userId);
+  if (!user) return sendError(res, 'User not found', 404);
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
+  const cartData = user.cartData || {};
+  if (!cartData[itemId]) cartData[itemId] = {};
+  cartData[itemId][size] = (cartData[itemId][size] || 0) + 1;
 
-        let cartData = user.cartData || {};
+  await User.findByIdAndUpdate(req.userId, { cartData });
+  return sendSuccess(res, { cartData }, 'Item added to cart');
+});
 
-        // Initialize item if it doesn't exist
-        if (!cartData[itemId]) {
-            cartData[itemId] = {};
-        }
+// ─── UPDATE CART ──────────────────────────────────────────────────────────────
+export const updateCart = asyncHandler(async (req, res) => {
+  const { itemId, size, quantity } = req.body;
+  if (!itemId || !size || quantity === undefined) {
+    return sendError(res, 'itemId, size and quantity are required', 400);
+  }
 
-        if (quantity === 0) {
-            // Remove size from item
-            delete cartData[itemId][size];
+  const user = await User.findById(req.userId);
+  if (!user) return sendError(res, 'User not found', 404);
 
-            // If no sizes left, remove the item entirely
-            if (Object.keys(cartData[itemId]).length === 0) {
-                delete cartData[itemId];
-            }
-        } else {
-            // Set or update quantity
-            cartData[itemId][size] = quantity;
-        }
+  const cartData = user.cartData || {};
+  if (!cartData[itemId]) cartData[itemId] = {};
 
-        await User.findByIdAndUpdate(req.userId, { cartData });
-        res.json({ message: "Cart updated" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
+  if (quantity <= 0) {
+    delete cartData[itemId][size];
+    if (Object.keys(cartData[itemId]).length === 0) delete cartData[itemId];
+  } else {
+    cartData[itemId][size] = quantity;
+  }
 
-//getcartuser
-export const getCartUser = async (req, res) => {
-    try {
-        const user = await User.findOne({ _id: req.userId });
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        let cartData = await user.cartData || {};
-        res.status(200).json(cartData);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-}
+  await User.findByIdAndUpdate(req.userId, { cartData });
+  return sendSuccess(res, { cartData }, 'Cart updated');
+});
+
+// ─── GET CART ─────────────────────────────────────────────────────────────────
+export const getCartUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.userId).select('cartData').lean();
+  if (!user) return sendError(res, 'User not found', 404);
+  return sendSuccess(res, { cartData: user.cartData || {} });
+});

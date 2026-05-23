@@ -1,65 +1,52 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { FaListUl } from 'react-icons/fa';
-import { MdOutlineReceiptLong } from 'react-icons/md';
-import { motion } from 'framer-motion';
+import { MdOutlineReceiptLong, MdDashboard } from 'react-icons/md';
+
+const NAV_ITEMS = [
+  { label: 'Dashboard', icon: MdDashboard, path: '/' },
+  { label: 'Add Product', icon: IoIosAddCircleOutline, path: '/add' },
+  { label: 'Products', icon: FaListUl, path: '/lists' },
+  { label: 'Orders', icon: MdOutlineReceiptLong, path: '/orders' },
+];
 
 function Sidebar() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   return (
-    <motion.div
-      initial={{ x: -100, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-      className='w-[18%] min-h-[100vh] py-[60px] border-r border-slate-800/50 fixed top-0 left-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 z-[5]'
-    >
-      {/* Premium Right Border */}
-      <div className="absolute top-0 right-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-blue-500/30 to-transparent" />
-      <div className='flex flex-col gap-5 pt-[40px] pl-[20%] text-[15px] relative z-10' style={{ fontFamily: 'Inter, sans-serif' }}>
+    <aside className="w-[240px] min-h-screen fixed top-0 left-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 border-r border-slate-800/60 z-[5] pt-[75px]">
+      {/* Decorative right gradient */}
+      <div className="absolute top-0 right-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-blue-500/25 to-transparent" />
 
-        {/* Premium Add Items */}
-        <motion.div
-          whileTap={{ scale: 0.95 }}
-          whileHover={{ x: 8 }}
-          className='relative flex items-center justify-center md:justify-start gap-3 border border-slate-700/50 border-r-0 px-5 py-4 cursor-pointer text-slate-300 rounded-l-2xl transition-all duration-300 font-semibold group overflow-hidden'
-          onClick={() => navigate('/add')}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 to-blue-600/0 group-hover:from-blue-600/20 group-hover:to-purple-600/20 transition-all duration-300" />
-          <IoIosAddCircleOutline className='w-[24px] h-[24px] relative z-10 group-hover:text-blue-400 transition-colors' />
-          <p className='hidden md:block relative z-10 group-hover:text-white transition-colors'>Add items</p>
-          <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-blue-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity rounded-l-2xl" />
-        </motion.div>
-
-        {/* Premium List Items */}
-        <motion.div
-          whileTap={{ scale: 0.95 }}
-          whileHover={{ x: 8 }}
-          className='relative flex items-center justify-center md:justify-start gap-3 border border-slate-700/50 border-r-0 px-5 py-4 cursor-pointer text-slate-300 rounded-l-2xl transition-all duration-300 font-semibold group overflow-hidden'
-          onClick={() => navigate('/lists')}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 to-blue-600/0 group-hover:from-blue-600/20 group-hover:to-purple-600/20 transition-all duration-300" />
-          <FaListUl className='w-[24px] h-[24px] relative z-10 group-hover:text-blue-400 transition-colors' />
-          <p className='hidden md:block relative z-10 group-hover:text-white transition-colors'>List items</p>
-          <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-blue-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity rounded-l-2xl" />
-        </motion.div>
-
-        {/* Premium View Orders */}
-        <motion.div
-          whileTap={{ scale: 0.95 }}
-          whileHover={{ x: 8 }}
-          className='relative flex items-center justify-center md:justify-start gap-3 border border-slate-700/50 border-r-0 px-5 py-4 cursor-pointer text-slate-300 rounded-l-2xl transition-all duration-300 font-semibold group overflow-hidden'
-          onClick={() => navigate('/orders')}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 to-blue-600/0 group-hover:from-blue-600/20 group-hover:to-purple-600/20 transition-all duration-300" />
-          <MdOutlineReceiptLong className='w-[24px] h-[24px] relative z-10 group-hover:text-blue-400 transition-colors' />
-          <p className='hidden md:block relative z-10 group-hover:text-white transition-colors'>View Orders</p>
-          <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-blue-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity rounded-l-2xl" />
-        </motion.div>
-
-      </div>
-    </motion.div>
+      <nav className="flex flex-col gap-1 px-3 pt-6">
+        {NAV_ITEMS.map(({ label, icon: Icon, path }) => {
+          const isActive = pathname === path;
+          return (
+            <motion.button
+              key={path}
+              whileHover={{ x: 4 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => navigate(path)}
+              className={`relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all group w-full text-left ${
+                isActive
+                  ? 'bg-blue-600/20 text-blue-300 border border-blue-500/30'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              {/* Active indicator */}
+              {isActive && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-gradient-to-b from-blue-500 to-purple-600 rounded-r-full" />
+              )}
+              <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-blue-400' : 'group-hover:text-blue-400 transition-colors'}`} />
+              <span>{label}</span>
+              {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-400" />}
+            </motion.button>
+          );
+        })}
+      </nav>
+    </aside>
   );
 }
 

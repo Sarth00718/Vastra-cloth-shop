@@ -1,56 +1,34 @@
-import { User } from "../models/userModel.js";
+import { User } from '../models/userModel.js';
+import { asyncHandler } from '../middlewares/errorHandler.js';
+import { sendSuccess, sendError } from '../utils/apiResponse.js';
 
-// Get user's wishlist
-export const getWishlist = async (req, res) => {
-    try {
-        const user = await User.findById(req.userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        res.status(200).json({ wishlist: user.wishlist || [] });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
+// ─── GET WISHLIST ─────────────────────────────────────────────────────────────
+export const getWishlist = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.userId).select('wishlist').lean();
+  if (!user) return sendError(res, 'User not found', 404);
+  return sendSuccess(res, { wishlist: user.wishlist || [] });
+});
 
-// Toggle product in wishlist (add if not present, remove if present)
-export const toggleWishlist = async (req, res) => {
-    try {
-        const { productId } = req.body;
-        if (!productId) {
-            return res.status(400).json({ message: "Product ID is required" });
-        }
+// ─── TOGGLE WISHLIST ──────────────────────────────────────────────────────────
+export const toggleWishlist = asyncHandler(async (req, res) => {
+  const { productId } = req.body;
+  if (!productId) return sendError(res, 'productId is required', 400);
 
-        const user = await User.findById(req.userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
+  const user = await User.findById(req.userId);
+  if (!user) return sendError(res, 'User not found', 404);
 
-        const wishlist = user.wishlist || [];
-        const index = wishlist.indexOf(productId);
+  const wishlist = user.wishlist || [];
+  const idx = wishlist.indexOf(productId);
+  const added = idx === -1;
 
-        let added;
-        if (index === -1) {
-            // Add to wishlist
-            wishlist.push(productId);
-            added = true;
-        } else {
-            // Remove from wishlist
-            wishlist.splice(index, 1);
-            added = false;
-        }
+  if (added) {
+    wishlist.push(productId);
+  } else {
+    wishlist.splice(idx, 1);
+  }
 
-        user.wishlist = wishlist;
-        await user.save();
+  user.wishlist = wishlist;
+  await user.save();
 
-        res.status(200).json({
-            message: added ? "Added to wishlist" : "Removed from wishlist",
-            wishlist,
-            added,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
+  return sendSuccess(res, { wishlist, added }, added ? 'Added to wishlist' : 'Removed from wishlist');
+});

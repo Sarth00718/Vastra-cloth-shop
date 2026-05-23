@@ -29,12 +29,7 @@ function Nav() {
   };
 
   return (
-    <motion.div
-      className="w-screen fixed top-0 z-10 bg-gradient-to-r from-slate-950/95 via-slate-900/95 to-slate-950/95 shadow-2xl border-b border-slate-800/50 backdrop-blur-xl"
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
+    <div className="w-screen fixed top-0 z-10 bg-gradient-to-r from-slate-950/95 via-slate-900/95 to-slate-950/95 shadow-2xl border-b border-slate-800/50 backdrop-blur-xl">
       {/* Premium Top Border */}
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
       
@@ -47,24 +42,18 @@ function Nav() {
         >
           <div className="relative">
             <div className="absolute inset-0 bg-blue-500/20 blur-lg rounded-full" />
-            <motion.img
+            <img
               src={logo}
               alt="logo"
               className="w-[40px] relative drop-shadow-[0_0_15px_rgba(59,130,246,0.8)]"
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ delay: 0.4, duration: 0.5, type: "spring" }}
             />
           </div>
-          <motion.h1
+          <h1
             className="text-[30px] font-bold bg-gradient-to-r from-white via-blue-100 to-blue-200 bg-clip-text text-transparent"
             style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '-0.02em' }}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
           >
             Vastra
-          </motion.h1>
+          </h1>
         </div>
 
         {/* Premium Logout Button */}
@@ -82,7 +71,7 @@ function Nav() {
           </ul>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

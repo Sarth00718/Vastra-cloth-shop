@@ -1,168 +1,277 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { FiFilter } from "react-icons/fi";
+import { useContext, useEffect, useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiFilter, FiX } from 'react-icons/fi';
+import { MdOutlineTune } from 'react-icons/md';
 import Titles from '../components/Titles';
-import Card from '../components/Card';
+import Card, { CardSkeleton } from '../components/Card';
 import { shopDataContext } from '../context/ShopContext';
-import { toast } from 'react-toastify';
 
+const CATEGORIES = ['Men', 'Women', 'Kids'];
+const SUBCATEGORIES = ['Topwear', 'Bottomwear', 'Winterwear'];
+const SORT_OPTIONS = [
+  { value: 'relevant', label: 'Most Relevant' },
+  { value: 'low-high', label: 'Price: Low → High' },
+  { value: 'high-low', label: 'Price: High → Low' },
+  { value: 'newest', label: 'Newest First' },
+];
+
+function FilterChip({ label, onRemove }) {
+  return (
+    <span className="flex items-center gap-1.5 bg-blue-600/20 text-blue-300 text-xs font-medium px-3 py-1 rounded-full border border-blue-500/30">
+      {label}
+      <button onClick={onRemove} className="hover:text-white transition-colors">
+        <FiX className="w-3 h-3" />
+      </button>
+    </span>
+  );
+}
 
 function Collections() {
-  const { products, search, showSearch } = useContext(shopDataContext);
+  const { products, search, showSearch, productsLoading } = useContext(shopDataContext);
   const [showFilters, setShowFilters] = useState(false);
-  const [showSort, setShowSort] = useState('relevant');
-  const [filterProduct, setFilterProduct] = useState([]);
-  const [category, setCategory] = useState([]);
-  const [subCategory, setSubCategory] = useState([]);
+  const [sortBy, setSortBy] = useState('relevant');
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedSubcategories, setSelectedSubcategories] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [bestseller, setBestseller] = useState(false);
 
-  const toggleCategory = (e) => {
-    const value = e.target.value;
-    setCategory((prev) =>
-      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
-    );
+  const toggle = (arr, setter, value) => {
+    setter((prev) => prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]);
   };
 
-  const toggleSubCategory = (e) => {
-    const value = e.target.value;
-    setSubCategory((prev) =>
-      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
-    );
-  };
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
 
-  const applyFilter = () => {
-    let productcopy = products.slice();
     if (search && showSearch) {
-      productcopy = productcopy.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase())
-      );
+      result = result.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
     }
-    if (category.length > 0) {
-      productcopy = productcopy.filter((item) => category.includes(item.category));
+    if (selectedCategories.length > 0) {
+      result = result.filter((p) => selectedCategories.includes(p.category));
     }
-    if (subCategory.length > 0) {
-      productcopy = productcopy.filter((item) => subCategory.includes(item.subCategory));
+    if (selectedSubcategories.length > 0) {
+      result = result.filter((p) => selectedSubcategories.includes(p.subCategory));
     }
-    if (productcopy.length === 0) {
-      toast.warning('No matching products found.');
+    if (bestseller) {
+      result = result.filter((p) => p.bestseller);
     }
-    setFilterProduct(productcopy);
+    result = result.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
+
+    switch (sortBy) {
+      case 'low-high': result.sort((a, b) => a.price - b.price); break;
+      case 'high-low': result.sort((a, b) => b.price - a.price); break;
+      case 'newest': result.sort((a, b) => b.date - a.date); break;
+      default: break;
+    }
+
+    return result;
+  }, [products, search, showSearch, selectedCategories, selectedSubcategories, bestseller, priceRange, sortBy]);
+
+  const activeFilters = [
+    ...selectedCategories.map((c) => ({ label: c, remove: () => toggle(selectedCategories, setSelectedCategories, c) })),
+    ...selectedSubcategories.map((s) => ({ label: s, remove: () => toggle(selectedSubcategories, setSelectedSubcategories, s) })),
+    ...(bestseller ? [{ label: 'Bestsellers', remove: () => setBestseller(false) }] : []),
+  ];
+
+  const clearAll = () => {
+    setSelectedCategories([]);
+    setSelectedSubcategories([]);
+    setBestseller(false);
+    setPriceRange([0, 10000]);
+    setSortBy('relevant');
   };
 
-  const sortProducts = () => {
-    let fpcopy = [...filterProduct];
-    switch (showSort) {
-      case 'low-high':
-        fpcopy.sort((a, b) => a.price - b.price);
-        break;
-      case 'high-low':
-        fpcopy.sort((a, b) => b.price - a.price);
-        break;
-      default:
-        applyFilter();
-        return;
-    }
-    setFilterProduct(fpcopy);
-  };
-
-  useEffect(() => {
-    sortProducts();
-  }, [showSort]);
-
-  useEffect(() => {
-    setFilterProduct(products);
-  }, [products]);
-
-  useEffect(() => {
-    applyFilter();
-  }, [category, subCategory, search, showSearch]);
-
-  return (
-    <div className="w-screen min-h-screen flex flex-col md:flex-row pt-[70px] overflow-hidden z-[2]">
-
-      {/* Mobile Toggle Button */}
-      <div className="md:hidden flex justify-between items-center px-6 py-3 text-[#aaf5fa] border-b border-gray-500">
-        <p className="text-[20px] font-semibold">FILTERS</p>
-        <button onClick={() => setShowFilters(!showFilters)} className="text-white">
-          <FiFilter size={24} />
-        </button>
-      </div>
-
-      {/* Sidebar Filters */}
-      <div className={`md:w-[30vw] lg:w-[20vw] w-full p-5 border-r border-gray-400 text-[#aaf5fa] bg-opacity-20 md:min-h-screen lg:fixed ${showFilters ? "block" : "hidden"} md:block`}>
-        <p className="text-[25px] font-semibold mb-4 hidden md:block">FILTERS</p>
-
-        {/* Category Filter */}
-        <div className="border-2 border-[#dedcdc] pl-5 py-3 mb-6 rounded-md bg-slate-600">
-          <p className="text-[18px] text-[#f8fafa] mb-2">CATEGORIES</p>
-          <div className="flex flex-col gap-2">
-            <label className="flex items-center gap-2 text-[16px] font-light">
-              <input type="checkbox" value="Men" onChange={toggleCategory} className="w-3 h-3" />
-              Men
-            </label>
-            <label className="flex items-center gap-2 text-[16px] font-light">
-              <input type="checkbox" value="Women" onChange={toggleCategory} className="w-3 h-3" />
-              Women
-            </label>
-            <label className="flex items-center gap-2 text-[16px] font-light">
-              <input type="checkbox" value="Kids" onChange={toggleCategory} className="w-3 h-3" />
-              Kids
-            </label>
-          </div>
-        </div>
-
-        {/* Subcategory Filter */}
-        <div className="border-2 border-[#dedcdc] pl-5 py-3 rounded-md bg-slate-600">
-          <p className="text-[18px] text-[#f8fafa] mb-2">SUBCATEGORIES</p>
-          <div className="flex flex-col gap-2">
-            <label className="flex items-center gap-2 text-[16px] font-light">
-              <input type="checkbox" value="Topwear" onChange={toggleSubCategory} className="w-3 h-3" />
-              Topwear
-            </label>
-            <label className="flex items-center gap-2 text-[16px] font-light">
-              <input type="checkbox" value="Bottomwear" onChange={toggleSubCategory} className="w-3 h-3" />
-              Bottomwear
-            </label>
-            <label className="flex items-center gap-2 text-[16px] font-light">
-              <input type="checkbox" value="Winterwear" onChange={toggleSubCategory} className="w-3 h-3" />
-              Winterwear
-            </label>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="md:ml-[30vw] lg:ml-[20vw] w-full px-4 sm:px-6 md:px-8 py-6">
-        {/* Title and Sort Dropdown */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6 text-white">
-          <Titles text1="ALL" text2="COLLECTIONS" />
-          <select
-            className="bg-slate-700 text-white px-4 py-2 rounded-md border border-gray-400 mt-4 md:mt-0"
-            value={showSort}
-            onChange={(e) => setShowSort(e.target.value)}
-          >
-            <option value="relevant">Sort By: Relevant</option>
-            <option value="low-high">Price: Low to High</option>
-            <option value="high-low">Price: High to Low</option>
-          </select>
-        </div>
-
-        {/* Responsive Product List using Flex */}
-        <div className="flex flex-wrap justify-center gap-6">
-          {filterProduct.length > 0 ? (
-            filterProduct.map((item, index) => (
-              <Card
-                key={index}
-                id={item._id}
-                name={item.name}
-                price={item.price}
-                image={item.image1}
-              />
-            ))
-          ) : (
-            <p className="text-white text-center w-full">No products found.</p>
+  const renderFilters = (isMobile = false) => (
+    <>
+      <div className="flex items-center justify-between">
+        <p className="text-slate-100 font-bold text-lg">Filters</p>
+        <div className="flex items-center gap-3">
+          {activeFilters.length > 0 && (
+            <button onClick={clearAll} className="text-xs text-blue-400 hover:text-blue-300">Clear all</button>
+          )}
+          {isMobile && (
+            <button onClick={() => setShowFilters(false)} className="text-slate-300 hover:text-white">
+              <FiX className="w-5 h-5" />
+            </button>
           )}
         </div>
       </div>
 
+      <div>
+        <p className="text-slate-400 text-xs font-semibold uppercase tracking-widest mb-3">Category</p>
+        <div className="flex flex-col gap-2">
+          {CATEGORIES.map((cat) => (
+            <label key={cat} className="flex items-center gap-3 cursor-pointer group">
+              <div
+                onClick={() => toggle(selectedCategories, setSelectedCategories, cat)}
+                className={`w-4 h-4 rounded border-2 transition-all ${
+                  selectedCategories.includes(cat)
+                    ? 'bg-blue-600 border-blue-600'
+                    : 'border-slate-600 group-hover:border-slate-400'
+                }`}
+              >
+                {selectedCategories.includes(cat) && (
+                  <svg viewBox="0 0 16 16" fill="white" className="w-3 h-3 m-[1px]">
+                    <path d="M13.5 3.5L6 11l-3.5-3.5" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" />
+                  </svg>
+                )}
+              </div>
+              <span className="text-slate-300 text-sm">{cat}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-slate-400 text-xs font-semibold uppercase tracking-widest mb-3">Type</p>
+        <div className="flex flex-col gap-2">
+          {SUBCATEGORIES.map((sub) => (
+            <label key={sub} className="flex items-center gap-3 cursor-pointer group">
+              <div
+                onClick={() => toggle(selectedSubcategories, setSelectedSubcategories, sub)}
+                className={`w-4 h-4 rounded border-2 transition-all ${
+                  selectedSubcategories.includes(sub)
+                    ? 'bg-blue-600 border-blue-600'
+                    : 'border-slate-600 group-hover:border-slate-400'
+                }`}
+              />
+              <span className="text-slate-300 text-sm">{sub}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label className="flex items-center gap-3 cursor-pointer">
+          <div
+            onClick={() => setBestseller((v) => !v)}
+            className={`w-10 h-5 rounded-full transition-all relative ${bestseller ? 'bg-blue-600' : 'bg-slate-700'}`}
+          >
+            <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${bestseller ? 'translate-x-5' : 'translate-x-0.5'}`} />
+          </div>
+          <span className="text-slate-300 text-sm">Bestsellers only</span>
+        </label>
+      </div>
+
+      <div>
+        <p className="text-slate-400 text-xs font-semibold uppercase tracking-widest mb-3">
+          Price Range — ₹{priceRange[0]} – ₹{priceRange[1]}
+        </p>
+        <input
+          type="range"
+          min={0}
+          max={10000}
+          step={100}
+          value={priceRange[1]}
+          onChange={(e) => setPriceRange([0, Number(e.target.value)])}
+          className="w-full accent-blue-500"
+        />
+      </div>
+    </>
+  );
+
+  return (
+    <div className="w-full min-h-screen flex flex-col md:flex-row pt-[75px] z-[2]">
+
+      {/* ── Mobile Filter Toggle ── */}
+      <div className="md:hidden flex items-center justify-between px-4 py-3 border-b border-slate-800">
+        <span className="text-slate-300 font-semibold text-sm">{filteredProducts.length} Products</span>
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex items-center gap-2 text-slate-300 hover:text-white text-sm"
+        >
+          <MdOutlineTune className="w-5 h-5" /> Filters
+        </button>
+      </div>
+
+      {/* ── Mobile Sidebar ── */}
+      <AnimatePresence>
+        {showFilters && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-30 md:hidden"
+              onClick={() => setShowFilters(false)}
+            />
+            <motion.aside
+              initial={{ x: -320 }}
+              animate={{ x: 0 }}
+              exit={{ x: -320 }}
+              transition={{ type: 'tween', duration: 0.25 }}
+              className="fixed top-[75px] left-0 h-[calc(100vh-75px)] w-[85%] max-w-[320px] border-r border-slate-800 overflow-y-auto p-5 flex flex-col gap-6 bg-slate-950 z-40 md:hidden"
+            >
+              {renderFilters(true)}
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ── Desktop Sidebar ── */}
+      <aside className="hidden md:flex md:w-[260px] lg:w-[240px] shrink-0 border-r border-slate-800 md:sticky md:top-[75px] md:h-[calc(100vh-75px)] overflow-y-auto p-5 flex-col gap-6 bg-slate-950 z-10">
+        {renderFilters(false)}
+      </aside>
+
+      {/* ── Main Content ── */}
+      <main className="flex-1 min-w-0 px-4 sm:px-6 py-6">
+
+        {/* Header row */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <Titles text1="ALL" text2="COLLECTIONS" />
+            <p className="text-slate-500 text-sm mt-1">{filteredProducts.length} products</p>
+          </div>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="bg-slate-800 text-slate-200 text-sm px-4 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer"
+          >
+            {SORT_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Active filter chips */}
+        {activeFilters.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-5">
+            {activeFilters.map((f, i) => (
+              <FilterChip key={i} label={f.label} onRemove={f.remove} />
+            ))}
+          </div>
+        )}
+
+        {/* Product grid */}
+        {productsLoading ? (
+          <div className="flex flex-wrap justify-center gap-6">
+            {Array.from({ length: 8 }).map((_, i) => <CardSkeleton key={i} />)}
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <div className="text-6xl">🔍</div>
+            <p className="text-slate-300 text-lg font-semibold">No products found</p>
+            <p className="text-slate-500 text-sm">Try adjusting your filters</p>
+            <button onClick={clearAll} className="mt-2 text-blue-400 hover:text-blue-300 text-sm underline">
+              Clear all filters
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-wrap justify-center gap-6">
+            {filteredProducts.map((item) => (
+              <Card
+                key={item._id}
+                id={item._id}
+                name={item.name}
+                price={item.price}
+                image={item.image1}
+                category={item.category}
+                subCategory={item.subCategory}
+                sizes={item.sizes}
+              />
+            ))}
+          </div>
+        )}
+      </main>
     </div>
   );
 }

@@ -7,32 +7,32 @@ function Footer() {
   const navigate = useNavigate();
 
   return (
-    <footer className="relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white py-16 px-6 mb-[75px] md:mb-0 border-t border-slate-800/50">
+    <footer className="relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white py-10 px-6 mb-[75px] md:mb-0 border-t border-slate-800/50">
       {/* Premium Top Border */}
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
       
       {/* Background Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-32 bg-blue-500/5 blur-3xl" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-20 bg-blue-500/5 blur-3xl" />
       
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center relative z-10">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center relative z-10">
         {/* Premium Logo and Description */}
         <div className="flex flex-col items-center">
-          <div className="relative mb-5">
+          <div className="relative mb-3">
             <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full" />
-            <img src={Vogo} alt="Vastra Logo" className="w-16 h-16 relative drop-shadow-[0_0_20px_rgba(59,130,246,0.6)]" />
+            <img src={Vogo} alt="Vastra Logo" className="w-12 h-12 relative drop-shadow-[0_0_20px_rgba(59,130,246,0.6)]" />
           </div>
-          <h3 className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+          <h3 className="text-lg font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
             Vastra
           </h3>
-          <p className="text-sm text-slate-400 leading-relaxed max-w-xs">
+          <p className="text-xs text-slate-400 leading-relaxed max-w-xs">
             Vastra blends tradition with modern elegance. Discover curated collections of ethnic and contemporary wear crafted to celebrate your unique style.
           </p>
         </div>
 
         {/* Premium Company Links */}
         <div className="flex flex-col items-center">
-          <h3 className="text-lg font-bold text-blue-400 mb-5" style={{ fontFamily: 'Poppins, sans-serif' }}>Company</h3>
-          <ul className="space-y-3 text-sm text-slate-400">
+          <h3 className="text-base font-bold text-blue-400 mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Company</h3>
+          <ul className="space-y-2 text-xs text-slate-400">
             <li>
               <button onClick={() => navigate('/')} className="hover:text-blue-400 transition-colors relative group">
                 Home
@@ -62,8 +62,8 @@ function Footer() {
 
         {/* Premium Contact Info */}
         <div className="flex flex-col items-center">
-          <h3 className="text-lg font-bold text-blue-400 mb-5" style={{ fontFamily: 'Poppins, sans-serif' }}>Get in Touch</h3>
-          <ul className="space-y-3 text-sm text-slate-400">
+          <h3 className="text-base font-bold text-blue-400 mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Get in Touch</h3>
+          <ul className="space-y-2 text-xs text-slate-400">
             <li className="flex items-center gap-3 justify-center hover:text-blue-400 transition-colors group">
               <FaPhoneAlt className="text-blue-500 group-hover:scale-110 transition-transform" /> +91-7046053000
             </li>
@@ -78,12 +78,12 @@ function Footer() {
       </div>
 
       {/* Premium Footer Bottom */}
-      <div className="mt-16 pt-8 text-center relative">
+      <div className="mt-8 pt-5 text-center relative">
         <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-slate-700/50 to-transparent" />
-        <p className="text-sm text-slate-500">
+        <p className="text-xs text-slate-500">
           © 2025 <span className="text-blue-400 font-bold">vastra.in</span> — All Rights Reserved
         </p>
-        <p className="text-xs text-slate-600 mt-2">Crafted with passion for fashion</p>
+        <p className="text-[11px] text-slate-600 mt-1.5">Crafted with passion for fashion</p>
       </div>
     </footer>
   );

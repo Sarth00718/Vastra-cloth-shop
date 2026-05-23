@@ -7,13 +7,18 @@ function UserContext({ children }) {
     const [user, setUser] = useState("");
 
     const getCurrentUser = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setUser(null);
+            return;
+        }
+
         try {
             const result = await authService.getCurrentUser();
             setUser(result);
-            console.log(result);
         } catch (error) {
             if (error.response?.status === 401) {
-                console.log("User not authenticated");
+                localStorage.removeItem('token');
                 setUser(null);
             } else {
                 console.log("Error fetching current user:", error.message);

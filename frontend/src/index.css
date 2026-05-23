@@ -279,12 +279,21 @@ button {
   font-family: "Inter", sans-serif;
   font-weight: 600;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
   letter-spacing: 0.02em;
 }
 
-button::before {
+/* Premium Button Variant */
+.btn-premium {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border: 1px solid rgba(147, 197, 253, 0.3);
+  box-shadow:
+    0 4px 16px rgba(59, 130, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-premium::before {
   content: "";
   position: absolute;
   top: 50%;
@@ -299,33 +308,20 @@ button::before {
     height 0.6s;
 }
 
-button:hover::before {
+.btn-premium:hover::before {
   width: 300px;
   height: 300px;
 }
 
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.3);
-}
-
-button:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
-}
-
-/* Premium Button Variant */
-.btn-premium {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border: 1px solid rgba(147, 197, 253, 0.3);
-  box-shadow:
-    0 4px 16px rgba(59, 130, 246, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
 .btn-premium:hover {
+  transform: translateY(-2px);
   background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
   box-shadow:
     0 12px 32px rgba(59, 130, 246, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-premium:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
 }

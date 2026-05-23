@@ -4,8 +4,6 @@ import Background from '../components/Background';
 import Product from './Product';
 import OurPolicy from '../components/OurPolicy';
 import NewLettorBox from '../components/NewLettorBox';
-import Footer from '../components/Footer';
-import { toast } from 'react-toastify';
 
 
 function Home() {
@@ -38,7 +36,6 @@ function Home() {
       <Product />
       <OurPolicy />
       <NewLettorBox />
-      <Footer />
     </div>
   );
 

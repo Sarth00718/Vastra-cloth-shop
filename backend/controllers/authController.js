@@ -7,25 +7,38 @@ export const register = async (req, res) => {
 
     try {
         const { name, email, password } = req.body;
+
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'Name, email and password are required', success: false });
+        }
+
+        const normalizedName = String(name).trim();
+        const normalizedEmail = String(email).trim().toLowerCase();
+
+        if (normalizedName.length < 2) {
+            return res.status(400).json({ message: 'Name must be at least 2 characters', success: false });
+        }
+
         //user exist
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ email: normalizedEmail });
         if (existingUser) {
-            return res.status(400).json({ msg: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists', success: false });
         }
         //validate email
-        if (!validator.isEmail(email)) {
-            return res.status(400).json({ msg: 'Invalid email' });
+        if (!validator.isEmail(normalizedEmail)) {
+            return res.status(400).json({ message: 'Invalid email', success: false });
         }
-        //validate password is strong
-        if (!validator.isStrongPassword(password)) {
-            return res.status(400).json({ msg: 'Password is not strong' });
+
+        if (String(password).length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters', success: false });
         }
+
         //hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
         //create user
         const user = await User.create({
-            name,
-            email,
+            name: normalizedName,
+            email: normalizedEmail,
             password: hashedPassword
         });
 
@@ -37,7 +50,7 @@ export const register = async (req, res) => {
             secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         });
-        res.json({ msg: 'User created successfully', user, token });
+        res.json({ message: 'User created successfully', success: true, user, token });
     }
     catch (error) {
         console.error(error);

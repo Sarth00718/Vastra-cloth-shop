@@ -1,226 +1,242 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useCallback } from 'react';
 import Nav from '../components/Nav';
 import Sidebar from '../components/Sidebar';
-import upload from '../assets/upload.png';
 import { authDataContext } from '../context/AuthContext';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { MdCloudUpload, MdClose } from 'react-icons/md';
+import adminApi from '../services/adminApi';
+
+const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+const CATEGORIES = ['Men', 'Women', 'Kids'];
+const SUBCATEGORIES = ['Topwear', 'Bottomwear', 'Winterwear'];
+
+const INITIAL_STATE = {
+  name: '', description: '', category: 'Men',
+  subCategory: 'Topwear', price: '', bestseller: false,
+};
+
+function ImageSlot({ index, image, onSet, onClear }) {
+  const handleDrop = useCallback((e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) onSet(file);
+  }, [onSet]);
+
+  return (
+    <div
+      className={`relative w-24 h-24 rounded-xl border-2 border-dashed transition-all ${
+        image ? 'border-blue-500/50' : 'border-slate-600 hover:border-slate-500'
+      }`}
+      onDragOver={e => e.preventDefault()}
+      onDrop={handleDrop}
+    >
+      {image ? (
+        <>
+          <img src={URL.createObjectURL(image)} alt="" className="w-full h-full object-cover rounded-xl" />
+          <button
+            type="button"
+            onClick={onClear}
+            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition-colors"
+          >
+            <MdClose className="w-3 h-3" />
+          </button>
+        </>
+      ) : (
+        <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer gap-1">
+          <MdCloudUpload className="w-6 h-6 text-slate-500" />
+          <span className="text-[10px] text-slate-600">Image {index + 1}</span>
+          <input type="file" accept="image/*" hidden onChange={e => e.target.files[0] && onSet(e.target.files[0])} />
+        </label>
+      )}
+    </div>
+  );
+}
 
 function Add() {
-  const [image1, setImage1] = useState(null);
-  const [image2, setImage2] = useState(null);
-  const [image3, setImage3] = useState(null);
-  const [image4, setImage4] = useState(null);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("Men");
-  const [price, setPrice] = useState("");
-  const [subCategory, setSubCategory] = useState("Topwear");
-  const [bestseller, setBestSeller] = useState(false);
+  const [images, setImages] = useState([null, null, null, null]);
+  const [form, setForm] = useState(INITIAL_STATE);
   const [sizes, setSizes] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
   const { serverurl } = useContext(authDataContext);
+
+  const setImage = (idx, file) => setImages(prev => { const n = [...prev]; n[idx] = file; return n; });
+  const clearImage = (idx) => setImages(prev => { const n = [...prev]; n[idx] = null; return n; });
+  const toggleSize = (s) => setSizes(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm(f => ({ ...f, [name]: type === 'checkbox' ? checked : value }));
+  };
+
+  const validate = () => {
+    if (!form.name.trim()) return 'Product name is required';
+    if (!form.description.trim()) return 'Description is required';
+    if (!form.price || Number(form.price) <= 0) return 'Valid price is required';
+    if (sizes.length === 0) return 'Select at least one size';
+    if (images.filter(Boolean).length < 4) return 'All 4 product images are required';
+    return null;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const err = validate();
+    if (err) { toast.error(err); return; }
+
+    setSubmitting(true);
     try {
       const formData = new FormData();
-      [image1, image2, image3, image4].forEach((img, i) => formData.append(`image${i + 1}`, img));
-      formData.append("name", name);
-      formData.append("description", description);
-      formData.append("category", category);
-      formData.append("price", price);
-      formData.append("subCategory", subCategory);
-      formData.append("bestseller", bestseller);
-      formData.append("sizes", JSON.stringify(sizes));
+      images.forEach((img, i) => { if (img) formData.append(`image${i + 1}`, img); });
+      formData.append('name', form.name);
+      formData.append('description', form.description);
+      formData.append('category', form.category);
+      formData.append('price', form.price);
+      formData.append('subCategory', form.subCategory);
+      formData.append('bestseller', form.bestseller);
+      formData.append('sizes', JSON.stringify(sizes));
 
-      await axios.post(`${serverurl}/api/product/addproduct`, formData, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      });
+      await adminApi.post('/api/product/addproduct', formData);
+      toast.success('✅ Product added successfully!');
 
-      toast.success("Product added successfully!");
-
-      // Reset form
-      setName(""); setDescription(""); setPrice(""); setCategory("Men");
-      setSubCategory("Topwear"); setBestSeller(false); setSizes([]);
-      setImage1(null); setImage2(null); setImage3(null); setImage4(null);
+      // Reset
+      setForm(INITIAL_STATE);
+      setSizes([]);
+      setImages([null, null, null, null]);
     } catch (error) {
-      console.error("Error adding product:", error);
-      toast.error("Failed to add product. Please try again.");
+      toast.error(error.response?.data?.message || 'Failed to add product');
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const sizeOptions = ["S", "M", "L", "XL", "XXL"];
-
   return (
-    <div className='w-full min-h-screen bg-gradient-to-tr from-[#0f172a] to-[#1e293b] text-gray-200 font-poppins'>
+    <div className="w-full min-h-screen bg-gradient-to-br from-slate-950 to-slate-900 text-white">
       <Nav />
       <Sidebar />
-
-      <div className="pl-[18%] pt-[95px] pr-6 md:pr-12 pb-12 min-h-screen">
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-cyan-300 mb-8">
-              Add Product Page
-            </h2>
+      <div className="pl-[240px] pt-[75px] pr-6 pb-12">
+        <div className="max-w-3xl mx-auto px-4 py-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <h1 className="text-2xl font-bold text-white mb-1">Add Product</h1>
+            <p className="text-slate-400 text-sm mb-8">Fill in the product details below</p>
           </motion.div>
 
           <motion.form
             onSubmit={handleSubmit}
-            className="w-full flex flex-col gap-6"
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="flex flex-col gap-5"
           >
-            {/* Upload Images */}
-            <div className="bg-slate-800/40 rounded-xl p-6 border border-slate-700/50">
-              <p className="text-lg font-semibold text-cyan-300 mb-4">Upload Images</p>
-              <div className='flex flex-wrap gap-4'>
-                {[image1, image2, image3, image4].map((img, idx) => (
-                  <label key={idx} className='cursor-pointer group'>
-                    <img
-                      src={img ? URL.createObjectURL(img) : upload}
-                      alt="product"
-                      className='w-[100px] h-[100px] object-cover rounded-lg border-2 border-slate-600 group-hover:border-cyan-400 transition-all duration-300 shadow-lg'
-                    />
-                    <input
-                      type="file"
-                      hidden
-                      required
-                      onChange={(e) => [setImage1, setImage2, setImage3, setImage4][idx](e.target.files[0])}
-                    />
-                  </label>
+            {/* Images */}
+            <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5">
+              <p className="text-sm font-semibold text-slate-300 mb-1">Product Images</p>
+              <p className="text-slate-500 text-xs mb-4">Upload or drag & drop 4 images (required)</p>
+              <div className="flex gap-4 flex-wrap">
+                {images.map((img, idx) => (
+                  <ImageSlot key={idx} index={idx} image={img} onSet={(f) => setImage(idx, f)} onClear={() => clearImage(idx)} />
                 ))}
               </div>
             </div>
 
-            {/* Product Name */}
-            <div className="bg-slate-800/40 rounded-xl p-6 border border-slate-700/50">
-              <p className="text-lg font-semibold text-cyan-300 mb-3">Product Name</p>
+            {/* Name */}
+            <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5">
+              <label className="text-sm font-semibold text-slate-300 block mb-2">Product Name *</label>
               <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                placeholder="Enter the product title"
-                className="w-full max-w-lg bg-slate-700/80 border border-slate-600 text-white rounded-lg px-4 py-3 placeholder-gray-400 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all outline-none"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="e.g. Classic Slim-Fit Cotton Shirt"
+                className="w-full bg-slate-700/80 border border-slate-600 text-white rounded-xl px-4 py-3 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
             </div>
 
             {/* Description */}
-            <div className="bg-slate-800/40 rounded-xl p-6 border border-slate-700/50">
-              <p className="text-lg font-semibold text-cyan-300 mb-3">Product Description</p>
+            <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5">
+              <label className="text-sm font-semibold text-slate-300 block mb-2">Description *</label>
               <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-                placeholder="Enter the product description"
-                rows="4"
-                className="w-full max-w-lg bg-slate-700/80 border border-slate-600 text-white rounded-lg px-4 py-3 placeholder-gray-400 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all outline-none resize-none"
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                rows={3}
+                placeholder="Describe the product — fabric, fit, features..."
+                className="w-full bg-slate-700/80 border border-slate-600 text-white rounded-xl px-4 py-3 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
               />
             </div>
 
-            {/* Category & Sub-Category */}
-            <div className="bg-slate-800/40 rounded-xl p-6 border border-slate-700/50">
-              <div className="flex flex-col sm:flex-row gap-6">
-                <div className="flex-1">
-                  <p className="text-lg font-semibold text-cyan-300 mb-3">Product Category</p>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    required
-                    className="w-full bg-slate-700/80 border border-slate-600 text-white rounded-lg px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all outline-none cursor-pointer"
-                  >
-                    <option>Men</option>
-                    <option>Women</option>
-                    <option>Kids</option>
-                  </select>
-                </div>
-
-                <div className="flex-1">
-                  <p className="text-lg font-semibold text-cyan-300 mb-3">Sub-Category</p>
-                  <select
-                    value={subCategory}
-                    onChange={(e) => setSubCategory(e.target.value)}
-                    required
-                    className="w-full bg-slate-700/80 border border-slate-600 text-white rounded-lg px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all outline-none cursor-pointer"
-                  >
-                    <option>Topwear</option>
-                    <option>Bottomwear</option>
-                    <option>Winterwear</option>
-                  </select>
-                </div>
+            {/* Category, Subcategory, Price */}
+            <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="text-sm font-semibold text-slate-300 block mb-2">Category *</label>
+                <select name="category" value={form.category} onChange={handleChange}
+                  className="w-full bg-slate-700/80 border border-slate-600 text-white rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-blue-500 cursor-pointer">
+                  {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-slate-300 block mb-2">Sub-Category *</label>
+                <select name="subCategory" value={form.subCategory} onChange={handleChange}
+                  className="w-full bg-slate-700/80 border border-slate-600 text-white rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-blue-500 cursor-pointer">
+                  {SUBCATEGORIES.map(s => <option key={s}>{s}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-slate-300 block mb-2">Price (₹) *</label>
+                <input
+                  name="price" type="number" value={form.price} onChange={handleChange}
+                  placeholder="e.g. 1299" min={1}
+                  className="w-full bg-slate-700/80 border border-slate-600 text-white rounded-xl px-4 py-3 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                />
               </div>
             </div>
 
-            {/* Price */}
-            <div className="bg-slate-800/40 rounded-xl p-6 border border-slate-700/50">
-              <p className="text-lg font-semibold text-cyan-300 mb-3">Product Price</p>
-              <input
-                type="number"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                required
-                placeholder="₹ 2000"
-                className="w-full max-w-xs bg-slate-700/80 border border-slate-600 text-white rounded-lg px-4 py-3 placeholder-gray-400 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all outline-none"
-              />
-            </div>
-
             {/* Sizes */}
-            <div className="bg-slate-800/40 rounded-xl p-6 border border-slate-700/50">
-              <p className="text-lg font-semibold text-cyan-300 mb-4">Select Sizes</p>
+            <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5">
+              <label className="text-sm font-semibold text-slate-300 block mb-3">Available Sizes *</label>
               <div className="flex gap-3 flex-wrap">
-                {sizeOptions.map((size) => (
-                  <div
-                    key={size}
-                    onClick={() =>
-                      setSizes((prev) =>
-                        prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
-                      )
-                    }
-                    className={`px-5 py-2.5 rounded-lg border-2 cursor-pointer font-semibold transition-all duration-300 ${sizes.includes(size)
-                      ? "border-cyan-400 bg-cyan-500 text-white shadow-lg shadow-cyan-500/30"
-                      : "border-slate-600 bg-slate-700/80 text-white hover:border-cyan-400 hover:bg-slate-600"
-                      }`}
+                {SIZES.map(s => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => toggleSize(s)}
+                    className={`min-w-[52px] px-4 py-2 rounded-xl border-2 text-sm font-semibold transition-all ${
+                      sizes.includes(s)
+                        ? 'border-blue-500 bg-blue-500/20 text-blue-300 shadow-lg shadow-blue-500/20'
+                        : 'border-slate-600 bg-slate-700/50 text-slate-400 hover:border-slate-500 hover:text-white'
+                    }`}
                   >
-                    {size}
-                  </div>
+                    {s}
+                  </button>
                 ))}
               </div>
             </div>
 
-            {/* Bestseller */}
-            <div className="bg-slate-800/40 rounded-xl p-6 border border-slate-700/50">
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  id="bestseller"
-                  checked={bestseller}
-                  onChange={(e) => setBestSeller(e.target.checked)}
-                  className="w-5 h-5 cursor-pointer accent-cyan-500"
-                />
-                <label htmlFor="bestseller" className="text-lg text-cyan-300 font-medium cursor-pointer">Add to BestSeller</label>
+            {/* Bestseller toggle */}
+            <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 flex items-center gap-4">
+              <div
+                onClick={() => setForm(f => ({ ...f, bestseller: !f.bestseller }))}
+                className={`w-11 h-6 rounded-full relative cursor-pointer transition-all ${form.bestseller ? 'bg-blue-600' : 'bg-slate-700'}`}
+              >
+                <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${form.bestseller ? 'translate-x-5' : 'translate-x-0.5'}`} />
+              </div>
+              <div>
+                <p className="text-slate-200 text-sm font-medium">Mark as Bestseller</p>
+                <p className="text-slate-500 text-xs">Featured prominently on the homepage</p>
               </div>
             </div>
 
             {/* Submit */}
-            <div className="pt-2">
-              <motion.button
-                type="submit"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold px-8 py-3 rounded-lg transition-all shadow-lg shadow-cyan-500/30 border border-cyan-400/20"
-              >
-                Add Product
-              </motion.button>
-            </div>
+            <motion.button
+              type="submit"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              disabled={submitting}
+              className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 disabled:from-slate-700 disabled:to-slate-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/20 transition-all"
+            >
+              {submitting ? (
+                <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Adding Product...</>
+              ) : (
+                '+ Add Product'
+              )}
+            </motion.button>
           </motion.form>
         </div>
       </div>
