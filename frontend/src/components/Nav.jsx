@@ -59,6 +59,7 @@ function Nav() {
   };
 
   return (
+    <>
     <div className="w-screen fixed top-0 z-20 bg-gradient-to-r from-slate-950/95 via-slate-900/95 to-slate-950/95 shadow-2xl border-b border-slate-800/50 backdrop-blur-xl" style={{ fontFamily: 'Inter, sans-serif' }}>
       {/* Premium Top Border */}
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
@@ -68,14 +69,14 @@ function Nav() {
         {/* Premium Logo */}
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="flex items-center gap-3 cursor-pointer relative"
+          className="flex items-center gap-2 md:gap-3 cursor-pointer relative"
           onClick={() => navigate("/")}
         >
           <div className="relative">
             <div className="absolute inset-0 bg-blue-500/20 blur-lg rounded-full" />
-            <img src={logo} alt="logo" className="w-[38px] relative drop-shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
+            <img src={logo} alt="logo" className="w-[30px] md:w-[38px] relative drop-shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
           </div>
-          <h1 className="text-[28px] font-bold bg-gradient-to-r from-white via-blue-100 to-blue-200 bg-clip-text text-transparent" style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '-0.02em' }}>
+          <h1 className="text-[22px] md:text-[28px] font-bold bg-gradient-to-r from-white via-blue-100 to-blue-200 bg-clip-text text-transparent" style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '-0.02em' }}>
             Vastra
           </h1>
         </motion.div>
@@ -239,27 +240,29 @@ function Nav() {
         </motion.div>
       )}
 
-      {/* Bottom Nav */}
-      <div className="w-full h-[90px] flex items-center justify-between px-6 text-xs fixed bottom-0 left-0 bg-gradient-to-r from-[#0a1929] via-[#0f2847] to-[#0a1929] border-t border-blue-900/30 md:hidden z-20 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
-        {[
-          { Icon: IoMdHome, label: "Home", path: "/" },
-          { Icon: IoMdAlbums, label: "Collections", path: "/collections" },
-          { Icon: IoMdContacts, label: "Contact", path: "/contects" },
-        ].map(({ Icon, label, path }) => (
-          <motion.button whileTap={{ scale: 0.9 }} key={label} className="text-blue-300 flex flex-col items-center justify-center gap-1 font-medium" onClick={() => navigate(path)}>
-            <Icon className="w-6 h-6" /> {label}
-          </motion.button>
-        ))}
-
-        <motion.button whileTap={{ scale: 0.9 }} className="relative text-blue-300 flex flex-col items-center justify-center gap-1 font-medium" onClick={() => navigate('/cart')}>
-          <IoMdCart className="w-6 h-6" />
-          <span className="absolute top-[-5px] right-[-10px] w-[18px] h-[18px] font-bold bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-full items-center justify-center text-[9px] shadow-lg">
-            {getCardCount()}
-          </span>
-          Cart
-        </motion.button>
-      </div>
     </div>
+
+    {/* Bottom Nav */}
+    <div className="w-full h-[90px] flex items-center justify-between px-6 text-xs fixed bottom-0 left-0 bg-gradient-to-r from-[#0a1929] via-[#0f2847] to-[#0a1929] border-t border-blue-900/30 md:hidden z-20 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+      {[
+        { Icon: IoMdHome, label: "Home", path: "/" },
+        { Icon: IoMdAlbums, label: "Collections", path: "/collections" },
+        { Icon: IoMdContacts, label: "Contact", path: "/contects" },
+      ].map(({ Icon, label, path }) => (
+        <motion.button whileTap={{ scale: 0.9 }} key={label} className="text-blue-300 flex flex-col items-center justify-center gap-1 font-medium" onClick={() => navigate(path)}>
+          <Icon className="w-6 h-6" /> {label}
+        </motion.button>
+      ))}
+
+      <motion.button whileTap={{ scale: 0.9 }} className="relative text-blue-300 flex flex-col items-center justify-center gap-1 font-medium" onClick={() => navigate('/cart')}>
+        <IoMdCart className="w-6 h-6" />
+        <span className="absolute top-[-5px] right-[-10px] w-[18px] h-[18px] font-bold bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-full items-center justify-center text-[9px] shadow-lg">
+          {getCardCount()}
+        </span>
+        Cart
+      </motion.button>
+    </div>
+    </>
   );
 }
 
