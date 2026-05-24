@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
-import Nav from '../components/Nav';
-import Sidebar from '../components/Sidebar';
+import Nav from '../../components/admin/Nav';
+import Sidebar from '../../components/admin/Sidebar';
 import axios from 'axios';
-import { authDataContext } from '../context/AuthContext';
+import { authDataContext } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MdSearch, MdFileDownload, MdRefresh } from 'react-icons/md';

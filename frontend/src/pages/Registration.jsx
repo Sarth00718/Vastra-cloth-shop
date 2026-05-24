@@ -44,15 +44,16 @@ function Registration() {
       let user = res.user;
       let name = user.displayName;
       let email = user.email;
+      let googleId = user.uid;
 
       const reslt = await axios.post(
         serverurl + "/api/auth/googlelogin",
-        { name, email },
+        { name, email, googleId },
         { withCredentials: true }
       );
       localStorage.setItem("token", reslt.data.token);
       toast.success("Google sign-in successful!");
-      getCurrentUser();
+      await getCurrentUser();
       navigate("/");
     }
     catch (error) {
@@ -61,12 +62,12 @@ function Registration() {
         toast.error("Sign-up cancelled. Please try again.");
       } else if (error.code === 'auth/popup-blocked') {
         toast.error("Popup blocked. Please allow popups for this site.");
+      } else if (error.code === 'auth/cancelled-by-user') {
+        toast.error("Sign-up cancelled.");
       } else if (error.response) {
         toast.error(error.response.data.message || "Server error. Please try again.");
-      } else if (error.request) {
-        toast.error("Network error. Please check your connection.");
       } else {
-        toast.error("Google sign-in failed. Please try again.");
+        toast.error("Google sign-in failed. Please check your browser settings.");
       }
     }
   };

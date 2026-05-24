@@ -30,8 +30,16 @@ function Login() {
       localStorage.setItem("token", res.data.token);
       console.log(res.data);
       toast.success("Login successful!");
-      getCurrentUser();
-      navigate("/");
+      
+      // Get full user data including role
+      const userData = res.data.user;
+      getCurrentUser(); // Sync context
+
+      if (userData.role === 'admin') {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
       toast.error(
@@ -46,29 +54,38 @@ function Login() {
       let user = res.user;
       let name = user.displayName;
       let email = user.email;
+      let googleId = user.uid;
 
       const reslt = await axios.post(
         serverurl + "/api/auth/googlelogin",
-        { name, email },
+        { name, email, googleId },
         { withCredentials: true }
       );
       console.log(reslt.data);
       localStorage.setItem("token", reslt.data.token);
       toast.success("Google login successful!");
-      getCurrentUser();
-      navigate("/");
+      
+      // Sync context and WAIT
+      await getCurrentUser();
+
+      const userData = reslt.data.user;
+      if (userData.role === 'admin') {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.error("Google login error:", error);
       if (error.code === 'auth/popup-closed-by-user') {
         toast.error("Login cancelled. Please try again.");
       } else if (error.code === 'auth/popup-blocked') {
         toast.error("Popup blocked. Please allow popups for this site.");
+      } else if (error.code === 'auth/cancelled-by-user') {
+        toast.error("Login cancelled.");
       } else if (error.response) {
         toast.error(error.response.data.message || "Server error. Please try again.");
-      } else if (error.request) {
-        toast.error("Network error. Please check your connection.");
       } else {
-        toast.error("Google login failed. Please try again.");
+        toast.error("Google login failed. Please check your browser settings.");
       }
     }
   };

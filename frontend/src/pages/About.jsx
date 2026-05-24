@@ -17,88 +17,115 @@ function About() {
       <Titles text1="ABOUT" text2="US" />
 
       {/* About Section */}
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-10 w-full max-w-[1200px]">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-12 w-full max-w-[1240px]">
 
-        {/* Image */}
+        {/* Image Container */}
         <motion.div
-          className="w-full lg:w-1/2 max-w-[400px]"
+          className="w-full lg:w-[45%] flex justify-center"
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <img
-            src={about}
-            alt="About Vastra"
-            className="w-full h-auto shadow-md shadow-black rounded-sm"
-          />
+          <div className="relative group w-full max-w-[500px]">
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+            <img
+              src={about}
+              alt="About Vastra"
+              className="relative w-full h-auto shadow-2xl shadow-black/50 rounded-lg object-cover"
+            />
+          </div>
         </motion.div>
 
-        {/* Text */}
+        {/* Text Container */}
         <motion.div
-          className="w-full lg:w-1/2 flex flex-col gap-6 text-white text-[14px] sm:text-[15px] md:text-[16px]"
+          className="w-full lg:w-[50%] flex flex-col gap-8 text-slate-300 text-[15px] sm:text-[16px] leading-relaxed"
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <p>
-            <strong>Vastra</strong> was born for smart, seamless shopping — created to deliver quality products, trending styles, and everyday essentials in one place. With reliable service, fast delivery, and great value, Vastra makes your online shopping experience simple, satisfying, and stress-free.
-          </p>
-          <p>
-            Made for modern shoppers — combining style, convenience, and affordability. Whether it's fashion, essentials, or trends, we bring everything you need to one trusted platform with fast delivery, easy returns, and a customer-first shopping experience you'll love.
-          </p>
-          <div>
-            <p className="text-base sm:text-lg font-bold text-white mb-2">Our Mission</p>
+          <div className="flex flex-col gap-6">
             <p>
-              Our mission is to redefine online shopping by delivering quality, affordability, and convenience. Vastra connects customers with trusted products and brands, offering a seamless, customer-focused experience that saves time, adds value, and fits every lifestyle and need.
+              <strong className="text-white text-lg">Vastra</strong> was born for smart, seamless shopping — created to deliver quality products, trending styles, and everyday essentials in one place. With reliable service, fast delivery, and great value, Vastra makes your online shopping experience simple, satisfying, and stress-free.
+            </p>
+            <p>
+              Vastra is an innovative e-commerce platform designed to bring you a premium collection of clothing and lifestyle products. We bridge the gap between high-end fashion and accessibility, offering a curated selection that reflects modern trends and timeless classics. Our platform is built on advanced technology to provide a smooth, secure, and enjoyable shopping journey for every customer.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <h3 className="text-xl font-bold text-white flex items-center gap-3">
+              <div className="w-8 h-[2px] bg-blue-500"></div>
+              Our Mission
+            </h3>
+            <p>
+              Our mission is to redefine the digital shopping landscape by prioritizing quality, transparency, and customer satisfaction. We aim to empower our users with a diverse range of products, supported by a robust infrastructure that ensures fast delivery, secure payments, and dedicated support. At Vastra, we don't just sell products; we deliver a lifestyle.
             </p>
           </div>
         </motion.div>
       </div>
 
       {/* Why Choose Us Section */}
-      <div className="w-full max-w-[1200px] flex flex-col items-center gap-6 px-4 sm:px-6">
+      <div className="w-full max-w-[1240px] flex flex-col items-center gap-10 px-4 sm:px-6 mb-12">
         <Titles text1="WHY" text2="CHOOSE US" />
 
-        {/* Cards */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 w-full py-10">
+        {/* Cards Container */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
           
           {/* Card 1 */}
           <motion.div
-            className="w-full lg:w-1/3 h-auto border border-gray-100 flex flex-col items-center text-center gap-4 px-6 py-6 text-white backdrop-blur-sm bg-white/10 rounded-md"
-            initial={{ opacity: 0, y: 50 }}
+            className="group relative h-full"
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <b className="text-lg sm:text-xl font-semibold text-[#bff1f9]">Quality Assurance</b>
-            <p className="text-sm sm:text-base">
-              We guarantee quality through strict checks, reliable sourcing, and a commitment to customer satisfaction always.
-            </p>
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+            <div className="relative h-full border border-slate-700/50 flex flex-col items-center text-center gap-5 px-8 py-10 text-white backdrop-blur-md bg-slate-900/40 rounded-2xl hover:border-blue-500/30 transition-all duration-300">
+              <div className="w-14 h-14 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight">Quality Assurance</h3>
+              <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+                We guarantee quality through strict checks, reliable sourcing, and a commitment to customer satisfaction always.
+              </p>
+            </div>
           </motion.div>
 
           {/* Card 2 */}
           <motion.div
-            className="w-full lg:w-1/3 h-auto border border-gray-100 flex flex-col items-center text-center gap-4 px-6 py-6 text-white backdrop-blur-sm bg-white/10 rounded-md"
-            initial={{ opacity: 0, y: 50 }}
+            className="group relative h-full"
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <b className="text-lg sm:text-xl font-semibold text-[#bff1f9]">Convenience</b>
-            <p className="text-sm sm:text-base">
-              Shop easily with fast delivery, simple navigation, secure checkout, and everything you need in one place.
-            </p>
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+            <div className="relative h-full border border-slate-700/50 flex flex-col items-center text-center gap-5 px-8 py-10 text-white backdrop-blur-md bg-slate-900/40 rounded-2xl hover:border-blue-500/30 transition-all duration-300">
+              <div className="w-14 h-14 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight">Convenience</h3>
+              <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+                Shop easily with fast delivery, simple navigation, secure checkout, and everything you need in one place.
+              </p>
+            </div>
           </motion.div>
 
           {/* Card 3 */}
           <motion.div
-            className="w-full lg:w-1/3 h-auto border border-gray-100 flex flex-col items-center text-center gap-4 px-6 py-6 text-white backdrop-blur-sm bg-white/10 rounded-md"
-            initial={{ opacity: 0, y: 50 }}
+            className="group relative h-full"
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
-            <b className="text-lg sm:text-xl font-semibold text-[#bff1f9]">Exceptional Service</b>
-            <p className="text-sm sm:text-base">
-              Our dedicated support team ensures quick responses, helpful solutions, and a smooth shopping experience every time.
-            </p>
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+            <div className="relative h-full border border-slate-700/50 flex flex-col items-center text-center gap-5 px-8 py-10 text-white backdrop-blur-md bg-slate-900/40 rounded-2xl hover:border-blue-500/30 transition-all duration-300">
+              <div className="w-14 h-14 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight">Exceptional Service</h3>
+              <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+                Our dedicated support team ensures quick responses, helpful solutions, and a smooth shopping experience every time.
+              </p>
+            </div>
           </motion.div>
 
         </div>

@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
-import Nav from '../components/Nav';
-import Sidebar from '../components/Sidebar';
+import Nav from '../../components/admin/Nav';
+import Sidebar from '../../components/admin/Sidebar';
 import axios from 'axios';
-import { authDataContext } from '../context/AuthContext';
+import { authDataContext } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { MdSearch, MdDelete, MdStar, MdStarBorder, MdGridView, MdTableRows } from 'react-icons/md';

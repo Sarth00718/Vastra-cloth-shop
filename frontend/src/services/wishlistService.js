@@ -1,18 +1,9 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
-const getAuthHeaders = () => ({
-    withCredentials: true,
-    headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-    }
-});
+import api from './api.js';
 
 export const wishlistService = {
     getWishlist: async () => {
         try {
-            const response = await axios.get(`${API_URL}/api/wishlist/get`, getAuthHeaders());
+            const response = await api.get('/api/wishlist/get');
             return response.data;
         } catch (error) {
             console.error("Error fetching wishlist:", error);
@@ -22,10 +13,9 @@ export const wishlistService = {
 
     toggleWishlist: async (productId) => {
         try {
-            const response = await axios.post(
-                `${API_URL}/api/wishlist/toggle`,
-                { productId },
-                getAuthHeaders()
+            const response = await api.post(
+                '/api/wishlist/toggle',
+                { productId }
             );
             return response.data;
         } catch (error) {

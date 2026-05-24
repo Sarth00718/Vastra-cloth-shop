@@ -1,11 +1,12 @@
 import { useState, useContext, useCallback } from 'react';
-import Nav from '../components/Nav';
-import Sidebar from '../components/Sidebar';
-import { authDataContext } from '../context/AuthContext';
+import Nav from '../../components/admin/Nav';
+import Sidebar from '../../components/admin/Sidebar';
+import { authDataContext } from '../../context/AuthContext';
+import { userDataContext } from '../../context/UserContext';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { MdCloudUpload, MdClose } from 'react-icons/md';
-import adminApi from '../services/adminApi';
+import adminApi from '../../services/admin/adminApi';
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 const CATEGORIES = ['Men', 'Women', 'Kids'];
@@ -54,11 +55,12 @@ function ImageSlot({ index, image, onSet, onClear }) {
 }
 
 function Add() {
+  const { user } = useContext(userDataContext);
+  const { serverurl } = useContext(authDataContext);
   const [images, setImages] = useState([null, null, null, null]);
   const [form, setForm] = useState(INITIAL_STATE);
   const [sizes, setSizes] = useState([]);
   const [submitting, setSubmitting] = useState(false);
-  const { serverurl } = useContext(authDataContext);
 
   const setImage = (idx, file) => setImages(prev => { const n = [...prev]; n[idx] = file; return n; });
   const clearImage = (idx) => setImages(prev => { const n = [...prev]; n[idx] = null; return n; });

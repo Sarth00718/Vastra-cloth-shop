@@ -22,18 +22,38 @@ const Order = lazy(() => import('./pages/Order'));
 const Wishlist = lazy(() => import('./pages/Wishlist'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
+// ─── ADMIN LAZY ROUTES ────────────────────────────────────────────────────────
+const AdminHome = lazy(() => import('./pages/admin/Home'));
+const AdminAdd = lazy(() => import('./pages/admin/Add'));
+const AdminLists = lazy(() => import('./pages/admin/Lists'));
+const AdminOrders = lazy(() => import('./pages/admin/Orders'));
+
 // ─── PROTECTED ROUTE ─────────────────────────────────────────────────────────
 function ProtectedRoute({ children }) {
-  const { user } = useContext(userDataContext);
+  const { user, loading } = useContext(userDataContext);
   const location = useLocation();
+  
+  if (loading) return <SkeletonPage />;
   if (!user) return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  return children;
+}
+
+// ─── ADMIN PROTECTED ROUTE ───────────────────────────────────────────────────
+function AdminProtectedRoute({ children }) {
+  const { user, loading } = useContext(userDataContext);
+  const location = useLocation();
+  
+  if (loading) return <SkeletonPage />;
+  if (!user || user.role !== 'admin') return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   return children;
 }
 
 // ─── GUEST ROUTE (redirect authenticated users away from login/signup) ────────
 function GuestRoute({ children }) {
-  const { user } = useContext(userDataContext);
+  const { user, loading } = useContext(userDataContext);
   const location = useLocation();
+  
+  if (loading) return <SkeletonPage />;
   if (user) return <Navigate to={location.state?.from || '/'} replace />;
   return children;
 }
@@ -42,9 +62,12 @@ function GuestRoute({ children }) {
 const NO_FOOTER_PATHS = ['/login', '/signup'];
 
 function App() {
-  const { user } = useContext(userDataContext);
+  const { user, loading } = useContext(userDataContext);
   const location = useLocation();
-  const showFooter = !NO_FOOTER_PATHS.includes(location.pathname);
+  const isAdminPath = location.pathname.startsWith('/admin');
+  const showFooter = !NO_FOOTER_PATHS.includes(location.pathname) && !isAdminPath;
+
+  if (loading) return <SkeletonPage />;
 
   return (
     <>
@@ -58,14 +81,14 @@ function App() {
           },
         }}
       />
-      {user && <Nav />}
+      {!isAdminPath && user && <Nav />}
       <Suspense fallback={<SkeletonPage />}>
         <Routes>
           {/* Guest routes */}
           <Route path="/signup" element={<GuestRoute><Registration /></GuestRoute>} />
           <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
 
-          {/* Protected routes */}
+          {/* User Protected routes */}
           <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
           <Route path="/contects" element={<ProtectedRoute><Contects /></ProtectedRoute>} />
@@ -77,11 +100,17 @@ function App() {
           <Route path="/order" element={<ProtectedRoute><Order /></ProtectedRoute>} />
           <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
 
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminProtectedRoute><AdminHome /></AdminProtectedRoute>} />
+          <Route path="/admin/add" element={<AdminProtectedRoute><AdminAdd /></AdminProtectedRoute>} />
+          <Route path="/admin/lists" element={<AdminProtectedRoute><AdminLists /></AdminProtectedRoute>} />
+          <Route path="/admin/orders" element={<AdminProtectedRoute><AdminOrders /></AdminProtectedRoute>} />
+
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
-      {user && showFooter && <Footer />}
+      {showFooter && <Footer />}
     </>
   );
 }

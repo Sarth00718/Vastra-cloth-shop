@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
-import Nav from '../components/Nav';
-import Sidebar from '../components/Sidebar';
+import Nav from '../../components/admin/Nav';
+import Sidebar from '../../components/admin/Sidebar';
 import axios from 'axios';
-import { authDataContext } from '../context/AuthContext';
+import { authDataContext } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import {
@@ -50,14 +50,15 @@ function Home() {
   const fetchAnalytics = async () => {
     setLoading(true);
     try {
-      // Try new analytics endpoint first, fallback to counting manually
+      // Try new analytics endpoint first
       try {
         const res = await axios.get(`${serverurl}/api/order/analytics`, {
           withCredentials: true,
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         setAnalytics(res.data.analytics);
-      } catch {
+      } catch (err) {
+        console.warn('Analytics endpoint failed, using fallback manual calculation:', err.message);
         // Fallback to manual count
         const [productsRes, ordersRes] = await Promise.all([
           axios.get(`${serverurl}/api/product/list`, {
@@ -69,10 +70,16 @@ function Home() {
           }),
         ]);
 
-        const orders = ordersRes.data.orders || ordersRes.data;
+        const orders = ordersRes.data.orders || ordersRes.data || [];
         const products = productsRes.data.data || productsRes.data.products || [];
 
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+
         const totalRevenue = orders.reduce((sum, o) => sum + (o.amount || 0), 0);
+        const monthlyOrders = orders.filter(o => o.date >= startOfMonth);
+        const monthlyRevenue = monthlyOrders.reduce((sum, o) => sum + (o.amount || 0), 0);
+
         const statusBreakdown = orders.reduce((acc, o) => {
           const found = acc.find(s => s._id === o.status);
           if (found) found.count++;
@@ -83,17 +90,18 @@ function Home() {
         setAnalytics({
           totalOrders: orders.length,
           totalRevenue,
-          monthlyOrders: 0,
-          monthlyRevenue: 0,
-          revenueGrowth: 0,
+          monthlyOrders: monthlyOrders.length,
+          monthlyRevenue,
+          revenueGrowth: 0, // Fallback can't easily calculate growth without previous month data
           statusBreakdown,
           recentOrders: orders.slice(0, 5),
           totalProducts: products.length,
+          totalUsers: '—', // Fallback doesn't have users list
         });
       }
     } catch (err) {
-      console.error(err);
-      toast.error('Failed to load analytics');
+      console.error('Final analytics error:', err);
+      toast.error('Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
@@ -153,6 +161,13 @@ function Home() {
                   value={analytics?.totalProducts || '—'}
                   color="#8b5cf6"
                   delay={0.2}
+                />
+                <StatCard
+                  icon={MdPeople}
+                  label="Total Users"
+                  value={analytics?.totalUsers || '—'}
+                  color="#06b6d4"
+                  delay={0.25}
                 />
                 <StatCard
                   icon={MdTrendingUp}

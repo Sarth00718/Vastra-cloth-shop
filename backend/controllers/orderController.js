@@ -125,6 +125,7 @@ export const getAnalytics = asyncHandler(async (req, res) => {
   const [
     totalOrders,
     totalProducts,
+    totalUsers,
     totalRevenue,
     monthlyOrders,
     monthlyRevenue,
@@ -135,6 +136,7 @@ export const getAnalytics = asyncHandler(async (req, res) => {
   ] = await Promise.all([
     Order.countDocuments(),
     Product.countDocuments(),
+    User.countDocuments(),
     Order.aggregate([{ $group: { _id: null, total: { $sum: '$amount' } } }]),
     Order.countDocuments({ date: { $gte: startOfMonth.getTime() } }),
     Order.aggregate([
@@ -183,6 +185,7 @@ export const getAnalytics = asyncHandler(async (req, res) => {
     analytics: {
       totalOrders,
       totalProducts,
+      totalUsers,
       totalRevenue: revenue,
       monthlyOrders,
       monthlyRevenue: monthRev,

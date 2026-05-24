@@ -1,20 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import axios from 'axios';
+import { authDataContext } from '../context/AuthContext';
 
 function NewLettorBox() {
   const [email, setEmail] = useState('');
+  const { serverurl } = useContext(authDataContext);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email.trim()) {
-      toast.error('Please enter a valid email address.');
+    if (!email) {
+      toast.error('Please enter an email');
       return;
     }
 
-    console.log('Subscribed email:', email);
-    toast.success('Thank you for subscribing!');
-    setEmail('');
+    try {
+      const response = await axios.post(`${serverurl}/api/subscription/subscribe`, { email });
+      toast.success(response.data.message || 'Subscribed successfully!');
+      setEmail('');
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || 'Subscription failed. Please try again.';
+      toast.error(errorMsg);
+      console.error('Subscription error:', error);
+    }
   };
 
   return (
@@ -34,19 +43,20 @@ function NewLettorBox() {
 
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white/10 backdrop-blur-md rounded-lg p-4 flex flex-col sm:flex-row gap-4 items-center"
+        className="w-full max-w-xl bg-slate-900/40 backdrop-blur-xl rounded-2xl p-2 border border-slate-700/50 flex flex-col sm:flex-row gap-3 items-center shadow-2xl shadow-black/20"
       >
         <input
           type="email"
           placeholder="Enter Your Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full sm:w-80 md:w-96 px-4 py-3 rounded-md text-white bg-white/20 placeholder-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          className="flex-1 w-full px-5 py-4 rounded-xl text-white bg-slate-950/60 placeholder-slate-500 border border-slate-800 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all duration-300"
         />
         <motion.button
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           type="submit"
-          className="w-full sm:w-auto bg-cyan-700 hover:bg-cyan-800 transition px-6 py-3 rounded-md font-semibold text-white"
+          className="w-full sm:w-auto bg-cyan-700 hover:bg-cyan-600 transition px-8 py-4 rounded-xl font-bold text-white shadow-lg shadow-cyan-900/20"
         >
           Subscribe
         </motion.button>

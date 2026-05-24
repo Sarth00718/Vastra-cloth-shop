@@ -1,34 +1,18 @@
 import { User } from "../models/userModel.js";
+import { asyncHandler } from "../middlewares/errorHandler.js";
 
-export const getCurrentUser = async (req, res) => {
-    try {
-        const user = await User.findById(req.userId).select("-password");
+export const getCurrentUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.userId).select("-password");
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        return res.status(200).json(user);
-    } catch (error) {
-        console.log("Error fetching user:", error.message);
-        return res.status(500).json({ message: "Error fetching user" });
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
     }
-};
 
-//get admin
-export const getAdmin = async (req, res) => {
-    try {
-        let adminEmail = req.adminEmail;
-        if (!adminEmail) {
-            return res.status(404).json({ message: "Admin not found" });
-        }
-        return res.status(201).json({
-            message: "Admin found",
-            email: adminEmail,
-            role: "admin"
-        })
-    } catch (error) {
-        console.log("Error fetching admin:", error.message);
-        return res.status(500).json({ message: "Error fetching admin" });
+    // Self-healing: Ensure admin role for configured admin email
+    if (user.email === process.env.ADMIN_EMAIL && user.role !== 'admin') {
+        user.role = 'admin';
+        await user.save();
     }
-};
+
+    return res.status(200).json(user);
+});

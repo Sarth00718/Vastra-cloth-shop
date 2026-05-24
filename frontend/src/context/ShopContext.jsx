@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 import { userDataContext } from './UserContext';
 import { productService } from '../services/productService';
 import { cartService } from '../services/cartService';
+import { wishlistService } from '../services/wishlistService';
 import api from '../services/api';
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
@@ -114,8 +115,8 @@ function ShopContext({ children }) {
   // ─── WISHLIST ────────────────────────────────────────────────────────────────
   const getUserWishlist = useCallback(async () => {
     try {
-      const response = await api.get('/api/wishlist/getwishlist');
-      setWishlist(response.data.wishlist || []);
+      const result = await wishlistService.getWishlist();
+      setWishlist(result.wishlist || []);
     } catch (error) {
       console.error('Error fetching wishlist:', error);
     }
@@ -128,9 +129,9 @@ function ShopContext({ children }) {
       isWishlisted ? prev.filter((id) => id !== productId) : [...prev, productId]
     );
     try {
-      const response = await api.post('/api/wishlist/toggle', { productId });
-      setWishlist(response.data.wishlist || []);
-      return response.data.added;
+      const result = await wishlistService.toggleWishlist(productId);
+      setWishlist(result.wishlist || []);
+      return result.added;
     } catch (error) {
       // Revert on failure
       setWishlist((prev) =>

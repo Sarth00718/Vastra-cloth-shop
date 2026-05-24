@@ -10,6 +10,7 @@ import cartRoutes from './routes/cartRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import assetRoutes from './routes/assetRoutes.js';
+import subscriptionRoutes from './routes/subscriptionRoutes.js';
 import { globalErrorHandler } from './middlewares/errorHandler.js';
 
 dotenv.config();
@@ -23,6 +24,10 @@ const allowedOrigins = [
   'https://vastra-cloth-shop-oirs.vercel.app',
   'http://localhost:5173',
   'http://localhost:5174',
+  'http://localhost:5175',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174',
+  'http://127.0.0.1:5175',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
@@ -44,6 +49,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/assets', assetRoutes);
+app.use('/api/subscription', subscriptionRoutes);
 
 // ─── 404 HANDLER ─────────────────────────────────────────────────────────────
 app.use((req, res) => {

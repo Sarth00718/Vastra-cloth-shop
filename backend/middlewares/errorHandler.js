@@ -11,7 +11,8 @@ export const asyncHandler = (fn) => (req, res, next) => {
  * Place LAST in middleware chain in index.js
  */
 export const globalErrorHandler = (err, req, res, next) => {
-  console.error(`[ERROR] ${req.method} ${req.path}:`, err.message);
+  console.error(`[ERROR] ${req.method} ${req.path}:`);
+  console.error(err.stack || err.message || err);
 
   // Mongoose validation error
   if (err.name === 'ValidationError') {

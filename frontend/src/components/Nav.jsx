@@ -4,17 +4,39 @@ import logo from "../assets/vogo.png";
 import { IoSearchCircleOutline, IoSearchCircleSharp } from "react-icons/io5";
 import { IoMdHome, IoMdAlbums, IoMdContacts, IoMdCart } from "react-icons/io";
 import { FaCircleUser } from "react-icons/fa6";
-import { MdOutlineShoppingCart } from "react-icons/md";
+import { MdOutlineShoppingCart, MdOutlineAdminPanelSettings } from "react-icons/md";
 import { userDataContext } from "../context/UserContext";
 import { authDataContext } from "../context/AuthContext";
 import { shopDataContext } from "../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast from "react-hot-toast";
+import { AnimatePresence } from "framer-motion";
+import { MdOutlineLogout, MdOutlineHistory, MdOutlineFavoriteBorder, MdOutlineInfo } from "react-icons/md";
+
+// ─── REUSABLE DROPDOWN ITEM ──────────────────────────────────────────────────
+const DropdownItem = ({ icon: Icon, label, onClick, danger, accent }) => (
+  <motion.li
+    whileHover={{ x: 6, backgroundColor: "rgba(59, 130, 246, 0.1)" }}
+    whileTap={{ scale: 0.98 }}
+    onClick={onClick}
+    className={`
+      flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group
+      ${danger ? 'text-red-400 hover:text-red-300' : accent ? 'text-blue-400 font-bold' : 'text-slate-300 hover:text-white'}
+    `}
+  >
+    <div className={`
+      w-8 h-8 rounded-lg flex items-center justify-center transition-colors
+      ${danger ? 'bg-red-500/10 group-hover:bg-red-500/20' : accent ? 'bg-blue-500/10 group-hover:bg-blue-500/20' : 'bg-slate-800 group-hover:bg-slate-700'}
+    `}>
+      <Icon className="w-5 h-5" />
+    </div>
+    <span className="text-[14px] font-medium tracking-wide">{label}</span>
+  </motion.li>
+);
 
 function Nav() {
-  const { user, setUser } = useContext(userDataContext);
+  const { user, setUser, admin } = useContext(userDataContext);
   const { serverurl } = useContext(authDataContext);
   const { showSearch, setShowSearch, search, setSearch, getCardCount } = useContext(shopDataContext);
   const [showProfile, setShowProfile] = useState(false);
@@ -26,7 +48,8 @@ function Nav() {
       await axios.get(`${serverurl}/api/auth/logout`, { withCredentials: true });
       localStorage.removeItem("token");
       setShowProfile(false);
-      setUser(null); // Clear user state immediately
+      setUser(null);
+      setAdmin(null);
       toast.success("Logout successful!");
       navigate("/login"); // Navigate to login page instead of home
     } catch (error) {
@@ -122,34 +145,64 @@ function Nav() {
             )}
 
             {/* Premium Dropdown */}
-            {showProfile && (
-              <motion.div
-                initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-                className="absolute top-[120%] right-0 w-48 bg-gradient-to-b from-slate-900/95 to-slate-950/95 border border-slate-700/50 rounded-2xl z-50 shadow-2xl shadow-black/50 backdrop-blur-xl overflow-hidden"
-              >
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
-                <ul className="flex flex-col text-slate-200 text-[15px] font-medium p-2">
-                  {!user && (
-                    <li className="px-4 py-3 hover:bg-blue-600/20 cursor-pointer rounded-xl transition-all" onClick={() => { navigate("/login"); setShowProfile(false); }}>
-                      Login
-                    </li>
-                  )}
-                  {user && (
-                    <li className="px-4 py-3 hover:bg-blue-600/20 cursor-pointer rounded-xl transition-all" onClick={handleLogout}>
-                      Logout
-                    </li>
-                  )}
-                  <li className="px-4 py-3 hover:bg-blue-600/20 cursor-pointer rounded-xl transition-all" onClick={() => navigate('/order')}>Orders</li>
-                  <li className="px-4 py-3 hover:bg-pink-500/20 cursor-pointer rounded-xl transition-all flex items-center gap-2" onClick={() => { navigate('/wishlist'); setShowProfile(false); }}>
-                    ❤️ Wishlist
-                  </li>
-                  <li className="px-4 py-3 hover:bg-blue-600/20 cursor-pointer rounded-xl transition-all" onClick={() => { navigate("/about"); setShowProfile(false); }}>About</li>
-                </ul>
-              </motion.div>
-            )}
+            <AnimatePresence>
+              {showProfile && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute top-[125%] right-0 w-56 bg-slate-900/95 border border-slate-800/60 rounded-2xl z-50 shadow-2xl shadow-black/60 backdrop-blur-2xl overflow-hidden p-2"
+                >
+                  {/* Glassmorphism Shine */}
+                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+                  
+                  <ul className="flex flex-col gap-1">
+                    {!user ? (
+                      <DropdownItem 
+                        icon={FaCircleUser} 
+                        label="Login" 
+                        onClick={() => { navigate("/login"); setShowProfile(false); }} 
+                      />
+                    ) : (
+                      <DropdownItem 
+                        icon={MdOutlineLogout} 
+                        label="Logout" 
+                        danger 
+                        onClick={handleLogout} 
+                      />
+                    )}
+
+                    {admin && (
+                      <DropdownItem 
+                        icon={MdOutlineAdminPanelSettings} 
+                        label="Admin Panel" 
+                        accent 
+                        onClick={() => { navigate('/admin'); setShowProfile(false); }} 
+                      />
+                    )}
+
+                    <div className="h-px bg-slate-800/60 my-1 mx-2" />
+
+                    <DropdownItem 
+                      icon={MdOutlineHistory} 
+                      label="Orders" 
+                      onClick={() => { navigate('/order'); setShowProfile(false); }} 
+                    />
+                    <DropdownItem 
+                      icon={MdOutlineFavoriteBorder} 
+                      label="Wishlist" 
+                      onClick={() => { navigate('/wishlist'); setShowProfile(false); }} 
+                    />
+                    <DropdownItem 
+                      icon={MdOutlineInfo} 
+                      label="About" 
+                      onClick={() => { navigate("/about"); setShowProfile(false); }} 
+                    />
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
 
           {/* Premium Cart */}
