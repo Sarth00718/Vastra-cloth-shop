@@ -3,7 +3,6 @@ import Hero from '../components/Hero'
 import Background from '../components/Background';
 import Product from './Product';
 import OurPolicy from '../components/OurPolicy';
-import NewLettorBox from '../components/NewLettorBox';
 
 
 function Home() {
@@ -35,7 +34,6 @@ function Home() {
       </div>
       <Product />
       <OurPolicy />
-      <NewLettorBox />
     </div>
   );
 

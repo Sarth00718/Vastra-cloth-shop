@@ -5,6 +5,7 @@ import { MdOutlineTune } from 'react-icons/md';
 import Titles from '../components/Titles';
 import Card, { CardSkeleton } from '../components/Card';
 import { shopDataContext } from '../context/ShopContext';
+import { useNavbarHeight } from '../hooks/useNavbarHeight';
 
 const CATEGORIES = ['Men', 'Women', 'Kids'];
 const SUBCATEGORIES = ['Topwear', 'Bottomwear', 'Winterwear'];
@@ -28,6 +29,7 @@ function FilterChip({ label, onRemove }) {
 
 function Collections() {
   const { products, search, showSearch, productsLoading } = useContext(shopDataContext);
+  const navbarPadding = useNavbarHeight();
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('relevant');
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -170,10 +172,10 @@ function Collections() {
   );
 
   return (
-    <div className="w-full min-h-screen flex flex-col md:flex-row pt-[75px] z-[2]">
+    <div className={`w-full min-h-screen flex flex-col md:flex-row transition-all duration-300 z-[2] ${navbarPadding}`}>
 
       {/* ── Mobile Filter Toggle ── */}
-      <div className="md:hidden flex items-center justify-between px-4 py-3 border-b border-slate-800">
+      <div className={`md:hidden flex items-center justify-between px-4 py-3 border-b border-slate-800 fixed w-full bg-slate-950 z-20 transition-all duration-300 ${showSearch ? 'top-[155px]' : 'top-[75px]'}`}>
         <span className="text-slate-300 font-semibold text-sm">{filteredProducts.length} Products</span>
         <button
           onClick={() => setShowFilters(!showFilters)}
@@ -199,7 +201,7 @@ function Collections() {
               animate={{ x: 0 }}
               exit={{ x: -320 }}
               transition={{ type: 'tween', duration: 0.25 }}
-              className="fixed top-[75px] left-0 h-[calc(100vh-75px)] w-[85%] max-w-[320px] border-r border-slate-800 overflow-y-auto p-5 flex flex-col gap-6 bg-slate-950 z-40 md:hidden"
+              className={`fixed left-0 w-[85%] max-w-[320px] border-r border-slate-800 overflow-y-auto p-5 flex flex-col gap-6 bg-slate-950 z-40 md:hidden transition-all duration-300 ${showSearch ? 'top-[155px] h-[calc(100vh-155px)]' : 'top-[75px] h-[calc(100vh-75px)]'}`}
             >
               {renderFilters(true)}
             </motion.aside>
@@ -208,7 +210,7 @@ function Collections() {
       </AnimatePresence>
 
       {/* ── Desktop Sidebar ── */}
-      <aside className="hidden md:flex md:w-[260px] lg:w-[240px] shrink-0 border-r border-slate-800 md:sticky md:top-[75px] md:h-[calc(100vh-75px)] overflow-y-auto p-5 flex-col gap-6 bg-slate-950 z-10">
+      <aside className={`hidden md:flex md:w-[260px] lg:w-[240px] shrink-0 border-r border-slate-800 md:sticky overflow-y-auto p-5 flex-col gap-6 bg-slate-950 z-10 transition-all duration-300 ${showSearch ? 'md:top-[155px] md:h-[calc(100vh-155px)]' : 'md:top-[75px] md:h-[calc(100vh-75px)]'}`}>
         {renderFilters(false)}
       </aside>
 

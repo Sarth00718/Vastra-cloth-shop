@@ -1,7 +1,6 @@
 import React from 'react';
 import about from '../assets/vastraAbout.jpg';
 import Titles from '../components/Titles';
-import NewLettorBox from '../components/NewLettorBox';
 import { motion } from 'framer-motion';
 
 function About() {
@@ -131,8 +130,6 @@ function About() {
         </div>
       </div>
 
-      {/* Newsletter Box */}
-      <NewLettorBox />
     </motion.div>
   );
 }

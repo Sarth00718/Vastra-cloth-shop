@@ -20,6 +20,7 @@ const Cart = lazy(() => import('./pages/Cart'));
 const PlaceOrder = lazy(() => import('./pages/PlaceOrder'));
 const Order = lazy(() => import('./pages/Order'));
 const Wishlist = lazy(() => import('./pages/Wishlist'));
+
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 // ─── ADMIN LAZY ROUTES ────────────────────────────────────────────────────────
@@ -99,6 +100,7 @@ function App() {
           <Route path="/placeorder" element={<ProtectedRoute><PlaceOrder /></ProtectedRoute>} />
           <Route path="/order" element={<ProtectedRoute><Order /></ProtectedRoute>} />
           <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
+
 
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminProtectedRoute><AdminHome /></AdminProtectedRoute>} />

@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaStar, FaStarHalfAlt, FaRegStar, FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaStar, FaStarHalfAlt, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { MdOutlineShoppingCart, MdArrowBack, MdLocalShipping, MdRefresh, MdVerifiedUser } from 'react-icons/md';
 import { shopDataContext } from '../context/ShopContext';
 import RelatedProducts from '../components/RelatedProducts';
 import toast from 'react-hot-toast';
-import Card, { CardSkeleton } from '../components/Card';
+import Card from '../components/Card';
 
 function ProductDetails() {
   const { productId } = useParams();
@@ -96,18 +96,23 @@ function ProductDetails() {
                 <button
                   key={idx}
                   onClick={() => setActiveImage(img)}
-                  className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                  className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center p-1 ${
                     activeImage === img ? 'border-blue-500 shadow-lg shadow-blue-500/30' : 'border-slate-700'
                   }`}
                 >
-                  <img src={img} alt="" referrerPolicy="no-referrer-when-downgrade" className="w-full h-full object-cover" />
+                  <img 
+                    src={img} 
+                    alt="" 
+                    referrerPolicy="no-referrer-when-downgrade" 
+                    className="max-w-full max-h-full object-contain" 
+                  />
                 </button>
               ))}
             </div>
 
             {/* Main Image with zoom */}
             <div
-              className="flex-1 order-1 lg:order-2 rounded-2xl overflow-hidden bg-slate-800 cursor-zoom-in"
+              className="flex-1 order-1 lg:order-2 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 cursor-zoom-in aspect-square flex items-center justify-center p-4"
               onMouseMove={handleMouseMove}
               onMouseEnter={() => setIsZooming(true)}
               onMouseLeave={() => { setIsZooming(false); setZoomStyle({}); }}
@@ -122,7 +127,7 @@ function ProductDetails() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="w-full h-[400px] md:h-[500px] object-cover transition-transform duration-100"
+                  className="max-w-full max-h-full object-contain transition-transform duration-100"
                   style={isZooming ? zoomStyle : {}}
                 />
               </AnimatePresence>
@@ -188,6 +193,8 @@ function ProductDetails() {
                 ))}
               </div>
             </div>
+
+
 
             {/* CTA buttons */}
             <div className="flex gap-3 mt-2">
@@ -276,6 +283,8 @@ function ProductDetails() {
             </div>
           </div>
         )}
+
+
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { IoSearchCircleOutline, IoSearchCircleSharp } from "react-icons/io5";
 import { IoMdHome, IoMdAlbums, IoMdContacts, IoMdCart } from "react-icons/io";
 import { FaCircleUser } from "react-icons/fa6";
 import { MdOutlineShoppingCart, MdOutlineAdminPanelSettings } from "react-icons/md";
+import { IoShirtOutline } from "react-icons/io5";
 import { userDataContext } from "../context/UserContext";
 import { authDataContext } from "../context/AuthContext";
 import { shopDataContext } from "../context/ShopContext";
@@ -13,6 +14,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { AnimatePresence } from "framer-motion";
 import { MdOutlineLogout, MdOutlineHistory, MdOutlineFavoriteBorder, MdOutlineInfo } from "react-icons/md";
+
+
 
 // ─── REUSABLE DROPDOWN ITEM ──────────────────────────────────────────────────
 const DropdownItem = ({ icon: Icon, label, onClick, danger, accent }) => (
@@ -40,6 +43,7 @@ function Nav() {
   const { serverurl } = useContext(authDataContext);
   const { showSearch, setShowSearch, search, setSearch, getCardCount } = useContext(shopDataContext);
   const [showProfile, setShowProfile] = useState(false);
+  const [showOutfitCreator, setShowOutfitCreator] = useState(false);
   const navigate = useNavigate();
   const iconButtonClass = "w-10 h-10 rounded-full flex items-center justify-center border border-slate-700/50 bg-slate-900/40 text-slate-300 hover:text-blue-300 hover:border-blue-500/50 transition-all";
 
@@ -195,6 +199,7 @@ function Nav() {
                       label="Wishlist" 
                       onClick={() => { navigate('/wishlist'); setShowProfile(false); }} 
                     />
+
                     <DropdownItem 
                       icon={MdOutlineInfo} 
                       label="About" 
@@ -224,21 +229,26 @@ function Nav() {
       </div>
 
       {/* Search Bar */}
-      {showSearch && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full h-[80px] bg-gradient-to-r from-[#0f2847] via-[#1a3a5f] to-[#0f2847] flex items-center justify-center border-b border-blue-900/30"
-        >
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-[90%] sm:w-[70%] md:w-[50%] h-[50px] bg-gradient-to-r from-[#0a1929] to-[#0f2847] border-2 border-blue-700/40 rounded-full px-6 placeholder:text-blue-300/60 text-blue-100 text-[16px] sm:text-[18px] outline-none focus:border-blue-500 focus:shadow-lg focus:shadow-blue-900/30 transition-all"
-          />
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {showSearch && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 80 }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="w-full bg-gradient-to-r from-[#0f2847] via-[#1a3a5f] to-[#0f2847] flex items-center justify-center border-b border-blue-900/30 overflow-hidden"
+          >
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              autoFocus
+              className="w-[90%] sm:w-[70%] md:w-[50%] h-[50px] bg-gradient-to-r from-[#0a1929] to-[#0f2847] border-2 border-blue-700/40 rounded-full px-6 placeholder:text-blue-300/60 text-blue-100 text-[16px] sm:text-[18px] outline-none focus:border-blue-500 focus:shadow-lg focus:shadow-blue-900/30 transition-all"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
 

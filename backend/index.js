@@ -10,7 +10,7 @@ import cartRoutes from './routes/cartRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import assetRoutes from './routes/assetRoutes.js';
-import subscriptionRoutes from './routes/subscriptionRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
 import { globalErrorHandler } from './middlewares/errorHandler.js';
 
 dotenv.config();
@@ -49,7 +49,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/assets', assetRoutes);
-app.use('/api/subscription', subscriptionRoutes);
+app.use('/api/contact', contactRoutes);
 
 // ─── 404 HANDLER ─────────────────────────────────────────────────────────────
 app.use((req, res) => {
