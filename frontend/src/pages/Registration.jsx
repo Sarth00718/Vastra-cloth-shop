@@ -18,10 +18,14 @@ function Registration() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   let { getCurrentUser } = useContext(userDataContext);
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    if (isLoading) return;
+    setIsLoading(true);
     try {
       const res = await axios.post(
         `${serverurl}/api/auth/register`,
@@ -35,10 +39,14 @@ function Registration() {
       navigate("/");
     } catch (error) {
       toast.error(error?.response?.data?.message || error?.response?.data?.msg || "Registration failed!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const googlesignup = async () => {
+    if (googleLoading) return;
+    setGoogleLoading(true);
     try {
       const res = await signInWithPopup(auth, provider);
       let user = res.user;
@@ -69,6 +77,8 @@ function Registration() {
       } else {
         toast.error("Google sign-in failed. Please check your browser settings.");
       }
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -100,15 +110,23 @@ function Registration() {
           className="w-[90%] h-[90%] flex flex-col items-center justify-start gap-[20px]"
           onSubmit={handleSignup}
         >
-          <motion.div
-            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(33, 150, 243, 0.4)" }}
-            whileTap={{ scale: 0.95 }}
-            className="w-[90%] h-[50px] bg-gradient-to-r from-blue-700 to-blue-600 rounded-lg flex items-center justify-center gap-[10px] py-[20px] cursor-pointer shadow-lg shadow-blue-900/30 font-semibold"
+          <motion.button
+            type="button"
+            whileHover={!googleLoading ? { scale: 1.05, boxShadow: "0 0 20px rgba(33, 150, 243, 0.4)" } : {}}
+            whileTap={!googleLoading ? { scale: 0.95 } : {}}
+            className={`w-[90%] h-[50px] bg-gradient-to-r from-blue-700 to-blue-600 rounded-lg flex items-center justify-center gap-[10px] py-[20px] shadow-lg shadow-blue-900/30 font-semibold ${googleLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
             onClick={googlesignup}
+            disabled={googleLoading}
           >
-            <img src={google} alt="Google icon" className="w-[22px]" />
-            Register with Google
-          </motion.div>
+            {googleLoading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <>
+                <img src={google} alt="Google icon" className="w-[22px]" />
+                Register with Google
+              </>
+            )}
+          </motion.button>
 
           <div className="w-[100%] h-[20px] flex justify-center items-center gap-[10px] text-blue-300/70">
             <div className="w-[40%] h-[1px] bg-blue-700/40" />
@@ -165,12 +183,16 @@ function Registration() {
             </div>
             <motion.button
               type="submit"
-              className="w-full h-[50px] bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-lg flex items-center justify-center mt-[20px] text-[17px] font-bold shadow-lg shadow-blue-900/40"
-              whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(33, 150, 243, 0.5)" }}
-              whileTap={{ scale: 0.95 }}
+              disabled={isLoading}
+              className={`w-full h-[50px] bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg flex items-center justify-center mt-[20px] text-[17px] font-bold shadow-lg shadow-blue-900/40 ${isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:from-blue-500 hover:to-blue-600 cursor-pointer'}`}
+              whileHover={!isLoading ? { scale: 1.05, boxShadow: "0 0 25px rgba(33, 150, 243, 0.5)" } : {}}
+              whileTap={!isLoading ? { scale: 0.95 } : {}}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              Create Account
+              <span className="flex items-center gap-2">
+                {isLoading && <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+                {isLoading ? "Creating Account..." : "Create Account"}
+              </span>
             </motion.button>
             <p className="flex gap-[10px] text-blue-200">
               Already have an account?

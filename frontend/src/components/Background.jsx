@@ -5,41 +5,18 @@ import back3 from "../assets/back3.jpg";
 import back4 from "../assets/back4.jpg";
 
 function Background({ heroCount }) {
-  if (heroCount === 0) {
+  const images = [back2, back1, back3, back4];
+  
+  if (heroCount >= 0 && heroCount < images.length) {
     return (
       <img
-        src={back2}
-        alt=""
-        className="w-full h-full float-left overflow-auto object-cover"
+        src={images[heroCount]}
+        alt="Background"
+        className="absolute inset-0 w-full h-full object-cover z-0"
       />
     );
-  } else if (heroCount === 1) {
-    return (
-      <img
-        src={back1}
-        alt=""
-        className="w-full h-full float-left overflow-auto object-cover"
-      />
-    );
-  } else if (heroCount === 2) {
-    return (
-      <img
-        src={back3}
-        alt=""
-        className="w-full h-full float-left overflow-auto object-cover"
-      />
-    );
-  } else if (heroCount === 3) {
-    return (
-      <img
-        src={back4}
-        alt=""
-        className="w-full h-full float-left overflow-auto object-cover"
-      />
-    );
-  } else {
-    return null;
   }
+  return null;
 }
 
 export default Background;

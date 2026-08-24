@@ -1,49 +1,83 @@
 import React from 'react';
 import { FiRepeat, FiHeadphones } from "react-icons/fi";
 import { BsShieldCheck } from "react-icons/bs";
+import { motion } from "framer-motion";
 
 function OurPolicy() {
+  const policies = [
+    {
+      icon: <FiRepeat className="w-8 h-8 text-blue-400" />,
+      title: "Easy Exchange Policy",
+      description: "Exchange Made Easy - Quick, Simple, and Customer-Friendly Process.",
+      delay: 0.1
+    },
+    {
+      icon: <BsShieldCheck className="w-8 h-8 text-blue-400" />,
+      title: "7 Days Return Policy",
+      description: "Shop with Confidence - 7 Days Easy Return Guarantee.",
+      delay: 0.2
+    },
+    {
+      icon: <FiHeadphones className="w-8 h-8 text-blue-400" />,
+      title: "Best Customer Support",
+      description: "Trusted Customer Support - Your Satisfaction Is Our Priority.",
+      delay: 0.3
+    }
+  ];
+
   return (
-    <div className="w-full px-[16px] py-[80px]  text-white">
-      <h2 className="text-center text-[24px] sm:text-[30px] font-semibold text-cyan-300 mb-[8px]">
-        OUR POLICY
-      </h2>
-      <p className="text-center text-[14px] sm:text-[16px] mb-[40px] text-gray-300">
-        Customer-Friendly Policies - Committed to Your Satisfaction and Safety.
-      </p>
+    <div className="w-full relative py-20 overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-slate-700/50 to-transparent" />
+      <div className="absolute top-1/4 left-0 w-64 h-64 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-0 w-64 h-64 bg-purple-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="flex flex-col md:flex-row justify-center items-center gap-[40px] max-w-7xl mx-auto">
-        {/* Easy Exchange */}
-        <div className="flex flex-col items-center text-center max-w-xs px-[16px]">
-          <FiRepeat size={40} className="text-cyan-400 mb-[16px]" />
-          <h3 className="text-[18px] font-semibold text-cyan-200 mb-[8px]">
-            Easy Exchange Policy
-          </h3>
-          <p className="text-[14px] text-gray-300">
-            Exchange Made Easy - Quick, Simple, and Customer-Friendly Process.
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        {/* Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Our Policy
+          </h2>
+          <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
+            Committed to providing you with a seamless and secure shopping experience.
           </p>
-        </div>
+        </motion.div>
 
-        {/* 7 Days Return */}
-        <div className="flex flex-col items-center text-center max-w-xs px-[16px]">
-          <BsShieldCheck size={40} className="text-cyan-400 mb-[16px]" />
-          <h3 className="text-[18px] font-semibold text-cyan-200 mb-[8px]">
-            7 Days Return Policy
-          </h3>
-          <p className="text-[14px] text-gray-300">
-            Shop with Confidence - 7 Days Easy Return Guarantee.
-          </p>
-        </div>
+        {/* Policy Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+          {policies.map((policy, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: policy.delay, duration: 0.6 }}
+              whileHover={{ y: -5 }}
+              className="group relative flex flex-col items-center text-center p-8 rounded-3xl bg-slate-900/40 border border-slate-800/50 backdrop-blur-sm hover:bg-slate-800/50 hover:border-slate-700/50 transition-all duration-500"
+            >
+              {/* Icon Container with Glow */}
+              <div className="relative mb-6">
+                <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full group-hover:bg-blue-500/30 group-hover:scale-150 transition-all duration-500" />
+                <div className="relative w-16 h-16 rounded-2xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center shadow-lg group-hover:border-blue-500/30 group-hover:shadow-blue-500/20 transition-all duration-500">
+                  {policy.icon}
+                </div>
+              </div>
 
-        {/* Customer Support */}
-        <div className="flex flex-col items-center text-center max-w-xs px-[16px]">
-          <FiHeadphones size={40} className="text-cyan-400 mb-[16px]" />
-          <h3 className="text-[18px] font-semibold text-cyan-200 mb-[8px]">
-            Best Customer Support
-          </h3>
-          <p className="text-[14px] text-gray-300">
-            Trusted Customer Support - Your Satisfaction Is Our Priority.
-          </p>
+              {/* Content */}
+              <h4 className="text-lg font-semibold text-white mb-3 group-hover:text-blue-200 transition-colors duration-300">
+                {policy.title}
+              </h4>
+              <p className="text-sm text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300">
+                {policy.description}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>

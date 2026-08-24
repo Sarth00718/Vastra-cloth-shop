@@ -170,14 +170,14 @@ function Add() {
                 <label className="text-sm font-semibold text-slate-300 block mb-2">Category *</label>
                 <select name="category" value={form.category} onChange={handleChange}
                   className="w-full bg-slate-700/80 border border-slate-600 text-white rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-blue-500 cursor-pointer">
-                  {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+                  {CATEGORIES.map(c => <option key={c} value={c} className="bg-slate-900 text-slate-100 py-1">{c}</option>)}
                 </select>
               </div>
               <div>
                 <label className="text-sm font-semibold text-slate-300 block mb-2">Sub-Category *</label>
                 <select name="subCategory" value={form.subCategory} onChange={handleChange}
                   className="w-full bg-slate-700/80 border border-slate-600 text-white rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-blue-500 cursor-pointer">
-                  {SUBCATEGORIES.map(s => <option key={s}>{s}</option>)}
+                  {SUBCATEGORIES.map(s => <option key={s} value={s} className="bg-slate-900 text-slate-100 py-1">{s}</option>)}
                 </select>
               </div>
               <div>

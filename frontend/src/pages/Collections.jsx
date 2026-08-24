@@ -175,7 +175,7 @@ function Collections() {
     <div className={`w-full min-h-screen flex flex-col md:flex-row transition-all duration-300 z-[2] ${navbarPadding}`}>
 
       {/* ── Mobile Filter Toggle ── */}
-      <div className={`md:hidden flex items-center justify-between px-4 py-3 border-b border-slate-800 fixed w-full bg-slate-950 z-20 transition-all duration-300 ${showSearch ? 'top-[155px]' : 'top-[75px]'}`}>
+      <div className={`md:hidden flex items-center justify-between px-4 py-3 border-b border-slate-800 fixed w-full bg-slate-950 z-20 transition-all duration-300 ${showSearch ? 'top-[144px]' : 'top-[64px]'}`}>
         <span className="text-slate-300 font-semibold text-sm">{filteredProducts.length} Products</span>
         <button
           onClick={() => setShowFilters(!showFilters)}
@@ -201,7 +201,7 @@ function Collections() {
               animate={{ x: 0 }}
               exit={{ x: -320 }}
               transition={{ type: 'tween', duration: 0.25 }}
-              className={`fixed left-0 w-[85%] max-w-[320px] border-r border-slate-800 overflow-y-auto p-5 flex flex-col gap-6 bg-slate-950 z-40 md:hidden transition-all duration-300 ${showSearch ? 'top-[155px] h-[calc(100vh-155px)]' : 'top-[75px] h-[calc(100vh-75px)]'}`}
+              className={`fixed left-0 w-[85%] max-w-[320px] border-r border-slate-800 overflow-y-auto p-5 flex flex-col gap-6 bg-slate-950 z-40 md:hidden transition-all duration-300 ${showSearch ? 'top-[144px] h-[calc(100vh-144px)]' : 'top-[64px] h-[calc(100vh-64px)]'}`}
             >
               {renderFilters(true)}
             </motion.aside>
@@ -210,7 +210,7 @@ function Collections() {
       </AnimatePresence>
 
       {/* ── Desktop Sidebar ── */}
-      <aside className={`hidden md:flex md:w-[260px] lg:w-[240px] shrink-0 border-r border-slate-800 md:sticky overflow-y-auto p-5 flex-col gap-6 bg-slate-950 z-10 transition-all duration-300 ${showSearch ? 'md:top-[155px] md:h-[calc(100vh-155px)]' : 'md:top-[75px] md:h-[calc(100vh-75px)]'}`}>
+      <aside className={`hidden md:flex md:w-[260px] lg:w-[240px] shrink-0 border-r border-slate-800 md:sticky overflow-y-auto p-5 flex-col gap-6 bg-slate-950 z-10 transition-all duration-300 ${showSearch ? 'md:top-[144px] md:h-[calc(100vh-144px)]' : 'md:top-[64px] md:h-[calc(100vh-64px)]'}`}>
         {renderFilters(false)}
       </aside>
 
@@ -226,10 +226,12 @@ function Collections() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-slate-800 text-slate-200 text-sm px-4 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer"
+            className="bg-slate-900 text-slate-100 font-medium text-sm px-4 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer shadow-md"
           >
             {SORT_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
+              <option key={o.value} value={o.value} className="bg-slate-900 text-slate-100 py-2">
+                {o.label}
+              </option>
             ))}
           </select>
         </div>

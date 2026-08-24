@@ -218,7 +218,7 @@ function Orders() {
                         className="bg-slate-900 text-white text-xs px-3 py-2.5 rounded-xl border border-slate-600 hover:border-slate-500 focus:outline-none focus:border-blue-500 cursor-pointer min-w-[150px]"
                       >
                         {STATUS_OPTIONS.filter(s => s !== 'All').map(s => (
-                          <option key={s} value={s}>{s}</option>
+                          <option key={s} value={s} className="bg-slate-900 text-slate-100 py-1">{s}</option>
                         ))}
                       </select>
                       <span className={`mt-2 px-2 py-0.5 rounded-full text-xs font-medium text-center border ${STATUS_COLORS[order.status] || ''}`}>

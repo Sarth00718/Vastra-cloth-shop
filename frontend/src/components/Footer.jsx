@@ -7,83 +7,93 @@ function Footer() {
   const navigate = useNavigate();
 
   return (
-    <footer className="relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white py-10 px-6 mb-[75px] md:mb-0 border-t border-slate-800/50">
-      {/* Premium Top Border */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+    <footer className="relative bg-[#020617] text-white pt-12 pb-8 px-6 mb-[75px] md:mb-0 border-t border-slate-800">
+      {/* Premium Top Border Glow */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
       
-      {/* Background Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-20 bg-blue-500/5 blur-3xl" />
+      {/* Background Ambience */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-32 bg-blue-500/10 blur-[100px] pointer-events-none" />
       
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center relative z-10">
-        {/* Premium Logo and Description */}
-        <div className="flex flex-col items-center">
-          <div className="relative mb-3">
-            <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full" />
-            <img src={Vogo} alt="Vastra Logo" className="w-12 h-12 relative drop-shadow-[0_0_20px_rgba(59,130,246,0.6)]" />
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 relative z-10">
+        
+        {/* Logo and Description */}
+        <div className="flex flex-col items-center sm:items-start text-center sm:text-left lg:col-span-2 pr-0 lg:pr-12">
+          <div className="flex items-center gap-3 mb-4 cursor-pointer" onClick={() => navigate('/')}>
+            <img src={Vogo} alt="Vastra Logo" className="w-8 h-8 object-contain" />
+            <div className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Vastra
+            </div>
           </div>
-          <h3 className="text-lg font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Vastra
-          </h3>
-          <p className="text-xs text-slate-400 leading-relaxed max-w-xs">
+          <p className="text-sm text-slate-400 leading-relaxed max-w-md">
             Vastra blends tradition with modern elegance. Discover curated collections of ethnic and contemporary wear crafted to celebrate your unique style.
           </p>
         </div>
 
-        {/* Premium Company Links */}
-        <div className="flex flex-col items-center">
-          <h3 className="text-base font-bold text-blue-400 mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Company</h3>
-          <ul className="space-y-2 text-xs text-slate-400">
+        {/* Company Links */}
+        <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+          <div className="text-base font-semibold text-white mb-5" style={{ fontFamily: 'Poppins, sans-serif' }}>Company</div>
+          <ul className="space-y-3 text-sm text-slate-400">
             <li>
-              <button onClick={() => navigate('/')} className="hover:text-blue-400 transition-colors relative group">
+              <button onClick={() => navigate('/')} className="hover:text-blue-400 transition-colors inline-block relative group">
                 Home
-                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-blue-500 to-blue-600 group-hover:w-full transition-all duration-300" />
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-blue-500 group-hover:w-full transition-all duration-300" />
               </button>
             </li>
             <li>
-              <button onClick={() => navigate('/about')} className="hover:text-blue-400 transition-colors relative group">
+              <button onClick={() => navigate('/about')} className="hover:text-blue-400 transition-colors inline-block relative group">
                 About Us
-                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-blue-500 to-blue-600 group-hover:w-full transition-all duration-300" />
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-blue-500 group-hover:w-full transition-all duration-300" />
               </button>
             </li>
             <li>
-              <button onClick={() => navigate('/collections')} className="hover:text-blue-400 transition-colors relative group">
+              <button onClick={() => navigate('/collections')} className="hover:text-blue-400 transition-colors inline-block relative group">
                 Collections
-                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-blue-500 to-blue-600 group-hover:w-full transition-all duration-300" />
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-blue-500 group-hover:w-full transition-all duration-300" />
               </button>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-400 transition-colors relative group">
+              <button onClick={() => navigate('/privacy-policy')} className="hover:text-blue-400 transition-colors inline-block relative group">
                 Privacy Policy
-                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-blue-500 to-blue-600 group-hover:w-full transition-all duration-300" />
-              </a>
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-blue-500 group-hover:w-full transition-all duration-300" />
+              </button>
             </li>
           </ul>
         </div>
 
-        {/* Premium Contact Info */}
-        <div className="flex flex-col items-center">
-          <h3 className="text-base font-bold text-blue-400 mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Get in Touch</h3>
-          <ul className="space-y-2 text-xs text-slate-400">
-            <li className="flex items-center gap-3 justify-center hover:text-blue-400 transition-colors group">
-              <FaPhoneAlt className="text-blue-500 group-hover:scale-110 transition-transform" /> +91-7046053000
+        {/* Contact Info */}
+        <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+          <div className="text-base font-semibold text-white mb-5" style={{ fontFamily: 'Poppins, sans-serif' }}>Get in Touch</div>
+          <ul className="space-y-3 text-sm text-slate-400">
+            <li className="flex items-center gap-4 hover:text-white transition-colors">
+              <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-blue-400 shrink-0">
+                <FaPhoneAlt size={12} />
+              </div>
+              +91-7046053000
             </li>
-            <li className="flex items-center gap-3 justify-center hover:text-blue-400 transition-colors group">
-              <FaEnvelope className="text-blue-500 group-hover:scale-110 transition-transform" /> support@vastra.in
+            <li className="flex items-center gap-4 hover:text-white transition-colors">
+              <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-blue-400 shrink-0">
+                <FaEnvelope size={12} />
+              </div>
+              support@vastra.in
             </li>
-            <li className="flex items-center gap-3 justify-center hover:text-blue-400 transition-colors group">
-              <FaMapMarkerAlt className="text-blue-500 group-hover:scale-110 transition-transform" /> Surat, Gujarat, India
+            <li className="flex items-center gap-4 hover:text-white transition-colors">
+              <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-blue-400 shrink-0">
+                <FaMapMarkerAlt size={12} />
+              </div>
+              Surat, Gujarat, India
             </li>
           </ul>
         </div>
       </div>
 
-      {/* Premium Footer Bottom */}
-      <div className="mt-8 pt-5 text-center relative">
-        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-slate-700/50 to-transparent" />
-        <p className="text-xs text-slate-500">
-          © 2025 <span className="text-blue-400 font-bold">vastra.in</span> — All Rights Reserved
+      {/* Footer Bottom */}
+      <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-slate-800/50 flex flex-col md:flex-row items-center justify-between gap-4">
+        <p className="text-sm text-slate-500">
+          © {new Date().getFullYear()} <span className="text-white font-medium">Vastra</span>. All Rights Reserved.
         </p>
-        <p className="text-[11px] text-slate-600 mt-1.5">Crafted with passion for fashion</p>
+        <p className="text-xs text-slate-600 bg-slate-900/50 px-4 py-1.5 rounded-full border border-slate-800/50">
+          Crafted with passion for fashion
+        </p>
       </div>
     </footer>
   );

@@ -16,7 +16,7 @@ import { globalErrorHandler } from './middlewares/errorHandler.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // ─── CORS ────────────────────────────────────────────────────────────────────
 const allowedOrigins = [
@@ -33,7 +33,7 @@ const allowedOrigins = [
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 
-// ─── MIDDLEWARE ───────────────────────────────────────────────────────────────
+// ─── MIDDLEWARE ─────────────────────────────────────────────────────────────--
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

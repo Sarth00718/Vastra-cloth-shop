@@ -17,10 +17,14 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   let { getCurrentUser } = useContext(userDataContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (isLoading) return;
+    setIsLoading(true);
     try {
       const res = await axios.post(
         `${serverurl}/api/auth/login`,
@@ -45,10 +49,14 @@ function Login() {
       toast.error(
         error?.response?.data?.message || error?.response?.data?.msg || "Login failed. Please check your credentials."
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const googlelogin = async () => {
+    if (googleLoading) return;
+    setGoogleLoading(true);
     try {
       const res = await signInWithPopup(auth, provider);
       let user = res.user;
@@ -87,6 +95,8 @@ function Login() {
       } else {
         toast.error("Google login failed. Please check your browser settings.");
       }
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -153,15 +163,23 @@ function Login() {
               onSubmit={handleLogin}
             >
               {/* Google Login Button */}
-              <motion.div
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full h-[56px] bg-gradient-to-r from-white/10 to-white/5 hover:from-white/15 hover:to-white/10 border border-white/20 rounded-xl flex items-center justify-center gap-[12px] cursor-pointer shadow-lg shadow-black/20 font-semibold text-[15px] backdrop-blur-sm transition-all duration-300"
+              <motion.button
+                type="button"
+                whileHover={!googleLoading ? { scale: 1.02, y: -2 } : {}}
+                whileTap={!googleLoading ? { scale: 0.98 } : {}}
+                className={`w-full h-[56px] bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-xl flex items-center justify-center gap-[12px] shadow-lg shadow-black/20 font-semibold text-[15px] backdrop-blur-sm transition-all duration-300 ${googleLoading ? 'opacity-50 cursor-not-allowed' : 'hover:from-white/15 hover:to-white/10 cursor-pointer'}`}
                 onClick={googlelogin}
+                disabled={googleLoading}
               >
-                <img src={google} alt="Google" className="w-[24px]" />
-                Continue with Google
-              </motion.div>
+                {googleLoading ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <img src={google} alt="Google" className="w-[24px]" />
+                    Continue with Google
+                  </>
+                )}
+              </motion.button>
 
               {/* Divider */}
               <div className="w-full h-[20px] flex justify-center items-center gap-[12px] text-slate-400 text-sm font-medium">
@@ -204,13 +222,17 @@ function Login() {
                 {/* Premium Login Button */}
                 <motion.button
                   type="submit"
-                  className="w-full h-[54px] bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 hover:from-blue-500 hover:via-blue-400 hover:to-blue-500 rounded-xl flex items-center justify-center mt-[8px] text-[16px] font-bold shadow-lg shadow-blue-500/30 border border-blue-400/20 relative overflow-hidden group"
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
+                  disabled={isLoading}
+                  className={`w-full h-[54px] bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 rounded-xl flex items-center justify-center mt-[8px] text-[16px] font-bold shadow-lg shadow-blue-500/30 border border-blue-400/20 relative overflow-hidden group ${isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:from-blue-500 hover:via-blue-400 hover:to-blue-500 cursor-pointer'}`}
+                  whileHover={!isLoading ? { scale: 1.02, y: -2 } : {}}
+                  whileTap={!isLoading ? { scale: 0.98 } : {}}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  <span className="relative z-10">Sign In</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+                  <span className="relative z-10 flex items-center gap-2">
+                    {isLoading && <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+                    {isLoading ? "Signing In..." : "Sign In"}
+                  </span>
+                  {!isLoading && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />}
                 </motion.button>
 
                 {/* Sign Up Link */}

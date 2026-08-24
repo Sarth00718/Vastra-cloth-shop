@@ -1,13 +1,16 @@
-import React from 'react'
+import React from "react";
 
 function Titles({ text1, text2 }) {
   return (
-    <div className="inline-flex gap-2 items-center text-center mb-3 text-[35px] md:text-[40px]">
-      <p className="text-blue-100">
-        {text1} <span className="text-[#a5faf7]">{text2}</span>
-      </p>
+    <div className="mb-8 flex w-full items-center justify-center text-center">
+      <h2 className="text-3xl font-semibold leading-tight tracking-tight text-blue-100 sm:text-4xl md:text-5xl lg:text-[52px]">
+        {text1}{" "}
+        <span className="bg-gradient-to-r from-[#a5faf7] via-[#7dd3fc] to-[#60a5fa] bg-clip-text text-transparent">
+          {text2}
+        </span>
+      </h2>
     </div>
   );
 }
 
-export default Titles
+export default Titles;

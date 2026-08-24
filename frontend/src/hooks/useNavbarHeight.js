@@ -8,8 +8,8 @@ import { shopDataContext } from '../context/ShopContext';
 export const useNavbarHeight = () => {
   const { showSearch } = useContext(shopDataContext);
   
-  // Base navbar height is 75px, search bar adds 80px
-  return showSearch ? 'pt-[155px]' : 'pt-[75px]';
+  // Base navbar height is 64px, search bar adds 80px
+  return showSearch ? 'pt-[144px]' : 'pt-[64px]';
 };
 
 export default useNavbarHeight;

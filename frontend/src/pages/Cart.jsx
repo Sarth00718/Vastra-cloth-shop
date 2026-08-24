@@ -85,7 +85,7 @@ function Cart() {
           className="max-w-4xl mx-auto mb-5 flex items-center gap-3 bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-3 text-sm"
         >
           <MdLocalShipping className="w-5 h-5 text-green-400" />
-          <span className="text-green-300 font-medium">🎉 You've unlocked free delivery!</span>
+          <span className="text-green-300 font-medium">You've unlocked free delivery!</span>
         </motion.div>
       )}
 

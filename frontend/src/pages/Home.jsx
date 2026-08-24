@@ -3,14 +3,15 @@ import Hero from '../components/Hero'
 import Background from '../components/Background';
 import Product from './Product';
 import OurPolicy from '../components/OurPolicy';
+import { useNavbarHeight } from '../hooks/useNavbarHeight';
 
 
 function Home() {
   const heroData = [
-    { text1: "30% OFF Limited Offer", text2: "Style that" },
-    { text1: "Discover the Best of Bold Fashion", text2: "Limited Time Only!" },
-    { text1: "Explore Our Best Collection", text2: "Shop Now!" },
-    { text1: "Choose your Perfect Fashion Fit", text2: "Now on Sale!" }
+    { tag: "✨ NEW ARRIVALS", text1: "Discover the Best of", text2: "Bold Fashion", desc: "Explore curated collections of contemporary wear crafted to elevate your unique style." },
+    { tag: "🔥 TRENDING NOW", text1: "Choose Your Perfect", text2: "Fashion Fit", desc: "Unleash your confidence with our latest high-end fashion line, now available online." },
+    { tag: "🎉 LIMITED TIME", text1: "Flat 30% OFF on", text2: "Summer Styles", desc: "Upgrade your wardrobe with premium quality clothing at unbeatable prices." },
+    { tag: "💎 PREMIUM WEAR", text1: "Explore Our Best", text2: "Exclusive Collection", desc: "Experience the perfect blend of tradition and modern elegance." }
   ];
   const [heroCount, setHeroCount] = useState(0);
 
@@ -22,9 +23,11 @@ function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  const navbarPadding = useNavbarHeight();
+
   return (
-    <div className='overflow-x-hidden relative top-[70px]'>
-      <div className="w-[100vw] lg:h-[100vh] md:h-[50vh] sm:h-[35vh]  relative overflow-hidden">
+    <div className={`overflow-x-hidden ${navbarPadding}`}>
+      <div className="w-full min-h-[50vh] md:min-h-[70vh] lg:min-h-[calc(100vh-64px)] flex items-center relative overflow-hidden">
         <Background heroCount={heroCount} />
         <Hero
           heroCount={heroCount}

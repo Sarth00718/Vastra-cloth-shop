@@ -1,15 +1,15 @@
 import React, { useContext, useState } from "react";
 import { motion } from "framer-motion";
 import logo from "../assets/vogo.png";
-import { IoSearchCircleOutline, IoSearchCircleSharp } from "react-icons/io5";
+import { IoSearchOutline } from "react-icons/io5";
 import { IoMdHome, IoMdAlbums, IoMdContacts, IoMdCart } from "react-icons/io";
 import { FaCircleUser } from "react-icons/fa6";
-import { MdOutlineShoppingCart, MdOutlineAdminPanelSettings } from "react-icons/md";
+import { MdOutlineShoppingCart, MdOutlineAdminPanelSettings, MdClose } from "react-icons/md";
 import { IoShirtOutline } from "react-icons/io5";
 import { userDataContext } from "../context/UserContext";
 import { authDataContext } from "../context/AuthContext";
 import { shopDataContext } from "../context/ShopContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { AnimatePresence } from "framer-motion";
@@ -45,7 +45,8 @@ function Nav() {
   const [showProfile, setShowProfile] = useState(false);
   const [showOutfitCreator, setShowOutfitCreator] = useState(false);
   const navigate = useNavigate();
-  const iconButtonClass = "w-10 h-10 rounded-full flex items-center justify-center border border-slate-700/50 bg-slate-900/40 text-slate-300 hover:text-blue-300 hover:border-blue-500/50 transition-all";
+  const location = useLocation();
+  const iconButtonClass = "w-9 h-9 rounded-full flex items-center justify-center border border-slate-700/50 bg-slate-900/40 text-slate-300 hover:text-blue-300 hover:border-blue-500/50 transition-all";
 
   const handleLogout = async () => {
     try {
@@ -68,7 +69,7 @@ function Nav() {
       {/* Premium Top Border */}
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
 
-      <div className="h-[75px] px-6 flex items-center justify-between relative">
+      <div className="h-[64px] px-6 flex items-center justify-between relative">
 
         {/* Premium Logo */}
         <motion.div
@@ -78,15 +79,15 @@ function Nav() {
         >
           <div className="relative">
             <div className="absolute inset-0 bg-blue-500/20 blur-lg rounded-full" />
-            <img src={logo} alt="logo" className="w-[30px] md:w-[38px] relative drop-shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
+            <img src={logo} alt="logo" className="w-[24px] md:w-[32px] relative drop-shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
           </div>
-          <h1 className="text-[22px] md:text-[28px] font-bold bg-gradient-to-r from-white via-blue-100 to-blue-200 bg-clip-text text-transparent" style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '-0.02em' }}>
+          <div className="text-[20px] md:text-[24px] font-bold bg-gradient-to-r from-white via-blue-100 to-blue-200 bg-clip-text text-transparent" style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '-0.02em' }}>
             Vastra
-          </h1>
+          </div>
         </motion.div>
 
         {/* Premium Center Nav */}
-        <ul className="hidden md:flex gap-2 text-[15px] font-semibold text-slate-300">
+        <ul className="hidden md:flex gap-2 text-[14px] font-semibold text-slate-300">
           {[
             { label: "Home", path: "/" },
             { label: "Collections", path: "/collections" },
@@ -98,7 +99,7 @@ function Nav() {
               onClick={() => navigate(path)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="relative px-5 py-2.5 rounded-xl cursor-pointer transition-all duration-300 hover:text-white group"
+              className="relative px-4 py-2 rounded-xl cursor-pointer transition-all duration-300 hover:text-white group"
             >
               <span className="relative z-10">{label}</span>
               <motion.div
@@ -122,11 +123,11 @@ function Nav() {
             <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
             {showSearch ? (
               <button className={`${iconButtonClass} relative`} onClick={() => setShowSearch(false)}>
-                <IoSearchCircleSharp className="w-6 h-6 text-blue-400" />
+                <MdClose className="w-5 h-5 text-blue-400" />
               </button>
             ) : (
-              <button className={`${iconButtonClass} relative`} onClick={() => { setShowSearch(true); navigate("/collections"); }}>
-                <IoSearchCircleOutline className="w-6 h-6" />
+              <button className={`${iconButtonClass} relative`} onClick={() => setShowSearch(true)}>
+                <IoSearchOutline className="w-[22px] h-[22px]" />
               </button>
             )}
           </motion.div>
@@ -240,9 +241,14 @@ function Nav() {
           >
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder="Search products (Press Enter to search)..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && location.pathname !== '/collections') {
+                  navigate('/collections');
+                }
+              }}
               autoFocus
               className="w-[90%] sm:w-[70%] md:w-[50%] h-[50px] bg-gradient-to-r from-[#0a1929] to-[#0f2847] border-2 border-blue-700/40 rounded-full px-6 placeholder:text-blue-300/60 text-blue-100 text-[16px] sm:text-[18px] outline-none focus:border-blue-500 focus:shadow-lg focus:shadow-blue-900/30 transition-all"
             />
