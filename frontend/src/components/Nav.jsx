@@ -20,21 +20,21 @@ import { MdOutlineLogout, MdOutlineHistory, MdOutlineFavoriteBorder, MdOutlineIn
 // ─── REUSABLE DROPDOWN ITEM ──────────────────────────────────────────────────
 const DropdownItem = ({ icon: Icon, label, onClick, danger, accent }) => (
   <motion.li
-    whileHover={{ x: 6, backgroundColor: "rgba(59, 130, 246, 0.1)" }}
+    whileHover={{ x: 4, backgroundColor: "rgba(59, 130, 246, 0.1)" }}
     whileTap={{ scale: 0.98 }}
     onClick={onClick}
     className={`
-      flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group
+      flex items-center gap-2.5 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 group
       ${danger ? 'text-red-400 hover:text-red-300' : accent ? 'text-blue-400 font-bold' : 'text-slate-300 hover:text-white'}
     `}
   >
     <div className={`
-      w-8 h-8 rounded-lg flex items-center justify-center transition-colors
+      w-7 h-7 rounded-md flex items-center justify-center transition-colors shrink-0
       ${danger ? 'bg-red-500/10 group-hover:bg-red-500/20' : accent ? 'bg-blue-500/10 group-hover:bg-blue-500/20' : 'bg-slate-800 group-hover:bg-slate-700'}
     `}>
-      <Icon className="w-5 h-5" />
+      <Icon className="w-4 h-4" />
     </div>
-    <span className="text-[14px] font-medium tracking-wide">{label}</span>
+    <span className="text-[13px] font-medium tracking-wide">{label}</span>
   </motion.li>
 );
 
@@ -158,12 +158,40 @@ function Nav() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute top-[125%] right-0 w-56 bg-slate-900/95 border border-slate-800/60 rounded-2xl z-50 shadow-2xl shadow-black/60 backdrop-blur-2xl overflow-hidden p-2"
+                  className="absolute top-[125%] right-0 w-48 bg-slate-900/95 border border-slate-800/60 rounded-2xl z-50 shadow-2xl shadow-black/60 backdrop-blur-2xl overflow-hidden p-2"
                 >
                   {/* Glassmorphism Shine */}
                   <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
                   
                   <ul className="flex flex-col gap-1">
+                    <DropdownItem 
+                      icon={MdOutlineHistory} 
+                      label="Orders" 
+                      onClick={() => { navigate('/order'); setShowProfile(false); }} 
+                    />
+                    <DropdownItem 
+                      icon={MdOutlineFavoriteBorder} 
+                      label="Wishlist" 
+                      onClick={() => { navigate('/wishlist'); setShowProfile(false); }} 
+                    />
+
+                    {admin && (
+                      <DropdownItem 
+                        icon={MdOutlineAdminPanelSettings} 
+                        label="Admin Panel" 
+                        accent 
+                        onClick={() => { navigate('/admin'); setShowProfile(false); }} 
+                      />
+                    )}
+
+                    <DropdownItem 
+                      icon={MdOutlineInfo} 
+                      label="About" 
+                      onClick={() => { navigate("/about"); setShowProfile(false); }} 
+                    />
+
+                    <div className="h-px bg-slate-800/60 my-1 mx-2" />
+
                     {!user ? (
                       <DropdownItem 
                         icon={FaCircleUser} 
@@ -178,34 +206,6 @@ function Nav() {
                         onClick={handleLogout} 
                       />
                     )}
-
-                    {admin && (
-                      <DropdownItem 
-                        icon={MdOutlineAdminPanelSettings} 
-                        label="Admin Panel" 
-                        accent 
-                        onClick={() => { navigate('/admin'); setShowProfile(false); }} 
-                      />
-                    )}
-
-                    <div className="h-px bg-slate-800/60 my-1 mx-2" />
-
-                    <DropdownItem 
-                      icon={MdOutlineHistory} 
-                      label="Orders" 
-                      onClick={() => { navigate('/order'); setShowProfile(false); }} 
-                    />
-                    <DropdownItem 
-                      icon={MdOutlineFavoriteBorder} 
-                      label="Wishlist" 
-                      onClick={() => { navigate('/wishlist'); setShowProfile(false); }} 
-                    />
-
-                    <DropdownItem 
-                      icon={MdOutlineInfo} 
-                      label="About" 
-                      onClick={() => { navigate("/about"); setShowProfile(false); }} 
-                    />
                   </ul>
                 </motion.div>
               )}
@@ -221,7 +221,7 @@ function Nav() {
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 items-center justify-center font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full text-[11px] hidden md:flex shadow-lg shadow-blue-500/50 border border-blue-400/30"
+              className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full text-[10px] hidden md:flex shadow-lg shadow-blue-500/50 border border-slate-900"
             >
               {getCardCount()}
             </motion.span>
@@ -271,11 +271,13 @@ function Nav() {
       ))}
 
       <motion.button whileTap={{ scale: 0.9 }} className="relative text-blue-300 flex flex-col items-center justify-center gap-1 font-medium" onClick={() => navigate('/cart')}>
-        <IoMdCart className="w-6 h-6" />
-        <span className="absolute top-[-5px] right-[-10px] w-[18px] h-[18px] font-bold bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-full items-center justify-center text-[9px] shadow-lg">
-          {getCardCount()}
-        </span>
-        Cart
+        <div className="relative">
+          <IoMdCart className="w-6 h-6" />
+          <span className="absolute -top-1.5 -right-2 w-[16px] h-[16px] flex items-center justify-center font-bold bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-full text-[9px] shadow-lg border border-slate-900">
+            {getCardCount()}
+          </span>
+        </div>
+        <span>Cart</span>
       </motion.button>
     </div>
     </>

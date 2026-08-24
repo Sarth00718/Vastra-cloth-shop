@@ -27,14 +27,29 @@ function Home() {
 
   return (
     <div className={`overflow-x-hidden ${navbarPadding}`}>
-      <div className="w-full min-h-[50vh] md:min-h-[70vh] lg:min-h-[calc(100vh-64px)] flex items-center relative overflow-hidden">
-        <Background heroCount={heroCount} />
-        <Hero
-          heroCount={heroCount}
-          setHeroCount={setHeroCount}
-          heroData={heroData[heroCount]}
-        />
+      {/* Hero Section */}
+      <div className="w-full lg:min-h-[calc(100vh-64px)] relative overflow-hidden">
+        {/* Desktop: side-by-side with absolute background */}
+        <div className="hidden lg:flex items-center min-h-[calc(100vh-64px)] relative">
+          <Background heroCount={heroCount} />
+          <Hero
+            heroCount={heroCount}
+            setHeroCount={setHeroCount}
+            heroData={heroData[heroCount]}
+          />
+        </div>
+
+        {/* Mobile/Tablet: stacked layout */}
+        <div className="flex flex-col lg:hidden">
+          <Hero
+            heroCount={heroCount}
+            setHeroCount={setHeroCount}
+            heroData={heroData[heroCount]}
+          />
+          <Background heroCount={heroCount} />
+        </div>
       </div>
+
       <Product />
       <OurPolicy />
     </div>

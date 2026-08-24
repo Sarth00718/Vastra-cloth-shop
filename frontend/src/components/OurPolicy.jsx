@@ -2,6 +2,7 @@ import React from 'react';
 import { FiRepeat, FiHeadphones } from "react-icons/fi";
 import { BsShieldCheck } from "react-icons/bs";
 import { motion } from "framer-motion";
+import Titles from "./Titles";
 
 function OurPolicy() {
   const policies = [
@@ -41,10 +42,8 @@ function OurPolicy() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Our Policy
-          </h2>
-          <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
+          <Titles text1="OUR" text2="POLICY" />
+          <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto -mt-2">
             Committed to providing you with a seamless and secure shopping experience.
           </p>
         </motion.div>

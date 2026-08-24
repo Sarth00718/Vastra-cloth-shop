@@ -137,7 +137,7 @@ a:hover::after {
 
 /* -------------------- */
 /* Premium Inputs */
-input,
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
 select,
 textarea {
   background: linear-gradient(
@@ -167,7 +167,7 @@ textarea::placeholder {
   letter-spacing: 0.01em;
 }
 
-input:focus,
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):focus,
 select:focus,
 textarea:focus {
   border-color: #3b82f6;
@@ -184,7 +184,7 @@ textarea:focus {
   transform: translateY(-1px);
 }
 
-input:hover,
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):hover,
 select:hover,
 textarea:hover {
   border-color: rgba(96, 165, 250, 0.6);

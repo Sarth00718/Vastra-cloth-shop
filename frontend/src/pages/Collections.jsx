@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiFilter, FiX } from 'react-icons/fi';
+import { FiFilter, FiX, FiChevronDown } from 'react-icons/fi';
 import { MdOutlineTune } from 'react-icons/md';
 import Titles from '../components/Titles';
 import Card, { CardSkeleton } from '../components/Card';
@@ -32,6 +32,7 @@ function Collections() {
   const navbarPadding = useNavbarHeight();
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('relevant');
+  const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 10000]);
@@ -165,7 +166,10 @@ function Collections() {
           step={100}
           value={priceRange[1]}
           onChange={(e) => setPriceRange([0, Number(e.target.value)])}
-          className="w-full accent-blue-500"
+          className="w-full h-2 rounded-lg appearance-none cursor-pointer outline-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:shadow-blue-500/50 hover:[&::-webkit-slider-thumb]:scale-110 [&::-webkit-slider-thumb]:transition-transform"
+          style={{
+            background: `linear-gradient(to right, #3b82f6 ${(priceRange[1] / 10000) * 100}%, #334155 ${(priceRange[1] / 10000) * 100}%)`,
+          }}
         />
       </div>
     </>
@@ -223,17 +227,47 @@ function Collections() {
             <Titles text1="ALL" text2="COLLECTIONS" />
             <p className="text-slate-500 text-sm mt-1">{filteredProducts.length} products</p>
           </div>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="bg-slate-900 text-slate-100 font-medium text-sm px-4 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer shadow-md"
-          >
-            {SORT_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value} className="bg-slate-900 text-slate-100 py-2">
-                {o.label}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <button
+              onClick={() => setShowSortDropdown(!showSortDropdown)}
+              className="flex items-center gap-3 bg-slate-900/80 text-slate-100 font-medium text-sm px-4 py-2.5 rounded-xl border border-slate-700/60 hover:border-blue-500/50 hover:bg-slate-800 focus:outline-none focus:border-blue-500 cursor-pointer shadow-md transition-all backdrop-blur-md"
+            >
+              {SORT_OPTIONS.find(o => o.value === sortBy)?.label || 'Sort By'}
+              <FiChevronDown className={`w-4 h-4 transition-transform duration-300 ${showSortDropdown ? 'rotate-180' : ''}`} />
+            </button>
+
+            <AnimatePresence>
+              {showSortDropdown && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowSortDropdown(false)} />
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 top-[120%] w-48 bg-slate-900/95 border border-slate-700/60 rounded-xl z-50 shadow-xl shadow-black/40 backdrop-blur-xl overflow-hidden py-2"
+                  >
+                    {SORT_OPTIONS.map((o) => (
+                      <div
+                        key={o.value}
+                        onClick={() => {
+                          setSortBy(o.value);
+                          setShowSortDropdown(false);
+                        }}
+                        className={`px-4 py-2.5 text-sm cursor-pointer transition-colors ${
+                          sortBy === o.value
+                            ? 'bg-blue-500/20 text-blue-400 font-semibold'
+                            : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                        }`}
+                      >
+                        {o.label}
+                      </div>
+                    ))}
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Active filter chips */}
