@@ -1,49 +1,51 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/vogo.png";
 import { IoSearchOutline } from "react-icons/io5";
 import { IoMdHome, IoMdAlbums, IoMdContacts, IoMdCart } from "react-icons/io";
 import { FaCircleUser } from "react-icons/fa6";
 import { MdOutlineShoppingCart, MdOutlineAdminPanelSettings, MdClose, MdPersonAdd } from "react-icons/md";
-import { IoShirtOutline } from "react-icons/io5";
 import { userDataContext } from "../context/UserContext";
 import { authDataContext } from "../context/AuthContext";
 import { shopDataContext } from "../context/ShopContext";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api";
 import toast from "react-hot-toast";
-import { AnimatePresence } from "framer-motion";
 import { MdOutlineLogout, MdOutlineHistory, MdOutlineFavoriteBorder, MdOutlineInfo } from "react-icons/md";
-
-
 
 // ─── REUSABLE DROPDOWN ITEM ──────────────────────────────────────────────────
 const DropdownItem = ({ icon: Icon, label, onClick, danger, accent }) => (
-  <motion.li
-    whileHover={{ x: 4, backgroundColor: "rgba(59, 130, 246, 0.1)" }}
-    whileTap={{ scale: 0.98 }}
-    onClick={onClick}
-    className={`
-      flex items-center gap-2.5 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 group
-      ${danger ? 'text-red-400 hover:text-red-300' : accent ? 'text-blue-400 font-bold' : 'text-slate-300 hover:text-white'}
-    `}
-  >
-    <div className={`
-      w-7 h-7 rounded-md flex items-center justify-center transition-colors shrink-0
-      ${danger ? 'bg-red-500/10 group-hover:bg-red-500/20' : accent ? 'bg-blue-500/10 group-hover:bg-blue-500/20' : 'bg-slate-800 group-hover:bg-slate-700'}
-    `}>
-      <Icon className="w-4 h-4" />
-    </div>
-    <span className="text-[13px] font-medium tracking-wide">{label}</span>
-  </motion.li>
+  <li>
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        if (onClick) onClick(e);
+      }}
+      className={`
+        w-full flex items-center gap-2.5 px-3 py-2 rounded-lg cursor-pointer transition-colors duration-150 text-left group
+        ${danger 
+          ? 'text-red-400 hover:text-red-300 hover:bg-red-500/15' 
+          : accent 
+          ? 'text-blue-400 font-bold hover:bg-blue-500/15' 
+          : 'text-slate-300 hover:text-white hover:bg-slate-800/80 active:bg-slate-800'}
+      `}
+    >
+      <div className={`
+        w-7 h-7 rounded-md flex items-center justify-center transition-colors shrink-0 pointer-events-none
+        ${danger ? 'bg-red-500/10 group-hover:bg-red-500/20' : accent ? 'bg-blue-500/10 group-hover:bg-blue-500/20' : 'bg-slate-800 group-hover:bg-slate-700'}
+      `}>
+        <Icon className="w-4 h-4" />
+      </div>
+      <span className="text-[13px] font-medium tracking-wide pointer-events-none">{label}</span>
+    </button>
+  </li>
 );
 
 function Nav() {
   const { user, setUser, admin, setAdmin } = useContext(userDataContext);
-  const { serverurl } = useContext(authDataContext);
   const { showSearch, setShowSearch, search, setSearch, getCardCount, setCartItem, setWishlist } = useContext(shopDataContext);
   const [showProfile, setShowProfile] = useState(false);
-  const [showOutfitCreator, setShowOutfitCreator] = useState(false);
   const profileRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -60,14 +62,14 @@ function Nav() {
   }, []);
 
   const handleLogout = async () => {
+    setShowProfile(false);
     try {
-      await axios.get(`${serverurl}/api/auth/logout`, { withCredentials: true });
+      await api.get('/api/auth/logout');
     } catch (error) {
       console.error("Logout request error:", error);
     } finally {
       localStorage.removeItem("token");
       localStorage.removeItem("vastra_guest_cart");
-      setShowProfile(false);
       setUser(null);
       setAdmin(null);
       setCartItem({});
@@ -160,116 +162,125 @@ function Nav() {
 
           {/* Premium Profile */}
           <div ref={profileRef} className="relative">
-            <motion.div whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.05 }} className="relative group">
+            {/* Avatar / Trigger Button */}
+            <motion.button
+              type="button"
+              whileTap={{ scale: 0.92 }}
+              whileHover={{ scale: 1.05 }}
+              onClick={() => setShowProfile((prev) => !prev)}
+              aria-label="Account menu"
+              aria-expanded={showProfile}
+              className="relative flex items-center justify-center cursor-pointer focus:outline-none"
+            >
               {!user ? (
                 <div className="relative">
-                  <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <button className={`${iconButtonClass} relative`} onClick={() => setShowProfile((prev) => !prev)} title="Account">
+                  <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full opacity-0 hover:opacity-100 transition-opacity" />
+                  <div className={`${iconButtonClass} relative`} title="Account">
                     <FaCircleUser className="w-6 h-6" />
-                  </button>
+                  </div>
                 </div>
               ) : (
                 <div className="relative">
                   <div className="absolute inset-0 bg-blue-500/30 blur-lg rounded-full" />
-                  <div className="w-10 h-10 bg-blue-600/20 text-white rounded-full flex items-center justify-center uppercase text-sm font-bold cursor-pointer shadow-lg shadow-blue-500/30 border border-blue-400/30 relative hover:shadow-blue-500/50 transition-all" onClick={() => setShowProfile((prev) => !prev)}>
-                    {user.name?.charAt(0)}
+                  <div className="w-10 h-10 bg-blue-600/20 text-white rounded-full flex items-center justify-center uppercase text-sm font-bold shadow-lg shadow-blue-500/30 border border-blue-400/30 relative hover:shadow-blue-500/50 transition-all">
+                    {user.name?.charAt(0) || "U"}
                   </div>
                 </div>
               )}
+            </motion.button>
 
-              {/* Premium Dropdown */}
-              <AnimatePresence>
-                {showProfile && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-[125%] right-0 w-52 bg-slate-900/95 border border-slate-800/60 rounded-2xl z-50 shadow-2xl shadow-black/60 backdrop-blur-2xl overflow-hidden p-2"
-                  >
-                    {/* Glassmorphism Shine */}
-                    <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
-                    
-                    <ul className="flex flex-col gap-1">
-                      {user ? (
-                        <>
-                          <div className="px-3 py-2 border-b border-slate-800/80 mb-1">
-                            <p className="text-white text-xs font-semibold truncate">{user.name}</p>
-                            <p className="text-slate-400 text-[11px] truncate">{user.email}</p>
-                          </div>
-                          <DropdownItem 
-                            icon={MdOutlineHistory} 
-                            label="Orders" 
-                            onClick={() => { navigate('/order'); setShowProfile(false); }} 
-                          />
-                          <DropdownItem 
-                            icon={MdOutlineFavoriteBorder} 
-                            label="Wishlist" 
-                            onClick={() => { navigate('/wishlist'); setShowProfile(false); }} 
-                          />
+            {/* Premium Dropdown - Independent from whileTap wrapper */}
+            <AnimatePresence>
+              {showProfile && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute top-[125%] right-0 w-52 bg-slate-900/98 border border-slate-800/80 rounded-2xl z-50 shadow-2xl shadow-black/70 backdrop-blur-2xl overflow-hidden p-2"
+                >
+                  {/* Glassmorphism Shine */}
+                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+                  
+                  <ul className="flex flex-col gap-1">
+                    {user ? (
+                      <>
+                        <div className="px-3 py-2 border-b border-slate-800/80 mb-1 select-none">
+                          <p className="text-white text-xs font-semibold truncate">{user.name}</p>
+                          <p className="text-slate-400 text-[11px] truncate">{user.email}</p>
+                        </div>
+                        <DropdownItem 
+                          icon={MdOutlineHistory} 
+                          label="Orders" 
+                          onClick={() => { setShowProfile(false); navigate('/order'); }} 
+                        />
+                        <DropdownItem 
+                          icon={MdOutlineFavoriteBorder} 
+                          label="Wishlist" 
+                          onClick={() => { setShowProfile(false); navigate('/wishlist'); }} 
+                        />
 
-                          {admin && (
-                            <DropdownItem 
-                              icon={MdOutlineAdminPanelSettings} 
-                              label="Admin Panel" 
-                              accent 
-                              onClick={() => { navigate('/admin'); setShowProfile(false); }} 
-                            />
-                          )}
+                        {admin && (
+                          <DropdownItem 
+                            icon={MdOutlineAdminPanelSettings} 
+                            label="Admin Panel" 
+                            accent 
+                            onClick={() => { setShowProfile(false); navigate('/admin'); }} 
+                          />
+                        )}
 
-                          <DropdownItem 
-                            icon={MdOutlineInfo} 
-                            label="About" 
-                            onClick={() => { navigate("/about"); setShowProfile(false); }} 
-                          />
+                        <DropdownItem 
+                          icon={MdOutlineInfo} 
+                          label="About" 
+                          onClick={() => { setShowProfile(false); navigate("/about"); }} 
+                        />
 
-                          <div className="h-px bg-slate-800/60 my-1 mx-2" />
+                        <div className="h-px bg-slate-800/60 my-1 mx-2" />
 
-                          <DropdownItem 
-                            icon={MdOutlineLogout} 
-                            label="Logout" 
-                            danger 
-                            onClick={handleLogout} 
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <DropdownItem 
-                            icon={FaCircleUser} 
-                            label="Login" 
-                            accent
-                            onClick={() => { navigate("/login"); setShowProfile(false); }} 
-                          />
-                          <DropdownItem 
-                            icon={MdPersonAdd} 
-                            label="Register" 
-                            onClick={() => { navigate("/signup"); setShowProfile(false); }} 
-                          />
+                        <DropdownItem 
+                          icon={MdOutlineLogout} 
+                          label="Logout" 
+                          danger 
+                          onClick={handleLogout} 
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <DropdownItem 
+                          icon={FaCircleUser} 
+                          label="Login" 
+                          accent
+                          onClick={() => { setShowProfile(false); navigate("/login"); }} 
+                        />
+                        <DropdownItem 
+                          icon={MdPersonAdd} 
+                          label="Register" 
+                          onClick={() => { setShowProfile(false); navigate("/signup"); }} 
+                        />
 
-                          <div className="h-px bg-slate-800/60 my-1 mx-2" />
+                        <div className="h-px bg-slate-800/60 my-1 mx-2" />
 
-                          <DropdownItem 
-                            icon={MdOutlineHistory} 
-                            label="Orders" 
-                            onClick={() => { navigate('/order'); setShowProfile(false); }} 
-                          />
-                          <DropdownItem 
-                            icon={MdOutlineFavoriteBorder} 
-                            label="Wishlist" 
-                            onClick={() => { navigate('/wishlist'); setShowProfile(false); }} 
-                          />
-                          <DropdownItem 
-                            icon={MdOutlineInfo} 
-                            label="About" 
-                            onClick={() => { navigate("/about"); setShowProfile(false); }} 
-                          />
-                        </>
-                      )}
-                    </ul>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+                        <DropdownItem 
+                          icon={MdOutlineHistory} 
+                          label="Orders" 
+                          onClick={() => { setShowProfile(false); navigate('/order'); }} 
+                        />
+                        <DropdownItem 
+                          icon={MdOutlineFavoriteBorder} 
+                          label="Wishlist" 
+                          onClick={() => { setShowProfile(false); navigate('/wishlist'); }} 
+                        />
+                        <DropdownItem 
+                          icon={MdOutlineInfo} 
+                          label="About" 
+                          onClick={() => { setShowProfile(false); navigate("/about"); }} 
+                        />
+                      </>
+                    )}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Premium Cart */}
