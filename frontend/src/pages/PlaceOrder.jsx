@@ -1,10 +1,11 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { MdLock, MdLocalShipping, MdCreditCard } from 'react-icons/md';
 import Titles from '../components/Titles';
 import CartTotal from '../components/CartTotal';
 import { shopDataContext } from '../context/ShopContext';
+import { userDataContext } from '../context/UserContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import RazorpayImg from '../assets/Razorpay.jpg';
@@ -42,11 +43,23 @@ function FormField({ name, value, onChange, type = 'text', error }) {
 
 function PlaceOrder() {
   const { setCartItem, cartItem, getCartAmount, delivery_fee, products } = useContext(shopDataContext);
+  const { user } = useContext(userDataContext);
   const navigate = useNavigate();
   const [method, setMethod] = useState('cod');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        email: prev.email || user.email || '',
+        firstName: prev.firstName || (user.name ? user.name.split(' ')[0] : ''),
+        lastName: prev.lastName || (user.name && user.name.includes(' ') ? user.name.split(' ').slice(1).join(' ') : ''),
+      }));
+    }
+  }, [user]);
 
   const onChange = (e) => {
     setFormData(d => ({ ...d, [e.target.name]: e.target.value }));
@@ -87,7 +100,7 @@ function PlaceOrder() {
 
   const initRazorpay = (razorpayOrder) => {
     const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_ZIY1M0ykaWoWyC',
       amount: razorpayOrder.amount,
       currency: razorpayOrder.currency,
       name: 'Vastra',
@@ -96,6 +109,7 @@ function PlaceOrder() {
       handler: async (response) => {
         try {
           await api.post('/api/order/verifyrazorpay', response);
+          localStorage.removeItem('vastra_guest_cart');
           setCartItem({});
           toast.success('Payment successful! 🎉');
           navigate('/order');
@@ -121,6 +135,7 @@ function PlaceOrder() {
     try {
       if (method === 'cod') {
         await api.post('/api/order/place', payload);
+        localStorage.removeItem('vastra_guest_cart');
         setCartItem({});
         toast.success('Order placed successfully! 🎉');
         navigate('/order');

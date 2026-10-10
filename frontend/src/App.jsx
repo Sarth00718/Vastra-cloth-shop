@@ -56,17 +56,25 @@ function GuestRoute({ children }) {
   const location = useLocation();
   
   if (loading) return <SkeletonPage />;
-  if (user) return <Navigate to={location.state?.from || '/'} replace />;
+  if (user) {
+    const from = location.state?.from;
+    const target = user.role === 'admin'
+      ? (from || '/admin')
+      : (from && !from.startsWith('/admin') ? from : '/');
+    return <Navigate to={target} replace />;
+  }
   return children;
 }
 
-// ─── PAGES WITHOUT FOOTER ────────────────────────────────────────────────────
+// ─── PAGES WITHOUT FOOTER / NAVBAR ───────────────────────────────────────────
 const NO_FOOTER_PATHS = ['/login', '/signup'];
+const NO_NAV_PATHS = ['/login', '/signup'];
 
 function App() {
   const { user, loading } = useContext(userDataContext);
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith('/admin');
+  const showNav = !isAdminPath && !NO_NAV_PATHS.includes(location.pathname);
   const showFooter = !NO_FOOTER_PATHS.includes(location.pathname) && !isAdminPath;
 
   if (loading) return <SkeletonPage />;
@@ -83,28 +91,29 @@ function App() {
           },
         }}
       />
-      {!isAdminPath && user && <Nav />}
+      {showNav && <Nav />}
       <Suspense fallback={<SkeletonPage />}>
         <Routes>
-          {/* Guest routes */}
+          {/* Guest routes (redirect logged-in users away) */}
           <Route path="/signup" element={<GuestRoute><Registration /></GuestRoute>} />
           <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
 
-          {/* User Protected routes */}
-          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-          <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
-          <Route path="/contects" element={<ProtectedRoute><Contects /></ProtectedRoute>} />
-          <Route path="/collections" element={<ProtectedRoute><Collections /></ProtectedRoute>} />
-          <Route path="/product" element={<ProtectedRoute><Product /></ProtectedRoute>} />
-          <Route path="/productdetails/:productId" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>} />
-          <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+          {/* Public storefront routes (accessible without authentication) */}
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contects" element={<Contects />} />
+          <Route path="/collections" element={<Collections />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/productdetails/:productId" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
+          {/* User Protected routes (checkout, order history, wishlist) */}
           <Route path="/placeorder" element={<ProtectedRoute><PlaceOrder /></ProtectedRoute>} />
           <Route path="/order" element={<ProtectedRoute><Order /></ProtectedRoute>} />
           <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
-          <Route path="/privacy-policy" element={<ProtectedRoute><PrivacyPolicy /></ProtectedRoute>} />
 
-
-          {/* Admin Routes */}
+          {/* Admin Protected routes */}
           <Route path="/admin" element={<AdminProtectedRoute><AdminHome /></AdminProtectedRoute>} />
           <Route path="/admin/add" element={<AdminProtectedRoute><AdminAdd /></AdminProtectedRoute>} />
           <Route path="/admin/lists" element={<AdminProtectedRoute><AdminLists /></AdminProtectedRoute>} />

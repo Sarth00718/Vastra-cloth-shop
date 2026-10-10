@@ -28,10 +28,25 @@ const allowedOrigins = [
   'http://127.0.0.1:5173',
   'http://127.0.0.1:5174',
   'http://127.0.0.1:5175',
+  'http://vastra-shop-frontend-665651551502.s3-website-us-east-1.amazonaws.com',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.includes('s3-website') ||
+      origin.endsWith('.amazonaws.com') ||
+      origin.includes('vercel.app')
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+}));
 
 // ─── MIDDLEWARE ─────────────────────────────────────────────────────────────--
 app.use(cookieParser());

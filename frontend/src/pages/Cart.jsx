@@ -5,12 +5,14 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { FiMinus, FiPlus } from 'react-icons/fi';
 import { MdShoppingCartCheckout, MdLocalShipping } from 'react-icons/md';
 import { shopDataContext } from '../context/ShopContext';
+import { userDataContext } from '../context/UserContext';
 import Titles from '../components/Titles';
 import CartTotal from '../components/CartTotal';
 import toast from 'react-hot-toast';
 
 function Cart() {
   const { products, currency, cartItem, updateQuantity, delivery_fee, getCartAmount } = useContext(shopDataContext);
+  const { user } = useContext(userDataContext);
   const [cartData, setCartData] = useState([]);
   const navigate = useNavigate();
 
@@ -202,7 +204,14 @@ function Cart() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate('/placeorder')}
+              onClick={() => {
+                if (!user) {
+                  toast('Please sign in to proceed with checkout', { icon: '🔒' });
+                  navigate('/login', { state: { from: '/placeorder' } });
+                } else {
+                  navigate('/placeorder');
+                }
+              }}
               className="w-full mt-4 flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/30 transition-all text-sm tracking-wide"
             >
               <MdShoppingCartCheckout className="w-5 h-5" />

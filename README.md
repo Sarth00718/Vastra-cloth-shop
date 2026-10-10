@@ -49,7 +49,7 @@
 
 - ✅ User registration with email validation
 - ✅ Secure login with JWT tokens
-- ✅ Google OAuth integration via Firebase
+- ✅ Google OAuth 2.0 integration
 - ✅ Password encryption with bcrypt
 - ✅ Persistent sessions
 
@@ -571,13 +571,8 @@ Create `.env` file in `frontend/` directory:
 VITE_API_URL=http://localhost:5000
 VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
 
-# Firebase Configuration
-VITE_FIREBASE_API_KEY=your_firebase_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
+# Google OAuth Configuration
+VITE_GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
 ```
 
 Start the frontend:

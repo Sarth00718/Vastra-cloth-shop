@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import toast from 'react-hot-toast';
 import { userDataContext } from './UserContext';
 import { productService } from '../services/productService';
 import { cartService } from '../services/cartService';
@@ -16,16 +17,16 @@ const CATEGORIES = [
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 const getCartCount = (cartItem) => {
-  return Object.values(cartItem).reduce((total, sizes) => {
-    return total + Object.values(sizes).reduce((s, qty) => s + (qty > 0 ? qty : 0), 0);
+  return Object.values(cartItem || {}).reduce((total, sizes) => {
+    return total + Object.values(sizes || {}).reduce((s, qty) => s + (qty > 0 ? qty : 0), 0);
   }, 0);
 };
 
 const calculateCartTotal = (cartItem, products) => {
-  return Object.entries(cartItem).reduce((total, [productId, sizes]) => {
-    const product = products.find((p) => p._id === productId);
+  return Object.entries(cartItem || {}).reduce((total, [productId, sizes]) => {
+    const product = (products || []).find((p) => p._id === productId);
     if (!product) return total;
-    return total + Object.values(sizes).reduce((s, qty) => s + (qty > 0 ? product.price * qty : 0), 0);
+    return total + Object.values(sizes || {}).reduce((s, qty) => s + (qty > 0 ? product.price * qty : 0), 0);
   }, 0);
 };
 
@@ -36,7 +37,14 @@ function ShopContext({ children }) {
   const { user } = useContext(userDataContext);
 
   const [products, setProducts] = useState([]);
-  const [cartItem, setCartItem] = useState({});
+  const [cartItem, setCartItem] = useState(() => {
+    try {
+      const saved = localStorage.getItem('vastra_guest_cart');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [wishlist, setWishlist] = useState([]);
@@ -68,7 +76,7 @@ function ShopContext({ children }) {
   const addToCart = async (itemId, size) => {
     if (!size) return;
 
-    const cartData = structuredClone(cartItem);
+    const cartData = structuredClone(cartItem || {});
     if (!cartData[itemId]) cartData[itemId] = {};
     cartData[itemId][size] = (cartData[itemId][size] || 0) + 1;
     setCartItem(cartData);
@@ -79,11 +87,17 @@ function ShopContext({ children }) {
       } catch (error) {
         console.error('Error adding to cart:', error);
       }
+    } else {
+      try {
+        localStorage.setItem('vastra_guest_cart', JSON.stringify(cartData));
+      } catch (error) {
+        console.error('Error saving guest cart:', error);
+      }
     }
   };
 
   const updateQuantity = async (itemId, size, quantity) => {
-    const cartData = structuredClone(cartItem);
+    const cartData = structuredClone(cartItem || {});
     if (cartData[itemId]?.[size] !== undefined) {
       if (quantity <= 0) {
         delete cartData[itemId][size];
@@ -100,8 +114,63 @@ function ShopContext({ children }) {
       } catch (error) {
         console.error('Error updating quantity:', error);
       }
+    } else {
+      try {
+        localStorage.setItem('vastra_guest_cart', JSON.stringify(cartData));
+      } catch (error) {
+        console.error('Error saving guest cart:', error);
+      }
     }
   };
+
+  const syncAndLoadUserCart = useCallback(async () => {
+    try {
+      const serverCart = await cartService.getCart();
+      let guestCart = {};
+      try {
+        const saved = localStorage.getItem('vastra_guest_cart');
+        if (saved) guestCart = JSON.parse(saved);
+      } catch (e) {
+        console.error('Error reading guest cart:', e);
+      }
+
+      const mergedCart = structuredClone(serverCart || {});
+      const guestProductIds = Object.keys(guestCart || {});
+
+      if (guestProductIds.length > 0) {
+        for (const itemId of guestProductIds) {
+          if (!mergedCart[itemId]) mergedCart[itemId] = {};
+          for (const size in guestCart[itemId]) {
+            const guestQty = guestCart[itemId][size];
+            if (guestQty > 0) {
+              const currentQty = mergedCart[itemId][size] || 0;
+              const newQty = currentQty + guestQty;
+              mergedCart[itemId][size] = newQty;
+              try {
+                await cartService.updateCart(itemId, size, newQty);
+              } catch (err) {
+                console.error(`Error syncing cart item ${itemId} (${size}):`, err);
+              }
+            }
+          }
+          if (Object.keys(mergedCart[itemId]).length === 0) {
+            delete mergedCart[itemId];
+          }
+        }
+        localStorage.removeItem('vastra_guest_cart');
+      }
+
+      setCartItem(mergedCart);
+    } catch (error) {
+      console.error('Error fetching user cart:', error);
+      try {
+        const saved = localStorage.getItem('vastra_guest_cart');
+        if (saved) setCartItem(JSON.parse(saved));
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
 
   const getUserCart = useCallback(async () => {
     try {
@@ -123,6 +192,11 @@ function ShopContext({ children }) {
   }, []);
 
   const toggleWishlist = async (productId) => {
+    if (!user) {
+      toast.error('Please log in to save items to your wishlist');
+      return;
+    }
+
     const isWishlisted = wishlist.includes(productId);
     // Optimistic update
     setWishlist((prev) =>
@@ -144,17 +218,22 @@ function ShopContext({ children }) {
   // ─── EFFECTS ────────────────────────────────────────────────────────────────
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [getProducts]);
 
   useEffect(() => {
     if (user) {
-      getUserCart();
+      syncAndLoadUserCart();
       getUserWishlist();
     } else {
       setWishlist([]);
-      setCartItem({});
+      try {
+        const saved = localStorage.getItem('vastra_guest_cart');
+        setCartItem(saved ? JSON.parse(saved) : {});
+      } catch {
+        setCartItem({});
+      }
     }
-  }, [user]);
+  }, [user, syncAndLoadUserCart, getUserWishlist]);
 
   // ─── VALUE ───────────────────────────────────────────────────────────────────
   const value = {
