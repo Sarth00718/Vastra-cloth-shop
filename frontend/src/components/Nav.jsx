@@ -91,7 +91,7 @@ function Nav() {
 
   return (
     <>
-    <div className="w-screen fixed top-0 z-20 bg-gradient-to-r from-slate-950/95 via-slate-900/95 to-slate-950/95 shadow-2xl border-b border-slate-800/50 backdrop-blur-xl" style={{ fontFamily: 'Inter, sans-serif' }}>
+    <div className="w-full fixed top-0 z-20 bg-gradient-to-r from-slate-950/95 via-slate-900/95 to-slate-950/95 shadow-2xl border-b border-slate-800/50 backdrop-blur-xl" style={{ fontFamily: 'Inter, sans-serif' }}>
       {/* Premium Top Border */}
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
 
@@ -118,7 +118,7 @@ function Nav() {
             { label: "Home", path: "/" },
             { label: "Collections", path: "/collections" },
             { label: "About", path: "/about" },
-            { label: "Contact", path: "/contects" },
+            { label: "Contact", path: "/contact" },
           ].map(({ label, path }) => (
             <motion.li
               key={label}
@@ -344,7 +344,7 @@ function Nav() {
       {[
         { Icon: LuHouse, label: "Home", path: "/" },
         { Icon: LuLayers, label: "Collections", path: "/collections" },
-        { Icon: LuPhoneCall, label: "Contact", path: "/contects" },
+        { Icon: LuPhoneCall, label: "Contact", path: "/contact" },
       ].map(({ Icon, label, path }) => (
         <motion.button whileTap={{ scale: 0.9 }} key={label} className="text-blue-300 flex flex-col items-center justify-center gap-1 font-medium" onClick={() => navigate(path)}>
           <Icon className="w-5 h-5" /> {label}

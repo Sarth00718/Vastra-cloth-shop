@@ -18,13 +18,23 @@ export const addProduct = asyncHandler(async (req, res) => {
     uploadOnCloudinary(req.files.image4[0].path),
   ]);
 
+  if (!image1 || !image2 || !image3 || !image4) {
+    return sendError(res, 'Failed to upload one or more images to Cloudinary. Please check image files and Cloudinary configuration.', 500);
+  }
+
+  const parsedSizes = Array.isArray(sizes)
+    ? sizes
+    : typeof sizes === 'string'
+    ? (() => { try { return JSON.parse(sizes); } catch { return sizes.split(',').map(s => s.trim()); } })()
+    : [];
+
   const product = await Product.create({
     name,
     description,
     price: Number(price),
     category,
     subCategory,
-    sizes: JSON.parse(sizes),
+    sizes: parsedSizes,
     bestseller: bestseller === 'true' || bestseller === true,
     image1,
     image2,
@@ -104,7 +114,13 @@ export const updateProduct = asyncHandler(async (req, res) => {
   if (price) updateData.price = Number(price);
   if (category) updateData.category = category;
   if (subCategory) updateData.subCategory = subCategory;
-  if (sizes) updateData.sizes = JSON.parse(sizes);
+  if (sizes !== undefined) {
+    updateData.sizes = Array.isArray(sizes)
+      ? sizes
+      : typeof sizes === 'string'
+      ? (() => { try { return JSON.parse(sizes); } catch { return sizes.split(',').map(s => s.trim()); } })()
+      : [];
+  }
   if (bestseller !== undefined) updateData.bestseller = bestseller === 'true' || bestseller === true;
 
   const product = await Product.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });

@@ -2,7 +2,8 @@ import api from './api.js';
 
 export const productService = {
   getProducts: async (params = {}) => {
-    const response = await api.get('/api/product/list', { params });
+    const queryParams = { limit: 200, ...params };
+    const response = await api.get('/api/product/list', { params: queryParams });
     // Support both old shape {products:[]} and new paginated shape {data:[]}
     return { products: response.data.data || response.data.products || [] };
   },

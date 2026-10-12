@@ -3,24 +3,50 @@ import { User } from '../models/userModel.js';
 import { Product } from '../models/productModel.js';
 import Razorpay from 'razorpay';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 import { asyncHandler } from '../middlewares/errorHandler.js';
 import { sendSuccess, sendError } from '../utils/apiResponse.js';
 
 dotenv.config();
 
 const razorpayInstance = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
+  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+  key_secret: process.env.RAZORPAY_KEY_SECRET || 'rzp_test_secret_placeholder',
 });
+
+// Helper: Calculate verified total price on server
+const calculateVerifiedTotal = async (items) => {
+  if (!Array.isArray(items) || items.length === 0) return 0;
+  const productIds = items.map((i) => i._id).filter(Boolean);
+  const dbProducts = await Product.find({ _id: { $in: productIds } }).lean();
+  const priceMap = new Map(dbProducts.map((p) => [p._id.toString(), p.price]));
+
+  let subtotal = 0;
+  for (const item of items) {
+    const verifiedPrice = priceMap.get(item._id?.toString()) ?? (Number(item.price) || 0);
+    const qty = Math.max(1, Number(item.quantity) || 1);
+    subtotal += verifiedPrice * qty;
+  }
+  const deliveryFee = subtotal >= 999 ? 0 : 10;
+  return subtotal + deliveryFee;
+};
 
 // ─── PLACE ORDER (COD) ────────────────────────────────────────────────────────
 export const placeOrder = asyncHandler(async (req, res) => {
   const { orderItems, amount, address, paymentMethod } = req.body;
   const userId = req.userId;
 
+  if (!orderItems || !Array.isArray(orderItems) || orderItems.length === 0) {
+    return sendError(res, 'Order items are required', 400);
+  }
+
+  // Calculate verified server-side total price
+  const verifiedAmount = await calculateVerifiedTotal(orderItems);
+  const finalAmount = verifiedAmount > 0 ? verifiedAmount : (Number(amount) || 0);
+
   const newOrder = await Order.create({
     items: orderItems,
-    amount,
+    amount: finalAmount,
     address,
     userId,
     paymentMethod: paymentMethod || 'COD',
@@ -37,9 +63,16 @@ export const placeOrderRazor = asyncHandler(async (req, res) => {
   const { orderItems, amount, address } = req.body;
   const userId = req.userId;
 
+  if (!orderItems || !Array.isArray(orderItems) || orderItems.length === 0) {
+    return sendError(res, 'Order items are required', 400);
+  }
+
+  const verifiedAmount = await calculateVerifiedTotal(orderItems);
+  const finalAmount = verifiedAmount > 0 ? verifiedAmount : (Number(amount) || 0);
+
   const newOrder = await Order.create({
     items: orderItems,
-    amount,
+    amount: finalAmount,
     address,
     userId,
     paymentMethod: 'Razorpay',
@@ -48,7 +81,7 @@ export const placeOrderRazor = asyncHandler(async (req, res) => {
   });
 
   const options = {
-    amount: amount * 100,
+    amount: Math.round(finalAmount * 100),
     currency: 'INR',
     receipt: newOrder._id.toString(),
   };
@@ -66,12 +99,57 @@ export const placeOrderRazor = asyncHandler(async (req, res) => {
 // ─── VERIFY RAZORPAY ──────────────────────────────────────────────────────────
 export const verifyRazorpay = asyncHandler(async (req, res) => {
   const userId = req.userId;
-  const { razorpay_order_id } = req.body;
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-  const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+  if (!razorpay_order_id) {
+    return sendError(res, 'razorpay_order_id is required', 400);
+  }
 
-  if (orderInfo.status === 'paid') {
-    await Order.findByIdAndUpdate(orderInfo.receipt, { payment: true });
+  let isVerified = false;
+
+  // 1. Primary: Cryptographic HMAC SHA256 Signature Verification
+  if (razorpay_signature && razorpay_payment_id && process.env.RAZORPAY_KEY_SECRET) {
+    const generatedSignature = crypto
+      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest('hex');
+
+    if (generatedSignature === razorpay_signature) {
+      isVerified = true;
+    }
+  }
+
+  // 2. Fallback: Query Razorpay API directly
+  if (!isVerified) {
+    try {
+      const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+      if (orderInfo && (orderInfo.status === 'paid' || orderInfo.amount_paid > 0)) {
+        isVerified = true;
+      }
+    } catch (err) {
+      console.warn('Razorpay fetch fallback check:', err.message);
+    }
+  }
+
+  if (isVerified) {
+    let orderInfo = null;
+    try {
+      orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+    } catch {
+      // ignore
+    }
+
+    const orderId = orderInfo?.receipt;
+    if (orderId) {
+      await Order.findOneAndUpdate({ _id: orderId, userId }, { payment: true });
+    } else {
+      await Order.findOneAndUpdate(
+        { userId, paymentMethod: 'Razorpay', payment: false },
+        { payment: true },
+        { sort: { date: -1 } }
+      );
+    }
+
     await User.findByIdAndUpdate(userId, { cartData: {} });
     return sendSuccess(res, {}, 'Payment verified successfully');
   }

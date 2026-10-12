@@ -65,7 +65,7 @@ function Cart() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-4xl mx-auto mb-5 flex items-center gap-3 bg-blue-500/10 border border-blue-500/30 rounded-xl px-4 py-3 text-sm"
         >
-          <MdLocalShipping className="w-5 h-5 text-blue-400 shrink-0" />
+          <LuTruck className="w-5 h-5 text-blue-400 shrink-0" />
           <span className="text-blue-300">
             Add <span className="font-bold text-white">₹{remainingForFreeShipping}</span> more for free delivery!
           </span>
@@ -84,7 +84,7 @@ function Cart() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-4xl mx-auto mb-5 flex items-center gap-3 bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-3 text-sm"
         >
-          <MdLocalShipping className="w-5 h-5 text-green-400" />
+          <LuTruck className="w-5 h-5 text-green-400 shrink-0" />
           <span className="text-green-300 font-medium">You've unlocked free delivery!</span>
         </motion.div>
       )}

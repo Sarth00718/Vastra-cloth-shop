@@ -230,10 +230,14 @@ function PlaceOrder() {
 
     setLoading(true);
     const cleanedPhone = (formData.phone || '').trim().replace(/^(\+91|0)/, '').replace(/[\s-]/g, '');
+    const subtotal = getCartAmount();
+    const effectiveDeliveryFee = subtotal >= 999 ? 0 : delivery_fee;
+    const finalAmount = subtotal + effectiveDeliveryFee;
+
     const payload = {
       address: { ...formData, phone: cleanedPhone },
       orderItems,
-      amount: getCartAmount() + delivery_fee,
+      amount: finalAmount,
       paymentMethod: method === 'cod' ? 'COD' : 'Razorpay',
     };
 

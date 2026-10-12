@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LuShoppingBag, LuArrowLeft, LuTruck, LuRotateCcw, LuShieldCheck, LuSparkles, LuHeart, LuStar, LuStarHalf } from 'react-icons/lu';
+import { LuShoppingBag, LuArrowLeft, LuTruck, LuRotateCcw, LuShieldCheck, LuSparkles, LuHeart, LuStar, LuStarHalf, LuPackageX } from 'react-icons/lu';
 import { shopDataContext } from '../context/ShopContext';
+import { productService } from '../services/productService';
 import RelatedProducts from '../components/RelatedProducts';
 import toast from 'react-hot-toast';
 import Card from '../components/Card';
@@ -10,7 +11,7 @@ import Card from '../components/Card';
 function ProductDetails() {
   const { productId } = useParams();
   const navigate = useNavigate();
-  const { products, currency, addToCart, wishlist, toggleWishlist, recentlyViewed, addToRecentlyViewed } = useContext(shopDataContext);
+  const { products, productsLoading, currency, addToCart, wishlist, toggleWishlist, recentlyViewed, addToRecentlyViewed } = useContext(shopDataContext);
 
   const [productData, setProductData] = useState(null);
   const [activeImage, setActiveImage] = useState('');
@@ -18,17 +19,62 @@ function ProductDetails() {
   const [activeTab, setActiveTab] = useState('description');
   const [zoomStyle, setZoomStyle] = useState({});
   const [isZooming, setIsZooming] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    const found = products.find((p) => p._id === productId);
-    if (found) {
-      setProductData(found);
-      setActiveImage(found.image1);
-      setSize('');
-      addToRecentlyViewed(productId);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [productId, products]);
+    let isMounted = true;
+
+    const loadProduct = async () => {
+      // 1. Try finding in loaded products first
+      const found = products.find((p) => p._id === productId);
+      if (found) {
+        if (!isMounted) return;
+        setProductData(found);
+        setActiveImage(found.image1);
+        setSize('');
+        setLoading(false);
+        setNotFound(false);
+        addToRecentlyViewed(productId);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      // 2. If products list is still loading, wait before falling back to API
+      if (productsLoading) {
+        return;
+      }
+
+      // 3. Fallback: Fetch directly from API by ID
+      setLoading(true);
+      try {
+        const directProduct = await productService.getProduct(productId);
+        if (!isMounted) return;
+        if (directProduct) {
+          setProductData(directProduct);
+          setActiveImage(directProduct.image1);
+          setSize('');
+          setNotFound(false);
+          addToRecentlyViewed(productId);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          setNotFound(true);
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        console.error('Error fetching product details:', err);
+        setNotFound(true);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    loadProduct();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [productId, products, productsLoading, addToRecentlyViewed]);
 
   const handleAddToCart = useCallback(() => {
     if (!size) {
@@ -46,17 +92,37 @@ function ProductDetails() {
     setZoomStyle({ transformOrigin: `${x}% ${y}%`, transform: 'scale(2)' });
   }, []);
 
-  if (!productData) {
+  if (loading) {
     return (
-      <div className="w-full pt-24 px-4">
-        <div className="max-w-6xl mx-auto flex gap-10">
-          <div className="w-1/2 h-[450px] bg-slate-800 rounded-2xl animate-pulse" />
-          <div className="w-1/2 flex flex-col gap-4">
+      <div className="w-full pt-24 px-4 min-h-screen">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10">
+          <div className="w-full md:w-1/2 h-[450px] bg-slate-800/60 rounded-2xl animate-pulse" />
+          <div className="w-full md:w-1/2 flex flex-col gap-4">
             {[200, 100, 150, 80, 120].map((w, i) => (
-              <div key={i} className={`h-6 bg-slate-800 rounded animate-pulse`} style={{ width: w }} />
+              <div key={i} className="h-6 bg-slate-800/60 rounded-xl animate-pulse" style={{ width: `${w}px` }} />
             ))}
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (notFound || !productData) {
+    return (
+      <div className="w-full min-h-screen pt-32 px-4 flex flex-col items-center justify-center text-center">
+        <div className="w-20 h-20 rounded-3xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-4 shadow-xl">
+          <LuPackageX className="w-10 h-10" />
+        </div>
+        <h2 className="text-2xl font-bold text-white mb-2">Product Not Found</h2>
+        <p className="text-slate-400 text-sm max-w-md mb-6">
+          The product you are looking for does not exist or may have been removed from the catalog.
+        </p>
+        <button
+          onClick={() => navigate('/collections')}
+          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium text-sm transition-all cursor-pointer shadow-lg shadow-blue-600/30"
+        >
+          Explore Collections
+        </button>
       </div>
     );
   }

@@ -23,6 +23,7 @@ function Lists() {
     setLoading(true);
     try {
       const response = await axios.get(`${serverurl}/api/product/list`, {
+        params: { limit: 500 },
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       const products = response.data.data || response.data.products || [];
@@ -38,7 +39,14 @@ function Lists() {
     if (!confirm('Remove this product? This cannot be undone.')) return;
     setRemoving(id);
     try {
-      await axios.post(`${serverurl}/api/product/remove/${id}`, {}, { withCredentials: true });
+      await axios.post(
+        `${serverurl}/api/product/remove/${id}`,
+        {},
+        {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        }
+      );
       setList(prev => prev.filter(p => p._id !== id));
       toast.success('Product removed successfully!');
     } catch {

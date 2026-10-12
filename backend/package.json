@@ -11,9 +11,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "build": "echo 'No build step required for backend'",
-    "upload-assets": "node scripts/uploadAssetsToCloudinary.js",
-    "cleanup": "node cleanup.js",
-    "verify": "node verifyProducts.js"
+    "upload-assets": "node scripts/uploadAssetsToCloudinary.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

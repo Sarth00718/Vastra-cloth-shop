@@ -55,20 +55,10 @@ export const register = asyncHandler(async (req, res) => {
 
     const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
-        // If registered via Google without a password, allow setting a password
         if (!existingUser.password) {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            existingUser.password = hashedPassword;
-            if (!existingUser.authProviders.includes('credentials')) {
-                existingUser.authProviders.push('credentials');
-            }
-            await existingUser.save();
-            const token = await genToken(existingUser._id);
-            return res.cookie("token", token, getCookieOptions()).json({
-                success: true,
-                message: 'Password set successfully! You can now login with your email and password.',
-                user: sanitizeUser(existingUser),
-                token
+            return res.status(400).json({
+                success: false,
+                message: 'An account with this email was created via Google Sign-In. Please sign in with Google.',
             });
         }
         return res.status(400).json({ success: false, message: 'An account with this email already exists' });

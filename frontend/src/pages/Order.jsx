@@ -200,9 +200,9 @@ function Order() {
                   <span className="text-slate-400 text-xs">{order.paymentMethod}</span>
                   <button
                     onClick={loadOrders}
-                    className="text-xs text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
+                    className="text-xs text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1 cursor-pointer"
                   >
-                    <MdRefresh className="w-3 h-3" /> Track Order
+                    <LuRefreshCw className="w-3 h-3" /> Track Order
                   </button>
                 </div>
               </motion.div>

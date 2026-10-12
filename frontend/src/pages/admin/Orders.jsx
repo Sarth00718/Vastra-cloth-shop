@@ -47,7 +47,7 @@ function Orders() {
   const fetchAllOrders = async () => {
     setLoading(true);
     try {
-      const result = await axios.post(`${serverurl}/api/order/allorder`, {}, {
+      const result = await axios.post(`${serverurl}/api/order/allorder?limit=500`, {}, {
         withCredentials: true,
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });

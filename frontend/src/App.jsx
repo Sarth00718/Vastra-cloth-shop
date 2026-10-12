@@ -101,6 +101,7 @@ function App() {
           {/* Public storefront routes (accessible without authentication) */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contects />} />
           <Route path="/contects" element={<Contects />} />
           <Route path="/collections" element={<Collections />} />
           <Route path="/product" element={<Product />} />

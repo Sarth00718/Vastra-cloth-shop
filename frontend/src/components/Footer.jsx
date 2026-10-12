@@ -57,6 +57,12 @@ function Footer() {
                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-blue-500 group-hover:w-full transition-all duration-300" />
               </button>
             </li>
+            <li>
+              <button onClick={() => navigate('/contact')} className="hover:text-blue-400 transition-colors inline-block relative group">
+                Contact Us
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-blue-500 group-hover:w-full transition-all duration-300" />
+              </button>
+            </li>
           </ul>
         </div>
 
