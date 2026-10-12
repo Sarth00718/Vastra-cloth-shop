@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { shopDataContext } from '../context/ShopContext';
+import { LuSparkles } from 'react-icons/lu';
 
 function CartTotal() {
   const { currency, delivery_fee, getCartAmount } = useContext(shopDataContext);
@@ -23,7 +24,10 @@ function CartTotal() {
           </span>
         </div>
         {freeShipping && subtotal > 0 && (
-          <p className="text-green-400/80 text-xs">You've unlocked free delivery!</p>
+          <p className="text-emerald-400 text-xs flex items-center gap-1.5 font-medium">
+            <LuSparkles className="w-3.5 h-3.5" />
+            <span>You've unlocked free delivery!</span>
+          </p>
         )}
         <div className="border-t border-slate-700 pt-3 flex justify-between text-white font-bold text-base">
           <span>Total</span>

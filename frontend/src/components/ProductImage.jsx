@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { LuImageOff } from 'react-icons/lu';
 
 /**
  * ProductImage Component
@@ -47,7 +48,9 @@ const ProductImage = ({
       {hasError && (
         <div className="absolute inset-0 bg-slate-800 flex items-center justify-center">
           <div className="text-center">
-            <div className="text-4xl mb-2">📷</div>
+            <div className="w-10 h-10 rounded-xl bg-slate-700/50 flex items-center justify-center mx-auto mb-2 text-slate-400">
+              <LuImageOff className="w-5 h-5 stroke-[1.75]" />
+            </div>
             <p className="text-slate-400 text-sm">Image unavailable</p>
           </div>
         </div>

@@ -4,18 +4,17 @@ import { shopDataContext } from '../context/ShopContext';
 import Titles from '../components/Titles';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { MdRefresh, MdLocalShipping, MdCheckCircle, MdInventory, MdOutlineShoppingCart } from 'react-icons/md';
-import { FiPackage } from 'react-icons/fi';
+import { LuRefreshCw, LuShoppingBag, LuPackage, LuTruck, LuCircleCheck, LuClock } from 'react-icons/lu';
 
 // ─── ORDER TIMELINE ───────────────────────────────────────────────────────────
 const STATUS_STEPS = ['Order Placed', 'Packing', 'Shipped', 'Out for delivery', 'Delivered'];
 
 const STATUS_ICONS = {
-  'Order Placed': MdOutlineShoppingCart,
-  'Packing': MdInventory,
-  'Shipped': MdLocalShipping,
-  'Out for delivery': FiPackage,
-  'Delivered': MdCheckCircle,
+  'Order Placed': LuShoppingBag,
+  'Packing': LuPackage,
+  'Shipped': LuTruck,
+  'Out for delivery': LuTruck,
+  'Delivered': LuCircleCheck,
 };
 
 function OrderTimeline({ status }) {
@@ -76,7 +75,7 @@ function Order() {
       const res = await api.get('/api/order/userorders');
       const data = res.data.orders || res.data || [];
       setOrders(Array.isArray(data) ? data : []);
-    } catch (err) {
+    } catch (_err) {
       // Fallback to old endpoint shape
       try {
         const res = await api.post('/api/order/userorder', {});
@@ -100,9 +99,9 @@ function Order() {
           <button
             onClick={loadOrders}
             disabled={loading}
-            className="flex items-center gap-2 text-slate-400 hover:text-white text-sm transition-colors"
+            className="flex items-center gap-2 text-slate-400 hover:text-white text-sm transition-colors cursor-pointer"
           >
-            <MdRefresh className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <LuRefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </button>
         </div>
@@ -120,7 +119,9 @@ function Order() {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col items-center justify-center py-24 gap-5"
           >
-            <div className="text-7xl">📦</div>
+            <div className="w-24 h-24 rounded-3xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 mb-1 shadow-xl shadow-blue-500/5">
+              <LuPackage className="w-12 h-12" />
+            </div>
             <p className="text-white text-xl font-semibold">No orders yet</p>
             <p className="text-slate-400 text-sm text-center">Your orders will appear here once you place one</p>
           </motion.div>
@@ -146,10 +147,14 @@ function Order() {
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+                    <span className={`text-xs px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1.5 ${
                       order.payment ? 'bg-green-500/10 text-green-400 border border-green-500/30' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/30'
                     }`}>
-                      {order.payment ? '✓ Paid' : '⏳ Pending'}
+                      {order.payment ? (
+                        <><LuCircleCheck className="w-3.5 h-3.5" /> Paid</>
+                      ) : (
+                        <><LuClock className="w-3.5 h-3.5" /> Pending</>
+                      )}
                     </span>
                     <span className="text-white font-bold text-sm">
                       {currency} {order.amount?.toLocaleString('en-IN')}

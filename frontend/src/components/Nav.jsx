@@ -1,17 +1,27 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/vogo.png";
-import { IoSearchOutline } from "react-icons/io5";
-import { IoMdHome, IoMdAlbums, IoMdContacts, IoMdCart } from "react-icons/io";
-import { FaCircleUser } from "react-icons/fa6";
-import { MdOutlineShoppingCart, MdOutlineAdminPanelSettings, MdClose, MdPersonAdd } from "react-icons/md";
+import { 
+  LuSearch, 
+  LuX, 
+  LuUser, 
+  LuShoppingBag, 
+  LuPackage, 
+  LuHeart, 
+  LuShieldCheck, 
+  LuInfo, 
+  LuLogOut, 
+  LuUserPlus, 
+  LuLogIn, 
+  LuHouse, 
+  LuLayers, 
+  LuPhoneCall 
+} from "react-icons/lu";
 import { userDataContext } from "../context/UserContext";
-import { authDataContext } from "../context/AuthContext";
 import { shopDataContext } from "../context/ShopContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from "../services/api";
 import toast from "react-hot-toast";
-import { MdOutlineLogout, MdOutlineHistory, MdOutlineFavoriteBorder, MdOutlineInfo } from "react-icons/md";
 
 // ─── REUSABLE DROPDOWN ITEM ──────────────────────────────────────────────────
 const DropdownItem = ({ icon: Icon, label, onClick, danger, accent }) => (
@@ -139,11 +149,11 @@ function Nav() {
             <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
             {showSearch ? (
               <button className={`${iconButtonClass} relative`} onClick={() => setShowSearch(false)}>
-                <MdClose className="w-5 h-5 text-blue-400" />
+                <LuX className="w-5 h-5 text-blue-400" />
               </button>
             ) : (
               <button className={`${iconButtonClass} relative`} onClick={() => setShowSearch(true)}>
-                <IoSearchOutline className="w-[22px] h-[22px]" />
+                <LuSearch className="w-5 h-5" />
               </button>
             )}
           </motion.div>
@@ -176,7 +186,7 @@ function Nav() {
                 <div className="relative">
                   <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full opacity-0 hover:opacity-100 transition-opacity" />
                   <div className={`${iconButtonClass} relative`} title="Account">
-                    <FaCircleUser className="w-6 h-6" />
+                    <LuUser className="w-5 h-5" />
                   </div>
                 </div>
               ) : (
@@ -210,19 +220,19 @@ function Nav() {
                           <p className="text-slate-400 text-[11px] truncate">{user.email}</p>
                         </div>
                         <DropdownItem 
-                          icon={MdOutlineHistory} 
+                          icon={LuPackage} 
                           label="Orders" 
                           onClick={() => { setShowProfile(false); navigate('/order'); }} 
                         />
                         <DropdownItem 
-                          icon={MdOutlineFavoriteBorder} 
+                          icon={LuHeart} 
                           label="Wishlist" 
                           onClick={() => { setShowProfile(false); navigate('/wishlist'); }} 
                         />
 
                         {admin && (
                           <DropdownItem 
-                            icon={MdOutlineAdminPanelSettings} 
+                            icon={LuShieldCheck} 
                             label="Admin Panel" 
                             accent 
                             onClick={() => { setShowProfile(false); navigate('/admin'); }} 
@@ -230,7 +240,7 @@ function Nav() {
                         )}
 
                         <DropdownItem 
-                          icon={MdOutlineInfo} 
+                          icon={LuInfo} 
                           label="About" 
                           onClick={() => { setShowProfile(false); navigate("/about"); }} 
                         />
@@ -238,7 +248,7 @@ function Nav() {
                         <div className="h-px bg-slate-800/60 my-1 mx-2" />
 
                         <DropdownItem 
-                          icon={MdOutlineLogout} 
+                          icon={LuLogOut} 
                           label="Logout" 
                           danger 
                           onClick={handleLogout} 
@@ -247,13 +257,13 @@ function Nav() {
                     ) : (
                       <>
                         <DropdownItem 
-                          icon={FaCircleUser} 
+                          icon={LuLogIn} 
                           label="Login" 
                           accent
                           onClick={() => { setShowProfile(false); navigate("/login"); }} 
                         />
                         <DropdownItem 
-                          icon={MdPersonAdd} 
+                          icon={LuUserPlus} 
                           label="Register" 
                           onClick={() => { setShowProfile(false); navigate("/signup"); }} 
                         />
@@ -261,17 +271,17 @@ function Nav() {
                         <div className="h-px bg-slate-800/60 my-1 mx-2" />
 
                         <DropdownItem 
-                          icon={MdOutlineHistory} 
+                          icon={LuPackage} 
                           label="Orders" 
                           onClick={() => { setShowProfile(false); navigate('/order'); }} 
                         />
                         <DropdownItem 
-                          icon={MdOutlineFavoriteBorder} 
+                          icon={LuHeart} 
                           label="Wishlist" 
                           onClick={() => { setShowProfile(false); navigate('/wishlist'); }} 
                         />
                         <DropdownItem 
-                          icon={MdOutlineInfo} 
+                          icon={LuInfo} 
                           label="About" 
                           onClick={() => { setShowProfile(false); navigate("/about"); }} 
                         />
@@ -287,7 +297,7 @@ function Nav() {
           <motion.div whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.05 }} className="relative cursor-pointer group">
             <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
             <button className={`${iconButtonClass} relative hidden md:flex`} onClick={() => navigate('/cart')}>
-              <MdOutlineShoppingCart className="w-6 h-6" />
+              <LuShoppingBag className="w-5 h-5" />
             </button>
             <motion.span
               initial={{ scale: 0 }}
@@ -332,18 +342,18 @@ function Nav() {
     {/* Bottom Nav */}
     <div className="w-full h-[90px] flex items-center justify-between px-6 text-xs fixed bottom-0 left-0 bg-gradient-to-r from-[#0a1929] via-[#0f2847] to-[#0a1929] border-t border-blue-900/30 md:hidden z-20 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
       {[
-        { Icon: IoMdHome, label: "Home", path: "/" },
-        { Icon: IoMdAlbums, label: "Collections", path: "/collections" },
-        { Icon: IoMdContacts, label: "Contact", path: "/contects" },
+        { Icon: LuHouse, label: "Home", path: "/" },
+        { Icon: LuLayers, label: "Collections", path: "/collections" },
+        { Icon: LuPhoneCall, label: "Contact", path: "/contects" },
       ].map(({ Icon, label, path }) => (
         <motion.button whileTap={{ scale: 0.9 }} key={label} className="text-blue-300 flex flex-col items-center justify-center gap-1 font-medium" onClick={() => navigate(path)}>
-          <Icon className="w-6 h-6" /> {label}
+          <Icon className="w-5 h-5" /> {label}
         </motion.button>
       ))}
 
       <motion.button whileTap={{ scale: 0.9 }} className="relative text-blue-300 flex flex-col items-center justify-center gap-1 font-medium" onClick={() => navigate('/cart')}>
         <div className="relative">
-          <IoMdCart className="w-6 h-6" />
+          <LuShoppingBag className="w-5 h-5" />
           <span className="absolute -top-1.5 -right-2 w-[16px] h-[16px] flex items-center justify-center font-bold bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-full text-[9px] shadow-lg border border-slate-900">
             {getCardCount()}
           </span>

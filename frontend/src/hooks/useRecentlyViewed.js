@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 const MAX_RECENT = 8;
 const STORAGE_KEY = 'vastra_recently_viewed';
@@ -22,7 +22,9 @@ export function useRecentlyViewed() {
       const next = [productId, ...filtered].slice(0, MAX_RECENT);
       try {
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {}
+      } catch {
+        // Ignore storage quota/security errors
+      }
       return next;
     });
   }, []);

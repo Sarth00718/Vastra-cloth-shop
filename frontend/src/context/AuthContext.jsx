@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 export const authDataContext = createContext();
 
 function AuthContext({ children }) {
-    const serverurl = import.meta.env.VITE_API_URL || 'http://vastra-backend-env.eba-ipgmtvpc.us-east-1.elasticbeanstalk.com';
+    const serverurl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5001' : 'http://vastra-backend-env.eba-ipgmtvpc.us-east-1.elasticbeanstalk.com');
     const [authLoading, setAuthLoading] = useState(false);
 
     const loginUser = async (email, password) => {

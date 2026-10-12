@@ -8,6 +8,11 @@ import AuthContext from './context/AuthContext.jsx';
 import UserContext from './context/UserContext.jsx';
 import ShopContext from './context/ShopContext.jsx';
 
+// Handle automatic recovery if a newly deployed version purged previous dynamic chunks
+window.addEventListener('vite:preloadError', () => {
+  window.location.reload();
+});
+
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
 createRoot(document.getElementById('root')).render(

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { shopDataContext } from '../context/ShopContext';
-import { FaHeart, FaTrashAlt, FaShoppingCart } from 'react-icons/fa';
+import { LuHeart, LuTrash2, LuShoppingBag } from 'react-icons/lu';
 import toast from 'react-hot-toast';
 
 function Wishlist() {
@@ -14,7 +14,7 @@ function Wishlist() {
   const handleRemove = async (productId, productName) => {
     try {
       await toggleWishlist(productId);
-      toast.success(`💔 "${productName}" removed from wishlist`);
+      toast.success(`"${productName}" removed from wishlist`);
     } catch {
       toast.error('Failed to remove from wishlist');
     }
@@ -23,7 +23,7 @@ function Wishlist() {
   const handleAddToCart = (product) => {
     // For wishlist quick-add, we navigate to product details to pick a size
     navigate(`/productdetails/${product._id}`);
-    toast('Select a size to add to cart 👆', { icon: '👕' });
+    toast('Select a size to add to cart');
   };
 
   const containerVariants = {
@@ -56,7 +56,7 @@ function Wishlist() {
           className="text-center mb-12"
         >
           <div className="flex items-center justify-center gap-3 mb-3">
-            <FaHeart className="text-red-500 text-3xl" />
+            <LuHeart className="text-red-500 text-3xl fill-red-500" />
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-red-200 to-red-400 bg-clip-text text-transparent">
               My Wishlist
             </h1>
@@ -78,7 +78,7 @@ function Wishlist() {
           >
             <div className="relative inline-block mb-8">
               <div className="w-28 h-28 rounded-full bg-gradient-to-br from-red-500/20 to-pink-500/20 flex items-center justify-center mx-auto border border-red-500/20">
-                <FaHeart className="text-5xl text-red-400/50" />
+                <LuHeart className="text-5xl text-red-400/50 stroke-[1.5]" />
               </div>
               <div className="absolute -top-1 -right-1 w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center text-white text-xs font-bold border border-slate-600">
                 0
@@ -87,8 +87,10 @@ function Wishlist() {
             <h2 className="text-2xl font-semibold text-slate-300 mb-3">
               Your wishlist is empty
             </h2>
-            <p className="text-slate-500 mb-10 max-w-md mx-auto">
-              Tap the ❤️ heart on any product to save it here. Come back anytime to shop your saved items.
+            <p className="text-slate-500 mb-10 max-w-md mx-auto flex items-center justify-center gap-1.5 flex-wrap">
+              <span>Tap the</span>
+              <LuHeart className="w-4 h-4 text-red-400 fill-red-400 inline" />
+              <span>heart on any product to save it here. Come back anytime to shop your saved items.</span>
             </p>
             <motion.button
               whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(59,130,246,0.4)' }}
@@ -140,7 +142,7 @@ function Wishlist() {
                         className="absolute top-3 right-3 w-9 h-9 bg-red-500/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-red-600 transition-colors"
                         title="Remove from wishlist"
                       >
-                        <FaTrashAlt className="text-white text-sm" />
+                        <LuTrash2 className="text-white text-sm" />
                       </motion.button>
 
                       {/* Category Badge */}
@@ -168,7 +170,7 @@ function Wishlist() {
                           onClick={() => handleAddToCart(product)}
                           className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/80 to-blue-500/80 hover:from-blue-600 hover:to-blue-500 text-white text-sm font-semibold rounded-xl transition-all shadow-md shadow-blue-500/20"
                         >
-                          <FaShoppingCart className="text-xs" />
+                          <LuShoppingBag className="text-sm" />
                           Add to Cart
                         </motion.button>
                       </div>

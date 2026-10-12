@@ -1,9 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RiDeleteBin6Line } from 'react-icons/ri';
-import { FiMinus, FiPlus } from 'react-icons/fi';
-import { MdShoppingCartCheckout, MdLocalShipping } from 'react-icons/md';
+import { LuTrash2, LuMinus, LuPlus, LuShoppingBag, LuArrowLeft, LuArrowRight, LuTruck } from 'react-icons/lu';
 import { shopDataContext } from '../context/ShopContext';
 import { userDataContext } from '../context/UserContext';
 import Titles from '../components/Titles';
@@ -11,7 +9,7 @@ import CartTotal from '../components/CartTotal';
 import toast from 'react-hot-toast';
 
 function Cart() {
-  const { products, currency, cartItem, updateQuantity, delivery_fee, getCartAmount } = useContext(shopDataContext);
+  const { products, currency, cartItem, updateQuantity, getCartAmount } = useContext(shopDataContext);
   const { user } = useContext(userDataContext);
   const [cartData, setCartData] = useState([]);
   const navigate = useNavigate();
@@ -102,16 +100,19 @@ function Cart() {
               animate={{ opacity: 1, y: 0 }}
               className="flex flex-col items-center justify-center py-24 gap-5"
             >
-              <div className="text-7xl">🛒</div>
+              <div className="w-24 h-24 rounded-3xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 mb-2 shadow-xl shadow-blue-500/5">
+                <LuShoppingBag className="w-12 h-12" />
+              </div>
               <p className="text-white text-xl font-semibold">Your cart is empty</p>
               <p className="text-slate-400 text-sm">Explore our collections and find something you love</p>
               <motion.button
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => navigate('/collections')}
-                className="mt-2 px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-blue-500/30"
+                className="mt-2 px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-blue-500/30 flex items-center gap-2"
               >
                 Browse Collections
+                <LuArrowRight className="w-4 h-4" />
               </motion.button>
             </motion.div>
           ) : (
@@ -169,21 +170,21 @@ function Cart() {
                           onClick={() => handleQtyChange(item, -1)}
                           className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-600 text-white transition-colors"
                         >
-                          <FiMinus className="w-3 h-3" />
+                          <LuMinus className="w-3.5 h-3.5" />
                         </button>
                         <span className="w-8 text-center text-white text-sm font-semibold">{item.quantity}</span>
                         <button
                           onClick={() => handleQtyChange(item, +1)}
                           className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-600 text-white transition-colors"
                         >
-                          <FiPlus className="w-3 h-3" />
+                          <LuPlus className="w-3.5 h-3.5" />
                         </button>
                       </div>
                       <button
                         onClick={() => handleRemove(item, productData.name)}
                         className="w-8 h-8 flex items-center justify-center rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors border border-red-500/20"
                       >
-                        <RiDeleteBin6Line className="w-4 h-4" />
+                        <LuTrash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </motion.div>
@@ -206,22 +207,22 @@ function Cart() {
               whileTap={{ scale: 0.98 }}
               onClick={() => {
                 if (!user) {
-                  toast('Please sign in to proceed with checkout', { icon: '🔒' });
+                  toast.error('Please sign in to proceed with checkout');
                   navigate('/login', { state: { from: '/placeorder' } });
                 } else {
                   navigate('/placeorder');
                 }
               }}
-              className="w-full mt-4 flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/30 transition-all text-sm tracking-wide"
+              className="w-full mt-4 flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/30 transition-all text-sm tracking-wide cursor-pointer"
             >
-              <MdShoppingCartCheckout className="w-5 h-5" />
+              <LuShoppingBag className="w-5 h-5" />
               PROCEED TO CHECKOUT
             </motion.button>
             <button
               onClick={() => navigate('/collections')}
-              className="w-full mt-3 text-slate-400 hover:text-white text-sm py-2 transition-colors"
+              className="w-full mt-3 text-slate-400 hover:text-white text-sm py-2 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              ← Continue Shopping
+              <LuArrowLeft className="w-4 h-4" /> Continue Shopping
             </button>
           </motion.div>
         )}

@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import Vogo from "../assets/vogo.png";
 import google from "../assets/google.png";
 import { useNavigate, useLocation } from "react-router-dom";
-import { IoEye, IoEyeOutline, IoPersonOutline, IoMailOutline, IoLockClosedOutline, IoCheckmarkCircle, IoArrowForwardOutline } from "react-icons/io5";
+import { LuEye, LuEyeOff, LuUser, LuMail, LuLock, LuCircleCheck, LuArrowRight } from "react-icons/lu";
 import { authDataContext } from "../context/AuthContext";
 import { userDataContext } from "../context/UserContext";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -196,7 +196,7 @@ function Registration() {
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-300 tracking-wider uppercase">Full Name</label>
                 <div className="relative flex items-center">
-                  <IoPersonOutline className="absolute left-4 text-slate-400 text-lg pointer-events-none" />
+                  <LuUser className="absolute left-4 text-slate-400 w-5 h-5 pointer-events-none" />
                   <input
                     type="text"
                     required
@@ -212,7 +212,7 @@ function Registration() {
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-300 tracking-wider uppercase">Email Address</label>
                 <div className="relative flex items-center">
-                  <IoMailOutline className="absolute left-4 text-slate-400 text-lg pointer-events-none" />
+                  <LuMail className="absolute left-4 text-slate-400 w-5 h-5 pointer-events-none" />
                   <input
                     type="email"
                     required
@@ -228,7 +228,7 @@ function Registration() {
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-300 tracking-wider uppercase">Password</label>
                 <div className="relative flex items-center">
-                  <IoLockClosedOutline className="absolute left-4 text-slate-400 text-lg pointer-events-none" />
+                  <LuLock className="absolute left-4 text-slate-400 w-5 h-5 pointer-events-none" />
                   <input
                     type={showPassword ? "text" : "password"}
                     required
@@ -242,7 +242,7 @@ function Registration() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 text-slate-400 hover:text-slate-200 transition-colors p-1"
                   >
-                    {showPassword ? <IoEye size={18} /> : <IoEyeOutline size={18} />}
+                    {showPassword ? <LuEyeOff className="w-4 h-4" /> : <LuEye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
@@ -250,7 +250,7 @@ function Registration() {
               {/* Password Strength Indicator */}
               {password && (
                 <div className="flex items-center gap-1.5 text-xs pt-1">
-                  <IoCheckmarkCircle className={isPasswordMinLength ? "text-emerald-400" : "text-slate-600"} />
+                  <LuCircleCheck className={`w-4 h-4 ${isPasswordMinLength ? "text-emerald-400" : "text-slate-600"}`} />
                   <span className={isPasswordMinLength ? "text-emerald-400" : "text-slate-400"}>
                     At least 6 characters
                   </span>
@@ -272,7 +272,7 @@ function Registration() {
                 ) : (
                   <>
                     <span>Create Account</span>
-                    <IoArrowForwardOutline size={18} />
+                    <LuArrowRight className="w-4 h-4" />
                   </>
                 )}
               </motion.button>

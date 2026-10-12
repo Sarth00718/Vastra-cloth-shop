@@ -4,6 +4,7 @@ import Titles from './Titles';
 import Card, { CardSkeleton } from './Card';
 import { shopDataContext } from '../context/ShopContext';
 import { useNavigate } from 'react-router-dom';
+import { LuArrowRight } from 'react-icons/lu';
 
 function LatestCollections() {
   const { products, productsLoading } = useContext(shopDataContext);
@@ -57,9 +58,10 @@ function LatestCollections() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => navigate('/collections')}
-            className="px-8 py-3 border border-slate-600 hover:border-blue-500 text-slate-300 hover:text-white rounded-xl text-sm font-semibold transition-all"
+            className="inline-flex items-center gap-2 px-8 py-3 border border-slate-600 hover:border-blue-500 text-slate-300 hover:text-white rounded-xl text-sm font-semibold transition-all group"
           >
-            View All Collections →
+            <span>View All Collections</span>
+            <LuArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </motion.button>
         </div>
       )}

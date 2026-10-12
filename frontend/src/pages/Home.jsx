@@ -8,10 +8,10 @@ import { useNavbarHeight } from '../hooks/useNavbarHeight';
 
 function Home() {
   const heroData = [
-    { tag: "✨ NEW ARRIVALS", text1: "Discover the Best of", text2: "Bold Fashion", desc: "Explore curated collections of contemporary wear crafted to elevate your unique style." },
-    { tag: "🔥 TRENDING NOW", text1: "Choose Your Perfect", text2: "Fashion Fit", desc: "Unleash your confidence with our latest high-end fashion line, now available online." },
-    { tag: "🎉 LIMITED TIME", text1: "Flat 30% OFF on", text2: "Summer Styles", desc: "Upgrade your wardrobe with premium quality clothing at unbeatable prices." },
-    { tag: "💎 PREMIUM WEAR", text1: "Explore Our Best", text2: "Exclusive Collection", desc: "Experience the perfect blend of tradition and modern elegance." }
+    { tag: "NEW ARRIVALS", icon: "sparkles", text1: "Discover the Best of", text2: "Bold Fashion", desc: "Explore curated collections of contemporary wear crafted to elevate your unique style." },
+    { tag: "TRENDING NOW", icon: "flame", text1: "Choose Your Perfect", text2: "Fashion Fit", desc: "Unleash your confidence with our latest high-end fashion line, now available online." },
+    { tag: "LIMITED TIME", icon: "tag", text1: "Flat 30% OFF on", text2: "Summer Styles", desc: "Upgrade your wardrobe with premium quality clothing at unbeatable prices." },
+    { tag: "PREMIUM WEAR", icon: "gem", text1: "Explore Our Best", text2: "Exclusive Collection", desc: "Experience the perfect blend of tradition and modern elegance." }
   ];
   const [heroCount, setHeroCount] = useState(0);
 

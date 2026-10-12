@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
-import { MdOutlineArrowRightAlt } from 'react-icons/md';
+import { LuArrowRight, LuSparkles, LuFlame, LuTag, LuGem } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 
 function Hero({ heroData, heroCount, setHeroCount }) {
     const navigate = useNavigate();
+
+    const TagIcon = heroData?.icon === 'flame' ? LuFlame : heroData?.icon === 'tag' ? LuTag : heroData?.icon === 'gem' ? LuGem : LuSparkles;
 
     return (
         <div className="w-full lg:w-1/2 py-10 sm:py-14 md:py-16 lg:py-32 px-6 sm:px-[8%] md:px-[10%] lg:px-[12%] relative z-10 flex flex-col justify-center">
@@ -19,8 +21,9 @@ function Hero({ heroData, heroCount, setHeroCount }) {
                 {/* Tagline */}
                 <div className="flex items-center gap-3">
                     <span className="w-6 sm:w-8 md:w-12 h-[2px] bg-blue-500 rounded-full" />
-                    <span className="text-blue-400 font-semibold text-[10px] sm:text-xs md:text-sm tracking-widest uppercase" style={{ fontFamily: 'Inter, sans-serif' }}>
-                        {heroData.tag || "✨ NEW ARRIVALS"}
+                    <span className="text-blue-400 font-semibold text-[10px] sm:text-xs md:text-sm tracking-widest uppercase flex items-center gap-1.5" style={{ fontFamily: 'Inter, sans-serif' }}>
+                        <TagIcon className="w-3.5 h-3.5" />
+                        {heroData.tag || "NEW ARRIVALS"}
                     </span>
                 </div>
 
@@ -47,7 +50,7 @@ function Hero({ heroData, heroCount, setHeroCount }) {
                     className="mt-2 sm:mt-4 flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-cyan-500 text-white px-5 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-full font-semibold text-xs sm:text-sm md:text-base shadow-lg shadow-blue-500/30 transition-all"
                 >
                     Shop Collection
-                    <MdOutlineArrowRightAlt className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                    <LuArrowRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </motion.button>
             </motion.div>
 

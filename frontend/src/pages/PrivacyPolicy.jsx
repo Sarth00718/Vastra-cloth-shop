@@ -2,39 +2,39 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Titles from '../components/Titles';
 import { useNavbarHeight } from '../hooks/useNavbarHeight';
-import { MdVerifiedUser, MdLock, MdVisibility, MdDescription, MdNotificationsActive, MdAssignmentInd } from 'react-icons/md';
+import { LuShieldCheck, LuLock, LuEye, LuFileText, LuBell, LuUserCheck, LuMail } from 'react-icons/lu';
 
 function PrivacyPolicy() {
   const navbarPadding = useNavbarHeight();
 
   const sections = [
     {
-      icon: MdVerifiedUser,
+      icon: LuShieldCheck,
       title: "1. Information We Collect",
       content: "When you visit Vastra or make a purchase, we collect personal information provided directly by you, such as your name, email address, shipping address, phone number, and payment details. We also automatically gather device information, including IP address, browser type, and browsing patterns to optimize your shopping experience."
     },
     {
-      icon: MdVisibility,
+      icon: LuEye,
       title: "2. How We Use Your Information",
       content: "We use your data to process orders, manage deliveries, send order updates, and provide customer support. With your permission, we may also send promotional emails regarding new arrivals, special discounts, and seasonal offers tailored to your fashion preferences."
     },
     {
-      icon: MdLock,
+      icon: LuLock,
       title: "3. Data Security & Protection",
       content: "Your privacy is paramount. Vastra employs industry-standard SSL encryption and secure payment gateways to safeguard your transactions and personal details. We do not store sensitive payment card details on our servers."
     },
     {
-      icon: MdAssignmentInd,
+      icon: LuUserCheck,
       title: "4. Sharing Your Data",
       content: "We never sell or rent your personal information to third parties. We share data strictly with trusted service providers necessary to operate our platform—such as logistics partners for shipping and payment processors for transaction fulfillment."
     },
     {
-      icon: MdDescription,
+      icon: LuFileText,
       title: "5. Cookies & Tracking Technologies",
       content: "We use cookies to keep track of your shopping cart, remember your preferences, and analyze website traffic. You can choose to disable cookies through your browser settings, though some interactive features of our store may be limited."
     },
     {
-      icon: MdNotificationsActive,
+      icon: LuBell,
       title: "6. Your Rights & Contact",
       content: "You have the right to access, update, or request deletion of your personal data at any time. For privacy-related inquiries, please contact our support team at support@vastra.in."
     }
@@ -108,7 +108,8 @@ function PrivacyPolicy() {
             href="mailto:support@vastra.in"
             className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-lg shadow-blue-500/25"
           >
-            Contact Privacy Team
+            <LuMail className="w-4 h-4" />
+            <span>Contact Privacy Team</span>
           </a>
         </motion.div>
 

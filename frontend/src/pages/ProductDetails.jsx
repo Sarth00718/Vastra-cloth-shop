@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaStar, FaStarHalfAlt, FaHeart, FaRegHeart } from 'react-icons/fa';
-import { MdOutlineShoppingCart, MdArrowBack, MdLocalShipping, MdRefresh, MdVerifiedUser } from 'react-icons/md';
+import { LuShoppingBag, LuArrowLeft, LuTruck, LuRotateCcw, LuShieldCheck, LuSparkles, LuHeart, LuStar, LuStarHalf } from 'react-icons/lu';
 import { shopDataContext } from '../context/ShopContext';
 import RelatedProducts from '../components/RelatedProducts';
 import toast from 'react-hot-toast';
@@ -37,7 +36,7 @@ function ProductDetails() {
       return;
     }
     addToCart(productData._id, size);
-    toast.success('Added to cart! 🛒');
+    toast.success('Added to cart!');
   }, [size, productData, addToCart]);
 
   const handleMouseMove = useCallback((e) => {
@@ -78,7 +77,7 @@ function ProductDetails() {
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-slate-400 hover:text-white text-sm mb-6 transition-colors"
         >
-          <MdArrowBack className="w-4 h-4" /> Back
+          <LuArrowLeft className="w-4 h-4" /> Back
         </button>
 
         {/* ── Main layout ── */}
@@ -149,8 +148,8 @@ function ProductDetails() {
                 {productData.subCategory}
               </span>
               {productData.bestseller && (
-                <span className="text-xs font-bold uppercase tracking-widest text-yellow-400 bg-yellow-500/10 px-3 py-1 rounded-full border border-yellow-500/20">
-                  ⭐ Bestseller
+                <span className="text-xs font-bold uppercase tracking-widest text-yellow-400 bg-yellow-500/10 px-3 py-1 rounded-full border border-yellow-500/20 flex items-center gap-1.5">
+                  <LuSparkles className="w-3.5 h-3.5" /> Bestseller
                 </span>
               )}
             </div>
@@ -159,8 +158,12 @@ function ProductDetails() {
 
             {/* Rating */}
             <div className="flex items-center gap-2">
-              <div className="flex text-yellow-400 text-sm gap-0.5">
-                <FaStar /><FaStar /><FaStar /><FaStar /><FaStarHalfAlt />
+              <div className="flex text-yellow-400 text-sm gap-0.5 items-center">
+                <LuStar className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <LuStar className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <LuStar className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <LuStar className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <LuStarHalf className="w-4 h-4 fill-yellow-400 text-yellow-400" />
               </div>
               <span className="text-slate-400 text-sm">4.5 (125 reviews)</span>
             </div>
@@ -204,7 +207,7 @@ function ProductDetails() {
                 onClick={handleAddToCart}
                 className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3.5 rounded-2xl shadow-lg shadow-blue-500/30 transition-colors"
               >
-                <MdOutlineShoppingCart className="w-5 h-5" /> Add to Cart
+                <LuShoppingBag className="w-5 h-5" /> Add to Cart
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -212,7 +215,7 @@ function ProductDetails() {
                 onClick={async () => {
                   try {
                     const added = await toggleWishlist(productData._id);
-                    toast.success(added ? '❤️ Saved to wishlist!' : 'Removed from wishlist');
+                    toast.success(added ? 'Saved to wishlist!' : 'Removed from wishlist');
                   } catch { toast.error('Please log in first'); }
                 }}
                 className={`w-14 h-14 rounded-2xl border-2 flex items-center justify-center transition-all ${
@@ -221,16 +224,16 @@ function ProductDetails() {
                     : 'border-slate-700 bg-slate-800/60 text-slate-400 hover:border-red-500/50 hover:text-red-400'
                 }`}
               >
-                {isWishlisted ? <FaHeart className="text-lg" /> : <FaRegHeart className="text-lg" />}
+                {isWishlisted ? <LuHeart className="text-lg fill-red-500 text-red-500" /> : <LuHeart className="text-lg" />}
               </motion.button>
             </div>
 
             {/* Trust badges */}
             <div className="flex flex-col gap-2 pt-2 border-t border-slate-800">
               {[
-                { icon: MdVerifiedUser, text: '100% Original Product Guaranteed' },
-                { icon: MdLocalShipping, text: 'Free delivery on orders above ₹999' },
-                { icon: MdRefresh, text: 'Easy 7-day return & exchange policy' },
+                { icon: LuShieldCheck, text: '100% Original Product Guaranteed' },
+                { icon: LuTruck, text: 'Free delivery on orders above ₹999' },
+                { icon: LuRotateCcw, text: 'Easy 7-day return & exchange policy' },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-3 text-slate-400 text-sm">
                   <Icon className="w-4 h-4 text-blue-400 shrink-0" />

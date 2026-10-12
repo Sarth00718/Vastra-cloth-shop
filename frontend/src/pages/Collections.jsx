@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState, useMemo } from 'react';
+import { useContext, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiFilter, FiX, FiChevronDown } from 'react-icons/fi';
-import { MdOutlineTune } from 'react-icons/md';
+import { LuCheck, LuX, LuChevronDown, LuSlidersHorizontal, LuSearchX } from 'react-icons/lu';
 import Titles from '../components/Titles';
 import Card, { CardSkeleton } from '../components/Card';
 import { shopDataContext } from '../context/ShopContext';
@@ -21,7 +20,7 @@ function FilterChip({ label, onRemove }) {
     <span className="flex items-center gap-1.5 bg-blue-600/20 text-blue-300 text-xs font-medium px-3 py-1 rounded-full border border-blue-500/30">
       {label}
       <button onClick={onRemove} className="hover:text-white transition-colors">
-        <FiX className="w-3 h-3" />
+        <LuX className="w-3 h-3" />
       </button>
     </span>
   );
@@ -93,7 +92,7 @@ function Collections() {
           )}
           {isMobile && (
             <button onClick={() => setShowFilters(false)} className="text-slate-300 hover:text-white">
-              <FiX className="w-5 h-5" />
+              <LuX className="w-5 h-5" />
             </button>
           )}
         </div>
@@ -106,16 +105,14 @@ function Collections() {
             <label key={cat} className="flex items-center gap-3 cursor-pointer group">
               <div
                 onClick={() => toggle(selectedCategories, setSelectedCategories, cat)}
-                className={`w-4 h-4 rounded border-2 transition-all ${
+                className={`w-4 h-4 rounded border-2 transition-all flex items-center justify-center ${
                   selectedCategories.includes(cat)
                     ? 'bg-blue-600 border-blue-600'
                     : 'border-slate-600 group-hover:border-slate-400'
                 }`}
               >
                 {selectedCategories.includes(cat) && (
-                  <svg viewBox="0 0 16 16" fill="white" className="w-3 h-3 m-[1px]">
-                    <path d="M13.5 3.5L6 11l-3.5-3.5" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" />
-                  </svg>
+                  <LuCheck className="w-3 h-3 text-white stroke-[3]" />
                 )}
               </div>
               <span className="text-slate-300 text-sm">{cat}</span>
@@ -131,12 +128,16 @@ function Collections() {
             <label key={sub} className="flex items-center gap-3 cursor-pointer group">
               <div
                 onClick={() => toggle(selectedSubcategories, setSelectedSubcategories, sub)}
-                className={`w-4 h-4 rounded border-2 transition-all ${
+                className={`w-4 h-4 rounded border-2 transition-all flex items-center justify-center ${
                   selectedSubcategories.includes(sub)
                     ? 'bg-blue-600 border-blue-600'
                     : 'border-slate-600 group-hover:border-slate-400'
                 }`}
-              />
+              >
+                {selectedSubcategories.includes(sub) && (
+                  <LuCheck className="w-3 h-3 text-white stroke-[3]" />
+                )}
+              </div>
               <span className="text-slate-300 text-sm">{sub}</span>
             </label>
           ))}
@@ -185,7 +186,7 @@ function Collections() {
           onClick={() => setShowFilters(!showFilters)}
           className="flex items-center gap-2 text-slate-300 hover:text-white text-sm"
         >
-          <MdOutlineTune className="w-5 h-5" /> Filters
+          <LuSlidersHorizontal className="w-4 h-4" /> Filters
         </button>
       </div>
 
@@ -233,7 +234,7 @@ function Collections() {
               className="flex items-center gap-3 bg-slate-900/80 text-slate-100 font-medium text-sm px-4 py-2.5 rounded-xl border border-slate-700/60 hover:border-blue-500/50 hover:bg-slate-800 focus:outline-none focus:border-blue-500 cursor-pointer shadow-md transition-all backdrop-blur-md"
             >
               {SORT_OPTIONS.find(o => o.value === sortBy)?.label || 'Sort By'}
-              <FiChevronDown className={`w-4 h-4 transition-transform duration-300 ${showSortDropdown ? 'rotate-180' : ''}`} />
+              <LuChevronDown className={`w-4 h-4 transition-transform duration-300 ${showSortDropdown ? 'rotate-180' : ''}`} />
             </button>
 
             <AnimatePresence>
@@ -286,7 +287,9 @@ function Collections() {
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <div className="text-6xl">🔍</div>
+            <div className="w-20 h-20 rounded-3xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 mb-1 shadow-xl shadow-blue-500/5">
+              <LuSearchX className="w-10 h-10" />
+            </div>
             <p className="text-slate-300 text-lg font-semibold">No products found</p>
             <p className="text-slate-500 text-sm">Try adjusting your filters</p>
             <button onClick={clearAll} className="mt-2 text-blue-400 hover:text-blue-300 text-sm underline">

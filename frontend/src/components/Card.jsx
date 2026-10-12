@@ -1,8 +1,7 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaHeart, FaRegHeart, FaStar } from 'react-icons/fa';
-import { MdOutlineShoppingCart } from 'react-icons/md';
+import { LuHeart, LuShoppingBag, LuStar } from 'react-icons/lu';
 import { shopDataContext } from '../context/ShopContext';
 import toast from 'react-hot-toast';
 
@@ -29,7 +28,7 @@ function Card({ id, name, price, image, category, subCategory, sizes = [] }) {
     e.stopPropagation();
     try {
       const added = await toggleWishlist(id);
-      toast.success(added ? '❤️ Saved to wishlist!' : 'Removed from wishlist');
+      toast.success(added ? 'Saved to wishlist!' : 'Removed from wishlist');
     } catch {
       toast.error('Please log in first');
     }
@@ -91,7 +90,7 @@ function Card({ id, name, price, image, category, subCategory, sizes = [] }) {
                 onClick={handleQuickAdd}
                 className="absolute bottom-3 left-3 right-3 z-20 pointer-events-auto flex items-center justify-center gap-2 bg-blue-600/95 hover:bg-blue-500 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors shadow-lg border border-blue-400/40"
               >
-                <MdOutlineShoppingCart className="w-4 h-4" />
+                <LuShoppingBag className="w-4 h-4" />
                 {sizes.length === 1 ? 'Add to Cart' : 'Select Size'}
               </motion.button>
             </motion.div>
@@ -107,7 +106,7 @@ function Card({ id, name, price, image, category, subCategory, sizes = [] }) {
               : 'bg-black/40 text-white hover:bg-black/60'
           }`}
         >
-          {isWishlisted ? <FaHeart className="text-xs" /> : <FaRegHeart className="text-xs" />}
+          {isWishlisted ? <LuHeart className="text-sm fill-white text-white" /> : <LuHeart className="text-sm text-white" />}
         </button>
 
         {/* Category badge */}
@@ -126,7 +125,7 @@ function Card({ id, name, price, image, category, subCategory, sizes = [] }) {
             {currency} {price}
           </p>
           <div className="flex items-center gap-0.5 text-yellow-400 text-xs">
-            <FaStar />
+            <LuStar className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
             <span className="text-slate-400">4.5</span>
           </div>
         </div>

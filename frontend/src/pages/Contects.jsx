@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  MdOutlineMail, 
-  MdOutlinePhoneInTalk, 
-  MdOutlineLocationOn, 
-  MdOutlineAccessTime,
-  MdSend, 
-  MdCheckCircle,
-  MdHelpOutline,
-  MdKeyboardArrowDown
-} from 'react-icons/md';
-import { FaPaperPlane, FaStore, FaUser, FaTag, FaCommentAlt } from 'react-icons/fa';
+  LuMail, 
+  LuPhone, 
+  LuMapPin, 
+  LuClock, 
+  LuSend, 
+  LuCircleCheck, 
+  LuCircleHelp, 
+  LuChevronDown, 
+  LuStore, 
+  LuUser, 
+  LuTag, 
+  LuMessageSquare 
+} from 'react-icons/lu';
 import Titles from '../components/Titles';
 import contactImage from '../assets/image.png';
 import { sendContactMessage } from '../services/contactService';
@@ -102,25 +105,25 @@ function Contacts() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
         {[
           {
-            icon: MdOutlineLocationOn,
+            icon: LuMapPin,
             title: 'Our Headquarters',
             desc: 'Varachha Main Road, Surat City, Gujarat, India - 395006',
             color: 'from-blue-500/20 to-cyan-500/10 border-blue-500/30 text-blue-400',
           },
           {
-            icon: MdOutlinePhoneInTalk,
+            icon: LuPhone,
             title: 'Call Us Directly',
             desc: '+91 70460 53000\nMon-Sat from 9am to 8pm IST',
             color: 'from-purple-500/20 to-pink-500/10 border-purple-500/30 text-purple-400',
           },
           {
-            icon: MdOutlineMail,
+            icon: LuMail,
             title: 'Email Support',
             desc: 'admin@vastra.com\nsupport@vastra.com',
             color: 'from-emerald-500/20 to-teal-500/10 border-emerald-500/30 text-emerald-400',
           },
           {
-            icon: MdOutlineAccessTime,
+            icon: LuClock,
             title: 'Customer Service Hours',
             desc: 'Available 24/7 for Online Assistance',
             color: 'from-amber-500/20 to-orange-500/10 border-amber-500/30 text-amber-400',
@@ -162,7 +165,7 @@ function Contacts() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
 
           <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
-            <FaPaperPlane className="text-blue-400 w-5 h-5" /> Send Us A Message
+            <LuSend className="text-blue-400 w-5 h-5" /> Send Us A Message
           </h2>
           <p className="text-slate-400 text-sm mb-8">
             Fill out the form below. We promise to reply promptly with helpful solutions.
@@ -174,7 +177,7 @@ function Contacts() {
               animate={{ scale: 1, opacity: 1 }}
               className="bg-emerald-950/40 border border-emerald-500/40 rounded-2xl p-8 text-center flex flex-col items-center gap-4 my-6"
             >
-              <MdCheckCircle className="w-16 h-16 text-emerald-400 animate-bounce" />
+              <LuCircleCheck className="w-16 h-16 text-emerald-400 animate-bounce" />
               <h3 className="text-xl font-bold text-emerald-300">Message Delivered Successfully!</h3>
               <p className="text-slate-300 text-sm max-w-md">
                 Thank you for contacting Vastra. An automated confirmation email has been dispatched to your email address, and our support staff will get in touch shortly.
@@ -196,7 +199,7 @@ function Contacts() {
                     Full Name <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
-                    <FaUser className="absolute left-3.5 top-3.5 text-slate-500 text-sm" />
+                    <LuUser className="absolute left-3.5 top-3.5 text-slate-500 text-sm" />
                     <input
                       type="text"
                       name="name"
@@ -214,7 +217,7 @@ function Contacts() {
                     Email Address <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
-                    <MdOutlineMail className="absolute left-3.5 top-3.5 text-slate-500 text-base" />
+                    <LuMail className="absolute left-3.5 top-3.5 text-slate-500 text-base" />
                     <input
                       type="email"
                       name="email"
@@ -235,7 +238,7 @@ function Contacts() {
                     Phone Number (Optional)
                   </label>
                   <div className="relative">
-                    <MdOutlinePhoneInTalk className="absolute left-3.5 top-3.5 text-slate-500 text-base" />
+                    <LuPhone className="absolute left-3.5 top-3.5 text-slate-500 text-base" />
                     <input
                       type="tel"
                       name="phone"
@@ -252,7 +255,7 @@ function Contacts() {
                     Inquiry Subject <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
-                    <FaTag className="absolute left-3.5 top-3.5 text-slate-500 text-sm" />
+                    <LuTag className="absolute left-3.5 top-3.5 text-slate-500 text-sm" />
                     <input
                       type="text"
                       name="subject"
@@ -272,7 +275,7 @@ function Contacts() {
                   Your Message <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
-                  <FaCommentAlt className="absolute left-3.5 top-4 text-slate-500 text-sm" />
+                  <LuMessageSquare className="absolute left-3.5 top-4 text-slate-500 text-sm" />
                   <textarea
                     name="message"
                     rows="5"
@@ -300,7 +303,7 @@ function Contacts() {
                   </>
                 ) : (
                   <>
-                    <MdSend className="w-5 h-5" />
+                    <LuSend className="w-5 h-5" />
                     <span>Submit & Send Message</span>
                   </>
                 )}
@@ -326,7 +329,7 @@ function Contacts() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80" />
               <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2 text-white">
-                <FaStore className="text-blue-400 text-lg" />
+                <LuStore className="text-blue-400 text-lg" />
                 <span className="font-semibold text-base">Vastra Flagship Store</span>
               </div>
             </div>
@@ -337,8 +340,8 @@ function Contacts() {
               </p>
               <div className="h-px bg-slate-800 my-3" />
               <div className="flex justify-between items-center text-xs text-slate-400">
-                <span>📍 Varachha, Surat</span>
-                <span className="text-emerald-400 font-medium">● Open Today till 8 PM</span>
+                <span className="flex items-center gap-1.5"><LuMapPin className="text-blue-400 w-3.5 h-3.5" /> Varachha, Surat</span>
+                <span className="flex items-center gap-1.5 text-emerald-400 font-medium"><LuClock className="text-emerald-400 w-3.5 h-3.5" /> Open Today till 8 PM</span>
               </div>
             </div>
           </div>
@@ -364,7 +367,7 @@ function Contacts() {
       <div className="mb-20 bg-slate-900/50 border border-slate-800/80 rounded-3xl p-6 sm:p-10 backdrop-blur-xl shadow-xl">
         <div className="flex items-center gap-3 mb-8">
           <div className="p-3 bg-blue-500/10 text-blue-400 rounded-2xl border border-blue-500/20">
-            <MdHelpOutline className="w-6 h-6" />
+            <LuCircleHelp className="w-6 h-6" />
           </div>
           <div>
             <h2 className="text-xl font-bold text-white">Frequently Asked Questions</h2>
@@ -385,7 +388,7 @@ function Contacts() {
                   className="w-full p-5 text-left flex justify-between items-center gap-4 font-semibold text-slate-200 hover:text-white text-sm sm:text-base transition-colors"
                 >
                   <span>{item.q}</span>
-                  <MdKeyboardArrowDown
+                  <LuChevronDown
                     className={`w-5 h-5 text-blue-400 shrink-0 transition-transform duration-300 ${
                       isOpen ? 'rotate-180' : ''
                     }`}

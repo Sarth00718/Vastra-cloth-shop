@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://vastra-backend-env.eba-ipgmtvpc.us-east-1.elasticbeanstalk.com';
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5001' : 'http://vastra-backend-env.eba-ipgmtvpc.us-east-1.elasticbeanstalk.com');
 
 const adminApi = axios.create({
   baseURL: API_URL,

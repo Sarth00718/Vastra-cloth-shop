@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Vogo from '../assets/vogo.png';
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
+import { LuPhone, LuMail, LuMapPin } from 'react-icons/lu';
 
 function Footer() {
   const navigate = useNavigate();
@@ -66,19 +66,19 @@ function Footer() {
           <ul className="space-y-3 text-sm text-slate-400">
             <li className="flex items-center gap-4 hover:text-white transition-colors">
               <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-blue-400 shrink-0">
-                <FaPhoneAlt size={12} />
+                <LuPhone className="w-3.5 h-3.5" />
               </div>
               +91-7046053000
             </li>
             <li className="flex items-center gap-4 hover:text-white transition-colors">
               <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-blue-400 shrink-0">
-                <FaEnvelope size={12} />
+                <LuMail className="w-3.5 h-3.5" />
               </div>
               support@vastra.in
             </li>
             <li className="flex items-center gap-4 hover:text-white transition-colors">
               <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-blue-400 shrink-0">
-                <FaMapMarkerAlt size={12} />
+                <LuMapPin className="w-3.5 h-3.5" />
               </div>
               Surat, Gujarat, India
             </li>

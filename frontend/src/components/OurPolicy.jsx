@@ -1,25 +1,24 @@
 import React from 'react';
-import { FiRepeat, FiHeadphones } from "react-icons/fi";
-import { BsShieldCheck } from "react-icons/bs";
+import { LuRefreshCw, LuShieldCheck, LuHeadphones } from 'react-icons/lu';
 import { motion } from "framer-motion";
 import Titles from "./Titles";
 
 function OurPolicy() {
   const policies = [
     {
-      icon: <FiRepeat className="w-8 h-8 text-blue-400" />,
+      icon: <LuRefreshCw className="w-8 h-8 text-blue-400 stroke-[1.75]" />,
       title: "Easy Exchange Policy",
       description: "Exchange Made Easy - Quick, Simple, and Customer-Friendly Process.",
       delay: 0.1
     },
     {
-      icon: <BsShieldCheck className="w-8 h-8 text-blue-400" />,
+      icon: <LuShieldCheck className="w-8 h-8 text-blue-400 stroke-[1.75]" />,
       title: "7 Days Return Policy",
       description: "Shop with Confidence - 7 Days Easy Return Guarantee.",
       delay: 0.2
     },
     {
-      icon: <FiHeadphones className="w-8 h-8 text-blue-400" />,
+      icon: <LuHeadphones className="w-8 h-8 text-blue-400 stroke-[1.75]" />,
       title: "Best Customer Support",
       description: "Trusted Customer Support - Your Satisfaction Is Our Priority.",
       delay: 0.3
